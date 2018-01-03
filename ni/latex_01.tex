@@ -1,0 +1,133 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{indentfirst}
+\usepackage{lmodern}
+\usepackage[polish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\begin{document}
+
+Hello World! To oczywiście tylko zabawa.
+
+A to jest drugi akapit i można zobaczyć efekt działania.
+
+Hello World! To oczywiście\\
+tylko zabawa.
+
+A\hfill to\hfill jest\hfill drugi\hfill akapit\hfill i\hfill można\\
+zobaczyć efekt działania.
+
+A to jest kolejny akapit i można\\
+zobaczyć efekt działania.
+
+Czasami zależy nam na zmianie stopnia pisma. Lubię {\large duże}, {\Large
+ wieksze} oraz {\LARGE bardzo duże} litery.
+
+Odminą pochyłą składa się teminy definiowane, objaśniane lub tłumaczone.
+
+Grzegorz ugotował \emph{knedle}, rodzaj {\bf pulpetów} z surowego \underline{mięsa}
+
+Wyrownanie tekstu wymaga ,,pracy'':
+
+\begin{center}
+środek 
+\end{center}
+\begin{flushright}
+do prawa
+\end{flushright}
+
+To samo tylko jeszcze lewo:
+
+\begin{flushleft}
+do lewa
+\end{flushleft}
+\begin{center}
+środek 
+\end{center}
+\begin{flushright}
+do prawa
+\end{flushright}
+
+Cudzysłowy pojawią się jeżeli je podwoimy ''BASIA'', pojedyńcze dają smieszny efekt 'BARBARA', a takie "Basia"\ świadczą podobno o typograficznym... .
+
+Efekt specjalny, jeżeli chcemy coś wyróznić w srodowisku, to wtedy środowisko \texttt{\ quote}
+
+\begin{quote}
+bardzo ładna poezja bardzo ładna poezja bardzo ładna poezja bardzo ładna poezja bardzo ładna poezja bardzo ładna poezja bardzo ładna poezja bardzo ładna poezja bardzo ładna poezja bardzo ładna poezja bardzo ładna poezja
+\end{quote}
+
+
+Tutaj należy skończyć stronę (znaleźć jak) 
+
+\newpage
+
+\vspace*{-3cm}
+
+Teraz pobawimy się listami;\\
+środowiska \texttt{enumerate, itemize, description},\\
+,,spróbować'' osiągnąć efekt jak poniżej:
+ 
+\begin{enumerate}
+	\item Taka lista:
+	\begin{itemize}
+		\item wyglada
+		\item[--] smiesznie
+	\end{itemize}
+	\item Pamiętaj:
+	\begin{description}
+		\item[Głupoty] nie stają się mądrościami, gdy się je wyliczy.
+		\item[Mądrości] można elegancko zestawiać w wyliczeniach
+	\end{description}
+\end{enumerate}
+
+I wreszcie ,,matematyka'' którą należy po prostu napisać.\\
+Równanie $(f(x) = 2x)$ można zapisać:
+
+$$f(x) = 2x$$
+\begin{equation}
+f(x) = 2x
+\end{equation}
+
+$$\Gamma(\gamma) \neq 1 \rightarrow \exists \hbar \forall \heartsuit$$
+
+$$z_1 = x^{22} > 2^{2^{2}}$$
+
+$$\sum^b_{i=a} F(x) \Delta x \approx \int_a^b f(x) dx$$
+bardzo $\Sigma^b_{i=a} F(x) \Delta x \approx \int_a^b f(x) dx$ ładna poezja bardzo ładna poezja bardzo ładna poezja bardzo ładna poezja bardzo ładna poezja bardzo
+
+$$\frac{a+b}{c-d}$$
+
+$$\sqrt[3]{\frac{a+b}{c-d}}$$
+
+$$f'(x) = 2x \hspace{1cm} \Rightarrow \hspace{1cm} f(x) = x^2 + C$$
+
+Środowisko \texttt{\{array\}} do tworzenia tabel i macierzy:
+
+pierwsza
+$$
+\begin{array}{ccc}
+1 & 22 & 3 \\
+99 & 5 & x^2
+\end{array}
+$$
+druga
+$$
+\begin{array}{ccc}
+\hline
+1 & 22 & 3 \\
+\hline
+99 & 5 & x^2
+\end{array}
+$$
+trzecia
+$$
+\left[\left(
+\begin{array}{ccc}
+1 & 22 & 3 \\
+99 & 5 & x^2
+\end{array}
+\right) + \frac{1}{2}\right]
+$$
+
+\end{document}
+

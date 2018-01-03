@@ -1,0 +1,97 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{lmodern}
+\usepackage[polish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\title{Tytuł: Matematyka}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section*{Ściąga}
+
+int,lim,frac,sum,lnot,land,implies,Rightarrow,infty,iff,nearrow
+
+\section{Trygonometria (array)}
+
+\begin{center}
+	\begin{array}{|c|c|c|c|c|c||c|c|c|c|}
+		\hline
+		x & 0 & \frac{\pi}{6} & \frac{\pi}{4} & \frac{\pi}{3} & \frac{\pi}{2} &
+		(0; \frac{\pi}{2}) & (\frac{\pi}{2};\pi) & (\pi;\frac{3\pi}{2}) & (\frac{3\pi}{2}; 2\pi)\\
+		\hline
+		\sin x & 0 & \frac{1}{2} & \frac{\sqrt{2}}{2} & \frac{\sqrt{3}}{2} & 1 & + & + & - & -\\
+		\hline
+	\end{array}
+\end{center}
+
+\section{Szeregi (description)}
+
+\begin{description}
+	\item[Szereg nineskończony:] $\displaystyle \sum_{n=1}^\infty a_n = (a_n, S_n)$
+	\item[Szereg jest zbieżny:] $\displaystyle \sum_{n=1}^\infty a_n < \infty$
+	\item[Szereg jest rozbieżny do nieskończoności:] $\displaystyle \sum_{n=1}^\infty a_n = \infty$
+\end{description}
+
+\noindent Warunek konieczny zbieżności: $\sum_{n=1}^\infty a_n < \infty \Rightarrow \lim_{n \to \infty} a_n = 0$ \\
+(wniosek: $\lim_{n \to \infty} a_n \neq 0 \Rightarrow \displaystyle \sum_{n=1}^\infty a_n = \infty$) \\
+$\displaystyle \sum_{n=1}^\infty a_n < \infty$ jest bezwględnie zbieżny, 
+jeżeli $\displaystyle \sum_{n=1}^\infty |a_n| < \infty$, 
+w przeciwnym przypadku jest warunkowo zbieżny.
+
+\subsection{Szeregi o wyrazach dodatnich (equation, tag)}
+
+\subsubsection{Funkcja Riemanna: (cases,text)}
+
+\begin{equation}
+	\tag{0}
+	\zeta (s) = \sum_{n=1}^\infty \frac{1}{n^s} = 
+		\begin{cases}
+			\infty & \text{dla } s \leq 1 \\
+			-\infty & \text{dla } s \ge 1
+		\end{cases}
+\end{equation}
+
+\subsection{Szeregi o wyrazach dowolnych (align)}
+
+\subsubsection{Kryterium Abela:}
+
+\begin{equation}
+	\left(\lnot [(a_n) \nearrow] \land \forall{n \in N} : (a_n 0) \land \sum_{n=1}^\infty b_n < \infty \right) \Rightarrow \sum_{n=1}^\infty (a_n b_n) < \infty
+\end{equation}
+
+\subsubsection{Kryterium Dirichleta:}
+
+\begin{equation}
+	\left(\lim_{n \to \infty} a_n = 0 \land \lnot [(a_n) \nearrow] \land \exists{\epsilon > 0} : \forall{n \in N} : \epsilon - |S_n| \right) \Rightarrow \sum_{n=1}^\infty (a_n b_n) < \infty
+\end{equation}
+
+\subsubsection{Kryterium Leibniza:}
+
+\begin{equation}
+	\lim_{n \to \infty} a_n = 0 \iff \sum_{n=1}^\infty ((-1)^n a_n) < \infty
+\end{equation}
+
+\section{Całki (gather,int)}
+
+\begin{equation}
+	\int \frac{f'(x)}{f(x)} dx = \ln{|f(x)|}
+\end{equation}
+\begin{equation}
+	\int x dx = x^2 + C
+\end{equation}
+\begin{equation}
+	\int \cos x dx = \sin x + C
+\end{equation}
+
+\section{Kombinatoryka (align*, \{a \textbackslash choose b\})}
+
+$${n \choose k} = \frac{n!}{(n-k)!k!}$$
+$${n \choose n - k} = {n \choose k}$$
+
+\tableofcontents
+
+\end{document}

@@ -1,0 +1,120 @@
+\documentclass[11pt]{article}
+\usepackage{setspace,lmodern,amsmath,amssymb,amsfonts,amsthm}
+\usepackage[polish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\title{Wzory Analiza Matematyczna}
+\author{Max Adamski}
+\date{}
+
+\begin{document}
+
+\section{Całki}
+
+\subsection{Metody całkowania}
+
+\subsubsection{Przez części}
+$$\smallint u\ dv = uv - \smallint v\ du$$
+
+\subsubsection{Completing the square}
+$$
+ax^2 + bx + c \Rightarrow
+a\left(\left(x + \frac{b}{2a}\right)^2 - \frac{\Delta}{4a^2}\right)
+$$
+
+\subsubsection{Metoda nieoznaczonych współczynników}
+
+$W$ i $R$ to wielomiany zmiennej $x$. $W$ jest wielomianem stopnia $n$
+
+$$\int \frac{W_n}{\sqrt R} dx = W_{n-1} \sqrt R + \int \frac{A}{\sqrt R} dx \land n > 1 \Rightarrow$$
+
+$$\Rightarrow W_n = W_{n-1}' R + W_{n-1} \frac{1}{2} R' + A$$
+
+
+\subsection{Wzory praktyczne}
+
+\subsubsection{Długość łuku krzywej}
+$$|l| = \int_a^b \sqrt{1 + (f'(x))^2}dx$$
+
+\subsubsection{Długość łuku krzywej parametrycznej}
+$$|l| = \int_a^b \sqrt{(x'(t))^2 + (y'(x))^2}dt$$
+
+\subsubsection{Objętość obrotu OX}
+$$|V| = \pi \int_a^b (f(x))^2 dx$$
+
+\subsubsection{Objętość obrotu OY}
+$$|V| = 2\pi \int_a^b xf(x) dx$$
+
+\subsubsection{Pole obrotu OX}
+$$|P| = 2\pi \int_a^b f(x) \sqrt{1 + (f'(x))^2} dx$$
+
+\subsubsection{Pole obrotu OY}
+$$|P| = 2\pi \int_a^b x \sqrt{1 + (f'(x))^2} dx$$
+
+\section{Szeregi}
+
+\subsection{Warunek konieczny zbieżności}
+$$\lim_{n \to \infty} a_n = 0$$
+
+\section{Trygonometria}
+
+\subsection{Jedynka trygonometryczna}
+$$1 = \sin^2 x + \cos^2 x$$
+
+\subsection{Podwojony kąt}
+$$\cos 2x = \cos^2 x - \sin^2 x$$
+
+\subsection{Iloczyn funkcji}
+$$\sin a \sin b = \frac{1}{2}(\cos(a - b) - \cos(a + b))$$
+$$\cos a \cos b = \frac{1}{2}(\cos(a - b) + \cos(a + b))$$
+$$\sin a \cos b = \frac{1}{2}(\sin(a - b) + \sin(a + b))$$
+
+\pagebreak
+
+\subsection{Ogólne podstawienie trygonometryczne}
+
+\begin{spacing}{1,5}
+\[
+\begin{array}{|c|c|c|}
+	\hline
+	t = \tan \frac{x}{2} & t = \tan x \\
+	\hline
+	dx = \frac{2dt}{1 + t^2} & dx = \frac{dt}{1 + t^2} \\
+	\sin x = \frac{2t}{1 + t^2} & \sin^2 x = \frac{t^2}{1 + t^2} \\
+	\cos x = \frac{1 - t^2}{1 + t^2} & \cos^2 x = \frac{1}{1 + t^2} \\
+	- & \sin x \cos x = \frac{t}{1 + t^2} \\
+	\hline
+\end{array}
+\]
+\end{spacing}
+
+\subsection{Trywialne wzory}
+
+\begin{spacing}{1,5} \[ \begin{array}{|c|c|c|}
+	\hline
+		\int f(x) dx\ (+\ C) & f(x) & f'(x) \\
+	\hline
+		\frac{a^x}{\ln a} & a^x & a^x \ln a \\
+		e^x & e^x & e^x \\
+		\frac{1}{a} e^{ax} & e^{ax} & ae^{ax} \\
+		x \ln x - x & \ln x & \frac{1}{x} \\
+	\hline
+		\ln|f(x)| & \frac{f'(x)}{f(x)} & - \\
+		\frac{c}{a} \ln|ax + b| & \frac{c}{ax +b} & - \\
+	\hline
+		\sin^{-1} \frac{x}{a} & \frac{1}{\sqrt{a^2 - x^2}} & - \\
+		\ln|x + \sqrt{a^2 + x^2}| & \frac{1}{\sqrt{a^2 + x^2}} & - \\
+	\hline
+		-\cos x		& \sin x	&  \cos x \\
+		 \sin x		& \cos x	& -\sin x \\
+		-\ln|\cos x|	& \tan x	&  \frac{1}{\cos^2 x} \\
+		 \ln|\sin x|	& \cot x	& -\frac{1}{\sin^2 x} \\
+	\hline
+		 -	& \sin^{-1} x	&  \frac{1}{\sqrt{1-x^2}} \\
+		 -	& \cos^{-1} x	& -\frac{1}{\sqrt{1-x^2}} \\
+		 -	& \tan^{-1} x	& \frac{1}{1+x^2} \\
+		 -	& \cot^{-1} x	& -\frac{1}{1+x^2} \\
+	\hline
+\end{array} \] \end{spacing}
+
+\end{document}

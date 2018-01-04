@@ -5,5 +5,7 @@ Stworzone w ramach zajęć
 - ppp: podstawy programowania python
 - wdi: wprowadzenie do informatyki
 - ni: narzędzia informatyki
-- md: matematyka dyskretna
 - am: analiza matematyczna
+- md: matematyka dyskretna
+- al: algebra liniowa
+- lo: logika obliczeniowa

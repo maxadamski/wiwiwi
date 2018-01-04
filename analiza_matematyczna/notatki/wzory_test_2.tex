@@ -37,7 +37,7 @@ $$\Rightarrow W_n = W_{n-1}' R + W_{n-1} \frac{1}{2} R' + A$$
 $$|l| = \int_a^b \sqrt{1 + (f'(x))^2}dx$$
 
 \subsubsection{Długość łuku krzywej parametrycznej}
-$$|l| = \int_a^b \sqrt{(x'(t))^2 + (y'(x))^2}dt$$
+$$|l| = \int_a^b \sqrt{(x'(t))^2 + (y'(t))^2}dt$$
 
 \subsubsection{Objętość obrotu OX}
 $$|V| = \pi \int_a^b (f(x))^2 dx$$
@@ -73,7 +73,7 @@ $$\sin a \cos b = \frac{1}{2}(\sin(a - b) + \sin(a + b))$$
 
 \subsection{Ogólne podstawienie trygonometryczne}
 
-\begin{spacing}{1,5}
+\begin{spacing}{1,4}
 \[
 \begin{array}{|c|c|c|}
 	\hline
@@ -90,30 +90,32 @@ $$\sin a \cos b = \frac{1}{2}(\sin(a - b) + \sin(a + b))$$
 
 \subsection{Trywialne wzory}
 
-\begin{spacing}{1,5} \[ \begin{array}{|c|c|c|}
+\begin{spacing}{1,4} \[ \begin{array}{|c|c|c|}
 	\hline
 		\int f(x) dx\ (+\ C) & f(x) & f'(x) \\
 	\hline
 		\frac{a^x}{\ln a} & a^x & a^x \ln a \\
-		e^x & e^x & e^x \\
 		\frac{1}{a} e^{ax} & e^{ax} & ae^{ax} \\
 		x \ln x - x & \ln x & \frac{1}{x} \\
 	\hline
 		\ln|f(x)| & \frac{f'(x)}{f(x)} & - \\
 		\frac{c}{a} \ln|ax + b| & \frac{c}{ax +b} & - \\
 	\hline
-		\sin^{-1} \frac{x}{a} & \frac{1}{\sqrt{a^2 - x^2}} & - \\
+		\frac{1}{a} \tan^{-1} \frac{x}{a} & \frac{1}{x^2 + a^2} & - \\
+		\frac{1}{2a} \ln|\frac{x - a}{x + a}| & \frac{1}{x^2 - a^2} & - \\
+	\hline
 		\ln|x + \sqrt{a^2 + x^2}| & \frac{1}{\sqrt{a^2 + x^2}} & - \\
+		\sin^{-1} \frac{x}{a} & \frac{1}{\sqrt{a^2 - x^2}} & - \\
 	\hline
 		-\cos x		& \sin x	&  \cos x \\
 		 \sin x		& \cos x	& -\sin x \\
 		-\ln|\cos x|	& \tan x	&  \frac{1}{\cos^2 x} \\
 		 \ln|\sin x|	& \cot x	& -\frac{1}{\sin^2 x} \\
 	\hline
-		 -	& \sin^{-1} x	&  \frac{1}{\sqrt{1-x^2}} \\
-		 -	& \cos^{-1} x	& -\frac{1}{\sqrt{1-x^2}} \\
-		 -	& \tan^{-1} x	& \frac{1}{1+x^2} \\
-		 -	& \cot^{-1} x	& -\frac{1}{1+x^2} \\
+		 - & \sin^{-1} x	&  \frac{1}{\sqrt{1-x^2}} \\
+		 - & \cos^{-1} x	& -\frac{1}{\sqrt{1-x^2}} \\
+		 - & \tan^{-1} x	& \frac{1}{1+x^2} \\
+		 - & \cot^{-1} x	& -\frac{1}{1+x^2} \\
 	\hline
 \end{array} \] \end{spacing}
 

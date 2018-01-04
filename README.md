@@ -1,5 +1,6 @@
 # WIWIWI
-Stworzone w ramach zajęć
+
+Stworzone w ramach zajęć.
 
 ## Semestr 1
 - ppp: podstawy programowania python
@@ -9,3 +10,7 @@ Stworzone w ramach zajęć
 - md: matematyka dyskretna
 - al: algebra liniowa
 - lo: logika obliczeniowa
+
+## Uwaga
+
+Wszystkie materiały zamieszczone wyłącznie w celach edukacyjnych.

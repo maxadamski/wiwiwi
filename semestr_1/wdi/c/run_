@@ -1,0 +1,2 @@
+#!/usr/bin/env sh
+gcc -g $1.c -o $1 && ./$1

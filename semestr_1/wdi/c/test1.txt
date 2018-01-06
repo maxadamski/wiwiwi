@@ -1,0 +1,6 @@
+x2 c - co wydrukuje program
+x1 asm - compare i jump
+x1 asm - mnozenie dzielenie
+x1 proste bramki 
+x1 sumator, multiplekser
+x2 c - wskazniki

@@ -1,0 +1,2 @@
+#!/usr/bin/env sh
+fpc $1.pas && ./$1

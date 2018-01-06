@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+if fpc -g $1.pas; then
+	cgdb -x assembly.gdb $1
+fi
+

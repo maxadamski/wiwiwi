@@ -1,0 +1,156 @@
+\documentclass{beamer}
+\usepackage{lmodern,setspace,amsmath,amssymb,amsfonts,amsthm}
+\usepackage[polish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usetheme{Warsaw}
+\title{Tytuł: Matematyka}
+\author{Ktoś}
+\institute{PP II}
+\date{Poznań, \today}
+
+\begin{document}
+
+\maketitle
+
+
+\section{Ściąga}
+
+\subsection{preambuła}
+\begin{frame}
+	\frametitle{preambuła}
+\end{frame}
+
+\subsection{strona tytułowa}
+\begin{frame}
+	\frametitle{strona tytułowa}
+\end{frame}
+
+
+\section{Ściąga jak zrobić slajdy}
+
+\subsection{źródło jednego ze slajdów}
+\begin{frame}
+	\frametitle{praca domowa}
+	\begin{block}{samodzielna}
+		wykonać pozostałe slajdy
+	\end{block}
+	\begin{block}{}
+		jakiś kod
+	\end{block}
+\end{frame}
+
+\subsection{slajd bez tytułu slajdu}
+\begin{frame}
+	int,lim,frac,sum,lnot,land,implies,Rightarrow,infty,iff,nearrow
+\end{frame}
+
+\subsection{slajd z tytułem slajdu}
+\begin{frame}
+	\frametitle{tytuł1}
+	int,lim,frac,sum,lnot,land,implies,Rightarrow,infty,iff,nearrow
+\end{frame}
+
+\subsection{slajd z tytułem, z blokiem bez tytułu}
+\begin{frame}
+	\frametitle{tytuł2}
+	\begin{block}{}
+		int,lim,frac,sum,lnot,land,implies,Rightarrow,infty,iff,nearrow
+	\end{block}
+\end{frame}
+
+\subsection{slajd z tytułem, z blokiem z tytułem}
+\begin{frame}
+	\frametitle{tytuł3}
+	\begin{block}{tytuł bloku}
+		int,lim,frac,sum,lnot,land,implies,Rightarrow,infty,iff,nearrow
+	\end{block}
+\end{frame}
+
+
+\section{Trygonometria (array)}
+
+\begin{frame}
+	\frametitle{tabelka}
+
+	\begin{spacing}{1,5}
+	\[
+		\begin{array}{|c|c|c|c|c|c||c|c|c|c|}
+			\hline
+			x & 0 & \frac{\pi}{6} & \frac{\pi}{4} & \frac{\pi}{3} & \frac{\pi}{2} &
+			(0; \frac{\pi}{2}) & (\frac{\pi}{2};\pi) & (\pi;\frac{3\pi}{2}) & (\frac{3\pi}{2}; 2\pi)\\
+			\hline
+			\sin x & 0 & \frac{1}{2} & \frac{\sqrt{2}}{2} & \frac{\sqrt{3}}{2} & 1 & + & + & - & -\\
+			\hline
+		\end{array}
+	\]
+	\end{spacing}
+\end{frame}
+
+
+\section{Szeregi (description)}
+
+\begin{frame}
+	\frametitle{Szeregi}
+
+	\begin{description}
+		\item[Szereg nineskończony:] $\displaystyle \sum_{n=1}^\infty a_n = (a_n, S_n)$
+		\item[Szereg jest zbieżny:] $\displaystyle \sum_{n=1}^\infty a_n < \infty$
+		\item[Szereg jest rozbieżny:] $\displaystyle \sum_{n=1}^\infty a_n = \infty$
+	\end{description}
+
+	\noindent Warunek konieczny zbieżności: $\displaystyle \sum_{n=1}^\infty a_n < \infty \Rightarrow \lim_{n \to \infty} a_n = 0$ \\
+
+\end{frame}
+
+\subsection{Szeregi o wyrazach dodatnich (equation, tag)}
+
+\begin{frame}
+	\frametitle{Szeregi o wyrazach dodatnich}
+	\begin{block}{Funkcja Riemanna}
+		$$
+			\zeta (s) = \sum_{n=1}^\infty \frac{1}{n^s} = 
+				\begin{cases}
+					\infty & \text{dla } s \leq 1 \\
+					-\infty & \text{dla } s \ge 1
+				\end{cases}
+		$$
+	\end{block}
+
+\end{frame}
+
+\subsection{Szeregi o wyrazach dowolnych (align)}
+
+\begin{frame}
+	\frametitle{Szeregi o wyrazach dowolnych}
+	\begin{block}{Kryterium Abela:}
+		$$
+		\left(\lnot [(a_n) \nearrow] \land \forall{n \in N} : (a_n 0) \land \sum_{n=1}^\infty b_n < \infty \right) \Rightarrow \sum_{n=1}^\infty (a_n b_n) < \infty
+		$$
+	\end{block}
+
+
+	\begin{block}{Kryterium Dirichleta:}
+		$$
+		\left(\lim_{n \to \infty} a_n = 0 \land \lnot [(a_n) \nearrow] \land \exists{\epsilon > 0} : \forall{n \in N} : \epsilon - |S_n| \right) \\
+		\hfill \Rightarrow \displaystyle \sum_{n=1}^\infty (a_n b_n) < \infty
+		$$
+	\end{block}
+\end{frame}
+
+
+\section{Całki (gather,int)}
+
+\begin{frame}
+	\frametitle{Całki}
+	hmmm co to są całki?
+\end{frame}
+
+
+\section{Spis treści}
+
+\begin{frame}
+	\tableofcontents
+\end{frame}
+
+\end{document}

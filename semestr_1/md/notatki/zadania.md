@@ -180,3 +180,204 @@ Todo
 1. War. dst.: \forall r \geq 2 (liczba zwycięztw r zawodników \geq \select r 2
 1. w war. dst. wystarczy sprawdzić podciągi r najmniejszych wyników
 
+### Lekcja 11 - Kwadraty Łacińskie
+
+1. Zapisz kwadrat łaciński w postaci podstawowej
+
+n = 5
+
+L_{nxn} =
+  4 5 1 2 3
+  2 3 4 5 1
+  5 1 2 3 4
+  3 4 5 1 2
+  1 2 3 4 5
+
+ans: |
+
+map L: 
+  4 -> 1
+  5 -> 2
+  1 -> 3
+  2 -> 4
+  3 -> 5
+
+2.  Czy jest możliwe rozszerzenie proostokąta do kwadratu 6x6?
+
+p = 5, q = 3, n = 6
+
+L{pxq} = 
+  6 1 2
+  2 5 4
+  5 6 1
+  1 4 5
+  4 3 6
+
+Warunek rozszerzenia:
+$$\forall_{i = 1..n} L(i) \geq p + q - n$$
+
+ans: nie, L(3) < 2
+
+3. Dla jakiego x prostokąt łaciński ze zbioru {1,..6} możę być rozszerzony do kwadratu?
+
+p = 4, q = 4, n = 6
+
+1 2 3 4
+5 6 1 2
+3 4 5 1
+4 1 2 x
+
+ans: x = 6
+
+---
+
+p = 4, q = 4, n = 6
+
+1 2 3 4 . . .
+5 1 2 6 . . .
+3 4 5 1 . . .
+4 3 1 x . . .
+. . . . . . .
+. . . . . . .
+. . . . . . .
+
+ans: x = 6 ale nie można rozszerzyć bo element w C_4 były by 2 wystąpienia 6 => nie istnieje
+
+4. Rozszerz prostokąt łaciński do kwadratu 7x7
+
+p = 4, q = 3, n = 7
+
+1 2 3 . . . .
+3 4 5 . . . .
+7 1 2 . . . .
+2 3 4 . . . .
+. . . . . . .
+. . . . . . .
+. . . . . . .
+
+ans:
+
+A1 = 4, 5, 6, 7
+A2 = 1, 2, 6, 7
+A3 = 3, 4, 5, 6
+A4 = 1, 5, 6, 7
+
+znajdź transwersalę zawierającą elementy krytyczne
+$$P = {i: 1 \leq i \leq n \land L(i) = p + q - n}$$
+
+P = {6}
+
+|i  | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+|---|---|---|---|---|---|---|---|
+|L_i| 2 | 3 | 3 | 2 | 1 | 0 | 1 |
+
+A1 = 6
+A2 = 1
+A3 = 3
+A4 = 5
+
+1 2 3 6 . . .
+3 4 5 1 . . .
+7 1 2 3 . . .
+2 3 4 5 . . .
+. . . . . . .
+. . . . . . .
+. . . . . . .
+
+dla prostokąta p x q+1 aktualizuj tablicę wystąpień
+nie modyfikujemy transwersali
+ewentualnie koryguj transwersalę
+
+A1 = 4, 5, 7
+A2 = 2, 6, 7
+A3 = 4, 5, 6
+A4 = 1, 6, 7
+
+P = {6 7}
+
+|i  | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+|---|---|---|---|---|---|---|---|
+|L_i| 3 | 3 | 4 | 2 | 2 | 1 | 1 |
+
+A1 = 7
+A2 = 6
+A3 = 4
+A4 = 1
+
+1 2 3 6 7 . .
+3 4 5 1 6 . .
+7 1 2 3 4 . .
+2 3 4 5 1 . .
+. . . . . . .
+. . . . . . .
+. . . . . . .
+
+...
+
+1 2 3 6 7 5 4
+3 4 5 1 6 2 7
+7 1 2 3 4 6 5
+2 3 4 5 1 7 6
+. . . . . . .
+. . . . . . .
+. . . . . . .
+
+dopisz jeden brakujący wymiar używajac zykłej transwersali
+
+A1 = {4, 5, 6} -> 4
+A2 = {5, 6, 7} -> 5
+A3 = {1, 6, 7} -> 1 -> 6
+A4 = {2, 4, 7} -> 2 -> 7
+A5 = {2, 3, 5} -> 3
+A6 = {1, 3, 4} -> 2 -> 1
+A7 = {1, 2, 3} -> ? -> 2
+
+1 2 3 6 7 5 4
+3 4 5 1 6 2 7
+7 1 2 3 4 6 5
+2 3 4 5 1 7 6
+4 5 6 7 3 1 2
+. . . . . . .
+. . . . . . .
+
+...
+
+1 2 3 6 7 5 4
+3 4 5 1 6 2 7
+7 1 2 3 4 6 5
+2 3 4 5 1 7 6
+4 5 6 7 3 1 2
+5 6 7 4 2 3 1
+6 7 1 2 5 4 3
+
+4. Wyznacz wszystkie wzajemnie ortogonalne kwadraty łacińskie 5x5
+
+n = 5 is prime -> istnieją dokładnie n - 1 (= 4) takie kwadraty
+
+(F, +, \*)
+
+F = {f_i = 1 <= i <= n}
+f_i dla 1..n, '+' i '*' jest wykonywane mod n
+f_n pełni funkcję 0
+
+L_k = [a^k_{ij}]_{nxn}
+a^k_{ij} = f_k * f_i + f_j (1 <= k <= 4 and 1 <= i, j <= 5)
+
+L_k = [a^1_{ij}]_{5x5}
+a^1_{ij} = f_1 * f_i + f_j = 1 * i + j
+
+|i\j|1 2 3 4 5|
+|---|---------|
+|1  |2 3 4 5 1|
+|2  |3 4 5 1 2|
+|3  |4 5 1 2 3|
+|4  |5 1 2 3 4|
+|5  |1 2 3 4 5|
+
+L_1 xor L_2
+
+2,3 3,4 4,5 5,1 1,2
+3,5 4,1 5,2 1,3 2,4
+4,2 5,3 1,4 2,5 3,1
+5,4 1,5 2,1 3,2 4,3
+1,1 2,2 3,3 4,4 5,5

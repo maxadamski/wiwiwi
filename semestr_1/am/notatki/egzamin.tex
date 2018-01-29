@@ -1,0 +1,252 @@
+\documentclass[11pt]{article}
+\usepackage{setspace,lmodern,amsmath,amssymb,amsfonts,amsthm}
+\usepackage[top=1in, bottom=1.25in, left=1.25in, right=1.25in]{geometry}
+\usepackage[polish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\title{Analiza matematyczna}
+\author{Max Adamski}
+\date{}
+
+\begin{document}
+
+\begin{center}
+	\LARGE Analiza Matematyczna - Powtórka do egzaminu \\
+\end{center}
+
+\vspace{0.4cm}
+
+\section{Granice}
+
+\subsection{Podstawienia}
+\begin{equation}
+	\lim_{x \to \infty} \left(1 + \frac{a}{x}\right)^x = e^a
+\end{equation}
+
+\begin{equation}
+	\lim_{x \to 0} \frac{\log_a (1 + x)}{x} = \log_a e\ ,\ 
+	\lim_{x \to 0} \frac{a^x - 1}{x} = \ln a
+\end{equation}
+
+\begin{equation}
+	\lim_{x \to 0} \frac{(\sin | \tan | \sinh | \tanh | \sin^{-1} | \tan^{-1}) x}{x} = 1
+\end{equation}
+
+\section{Pochodne}
+
+\subsection{Różniczka funkcji}
+
+\begin{equation}
+	f(x_0 + \Delta x) \approx f(x_0) + f'(x_0) \Delta x
+\end{equation}
+
+\begin{equation}
+	f(x_0 + \Delta x, y_0 + \Delta y) \approx f(x_0, y_0) + 
+	\frac{\partial f}{\partial x} \Delta x + 
+	\frac{\partial f}{\partial y} \Delta y
+\end{equation}
+
+\section{Całki}
+
+\subsection{Metody całkowania}
+
+\subsubsection{Przez części}
+\begin{equation}
+	\smallint u\ dv = uv - \smallint v\ du
+\end{equation}
+
+\subsubsection{Complete the square}
+\begin{equation}
+	ax^2 + bx + c \Rightarrow
+	a\left(\left(x + \frac{b}{2a}\right)^2 - \frac{\Delta}{4a^2}\right)
+\end{equation}
+
+\subsubsection{Metoda nieoznaczonych współczynników}
+
+$W$ i $R$ to funkcje zmiennej $x$. $W$ jest wielomianem stopnia $n > 1$. $R$ jest wielomianem stopnia 2.
+
+\begin{equation}
+	\int \frac{W_n}{\sqrt R} dx = W_{n-1} \sqrt R + \int \frac{A}{\sqrt R} dx \Rightarrow
+\end{equation}
+
+$$
+	\Rightarrow W_n = W_{n-1}' R + W_{n-1} \frac{1}{2} R' + A
+$$
+
+\subsubsection{Podstawienie trygonometryczne}
+
+\begin{spacing}{1,4}
+\[
+\begin{array}{|c|c|c|}
+	\hline
+	t = \tan \frac{x}{2} & t = \tan x \\
+	\hline
+	dx = \frac{2dt}{1 + t^2} & dx = \frac{dt}{1 + t^2} \\
+	\sin x = \frac{2t}{1 + t^2} & \sin^2 x = \frac{t^2}{1 + t^2} \\
+	\cos x = \frac{1 - t^2}{1 + t^2} & \cos^2 x = \frac{1}{1 + t^2} \\
+	- & \sin x \cos x = \frac{t}{1 + t^2} \\
+	\hline
+\end{array}
+\]
+\end{spacing}
+
+
+\section{Szeregi}
+
+\subsubsection{Warunek konieczny zbieżności}
+Dla szeregu $\sum_{n=1}^{\infty} a_n$:
+\begin{equation}
+	\lim_{n \to \infty} a_n = 0
+\end{equation}
+
+\subsection{Szeregi o wyrazach dodatnich}
+Dla szeregu $\sum_{n=1}^{\infty} a_n$, gdzie $a_n > 0$:
+
+
+\subsubsection{Kryterium d'Alemberta}
+\begin{equation}
+	\lim_{n \to \infty} \frac{a_{n+1}}{a_n} = g
+\end{equation}
+
+
+\subsubsection{Kryterium Cauchy'ego}
+\begin{equation}
+	\lim_{n \to \infty} \sqrt[n]{a_n} = g
+\end{equation}
+
+\noindent Szereg zbieżny, gdy $g < 1$\\
+\noindent Szereg rozbieżny, gdy $g > 1$
+
+
+\subsubsection{Kryterium porównawcze}
+Dla szeregów
+$A: \sum_{n=1}^{\infty} a_n$ i
+$B: \sum_{n=1}^{\infty} b_n$
+
+\begin{equation}
+	\exists_{n_0 \in \mathscr{N}}\ \forall_{n > n_0}\ a_n \leq b_n
+\end{equation}
+
+\noindent Szereg $B$ jest zbieżny, gdy szereg $A$ jest zbieżny\\
+\noindent Szereg $A$ jest rozbieżny, gdy szereg $B$ jest rozbieżny
+
+
+\subsubsection{Kryterium całkowe}
+\noindent Dla szeregu $\sum_{n=n_0}^{\infty} f(n)$, gdzie $n_0 \in N$
+
+\begin{equation}
+	\forall_{x \in [n_0, \infty)}\left[f(x) \geq 0 \land f'(x) \leq 0\right]
+\end{equation}
+
+\noindent (jeśli $f$ jest nieujemna i nierosnąca)\\
+\noindent Szereg jest (ro)zbieżny gdy $\int_{n_0}^{\infty} f(x) dx$ jest (ro)zbieżna
+
+
+\subsection{Szeregi potęgowe}
+
+\subsubsection{Promień zbieżności}
+
+Dla szeregu $\sum_{n=0}^{\infty} a_n(x-x_0)^n$, gdzie $x \in R$:
+
+\begin{equation}
+	r = \lim_{n \to \infty} \left|\frac{a_n}{a_{n+1}}\right| \lor r = \lim_{n \to \infty} \frac{1}{\sqrt[n]{|a_n|}}
+\end{equation}
+
+
+\subsubsection{Szereg Taylora}
+\begin{equation}
+	\sum_{n=0}^{\infty} \frac{f^{(n)}(x_0)}{n!} (x - x_0)^n
+\end{equation}
+
+\pagebreak
+
+\section{''''''Praktyczne'''''' wzory}
+
+\subsubsection{Długość łuku krzywej}
+\begin{equation}
+	|L| = \int_a^b \sqrt{1 + f'(x)^2}dx
+\end{equation}
+
+\subsubsection{Długość łuku krzywej parametrycznej}
+\begin{equation}
+|L| = \int_a^b \sqrt{x'(t)^2 + y'(t)^2}dt
+\end{equation}
+
+\subsubsection{Pole obrotu OX}
+\begin{equation}
+|P| = 2\pi \int_a^b f(x) \sqrt{1 + f'(x)^2} dx
+\end{equation}
+
+\subsubsection{Pole obrotu OY}
+\begin{equation}
+|P| = 2\pi \int_a^b x \sqrt{1 + f'(x)^2} dx
+\end{equation}
+
+\subsubsection{Objętość obrotu OX}
+\begin{equation}
+	|V| = \pi \int_a^b \left[g(x)^2 - f(x)^2\right] dx
+\end{equation}
+
+\subsubsection{Objętość obrotu OY}
+\begin{equation}
+	|V| = 2\pi \int_a^b x\left[g(x) - f(x)\right] dx
+\end{equation}
+
+\pagebreak
+
+\section{Trywialne wzory}
+
+\emph{Uwaga:} ''--'' nie oznacza, że pochodna/całka nie istnieje!
+
+\begin{spacing}{1,4} \[ \begin{array}{|c|c|c|}
+	\hline
+		\int f(x) dx\ (+\ C) & f(x) & f'(x) \\
+	\hline
+		\frac{a^x}{\ln a} & a^x & a^x \ln a \\
+		\frac{1}{a} e^{ax} & e^{ax} & ae^{ax} \\
+		x \ln x - x & \ln x & \frac{1}{x} \\
+		-    & \log_a x & \frac{1}{x \ln a} \\
+	\hline
+		\ln|f(x)| & \frac{f'(x)}{f(x)} & - \\
+		\frac{c}{a} \ln|ax + b| & \frac{c}{ax +b} & - \\
+	\hline
+		\frac{1}{a} \tan^{-1} \frac{x}{a} & \frac{1}{x^2 + a^2} & - \\
+		\frac{1}{2a} \ln|\frac{x - a}{x + a}| & \frac{1}{x^2 - a^2} & - \\
+	\hline
+		\ln|x + \sqrt{a^2 + x^2}| & \frac{1}{\sqrt{a^2 + x^2}} & - \\
+		\sin^{-1} \frac{x}{a} & \frac{1}{\sqrt{a^2 - x^2}} & - \\
+	\hline
+		-\cos x		& \sin x	&  \cos x \\
+		 \sin x		& \cos x	& -\sin x \\
+		-\ln|\cos x|	& \tan x	&  \frac{1}{\cos^2 x} \\
+		 \ln|\sin x|	& \cot x	& -\frac{1}{\sin^2 x} \\
+	\hline
+		 - & \sin^{-1} x	&  \frac{1}{\sqrt{1-x^2}} \\
+		 - & \cos^{-1} x	& -\frac{1}{\sqrt{1-x^2}} \\
+		 - & \tan^{-1} x	& \frac{1}{1+x^2} \\
+		 - & \cot^{-1} x	& -\frac{1}{1+x^2} \\
+	\hline
+\end{array} \] \end{spacing}
+
+\pagebreak
+
+\section{Appendix: Szkoła podstawowa}
+
+\subsection{Suma ciągu arytmetycznego}
+$$
+	S_n = n \frac{a_1 + a_n}{2}
+$$
+
+\subsection{Suma ciągu geometrycznego}
+$$
+	S_n = a_1 \frac{1 - q^n}{1 - q}
+$$
+
+\subsection{Trig}
+$$1 = \sin^2 x + \cos^2 x$$
+$$\cos 2x = \cos^2 x - \sin^2 x$$
+$$\sin a \sin b = \frac{1}{2}(\cos(a - b) - \cos(a + b))$$
+$$\cos a \cos b = \frac{1}{2}(\cos(a - b) + \cos(a + b))$$
+$$\sin a \cos b = \frac{1}{2}(\sin(a - b) + \sin(a + b))$$
+
+\end{document}

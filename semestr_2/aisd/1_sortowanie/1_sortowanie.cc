@@ -124,10 +124,54 @@ void quick_sort(int *a, int len) {
 	quick_sort(a + i, len - i);
 }
 
+void heapify(int *a, int len, int i) {
+   // Find largest among root, left child and right child
+   int max = i;
+   int l = 2*i + 1;
+   int r = 2*i + 2;
+
+   if (l < len && a[l] > a[max])
+     max = l;
+
+   if (r < len && a[r] > a[max])
+     max = r;
+
+   // Swap and continue heapifying if root is not largest
+   if (max != i) {
+     swap(&a[i], &a[max]);
+     heapify(a, len, max);
+   }
+}
+
 void heap_sort(int *a, int len) {
+   // Build max heap
+   for (int i = len / 2 - 1; i >= 0; i -= 1) {
+     heapify(a, len, i);
+   }
+
+   // Heap sort
+   for (int i = len - 1; i >= 0; i -= 1) {
+     swap(&a[0], &a[i]);
+     
+     // Heapify root element to get highest element at root again
+     heapify(a, i, 0);
+   }
+}
+
+void insertion_sort_gap(int *a, int len, int gap) {
+	for (int i = gap; i < len; i += gap) {
+		for (int j = i; j >= gap && a[j - gap] > a[j]; j -= gap) {
+			swap(&a[j - gap], &a[j]);
+		}
+	}
 }
 
 void shell_sort(int *a, int len) {
+	for (int k = len / 2; k > 0; k /= 2) {
+		for (int i = 0; i < k; i += 1) {
+			insertion_sort_gap(a + i, len - i, k);
+		}
+	}
 }
 
 void merge_sort(int *a, int len) {
@@ -165,7 +209,7 @@ int main() {
 	typedef function<void(int*, int)> algorithm;
 	typedef function<int*(int)> generator;
 
-	int len_min = 1000, len_max = 10000, len_step = 500;
+	int len_min = 1000, len_max = 15000, len_step = 1000;
 
 	vector<pair<string, generator>> generators;
 	generators.push_back(make_pair("losowe",
@@ -177,14 +221,16 @@ int main() {
 	generators.push_back(make_pair("v-kształtne", &generate_v_shape_array));
 
 	vector<pair<string, algorithm>> algorithms;
-//	algorithms.push_back(make_pair("bubble sort",    &bubble_sort));
-//	algorithms.push_back(make_pair("selection sort", &selection_sort));
-	algorithms.push_back(make_pair("insertion sort", &insertion_sort));
+	//algorithms.push_back(make_pair("selection sort", &selection_sort));
+	//algorithms.push_back(make_pair("insertion sort", &insertion_sort));
+	algorithms.push_back(make_pair("bubble sort",    &bubble_sort));
 	algorithms.push_back(make_pair("quick sort",     &quick_sort));
 	algorithms.push_back(make_pair("c++ sort",       &cpp_sort));
+	algorithms.push_back(make_pair("heap sort",      &heap_sort));
+	algorithms.push_back(make_pair("shell sort",     &shell_sort));
 	algorithms.push_back(make_pair("counting sort",  &counting_sort));
 
-	// wydrukuj naglowek csv
+	// wydrukuj naglowek
 	cout << "length";
 	for (auto generator : generators) {
 		for (auto algorithm : algorithms) {
@@ -217,7 +263,7 @@ int main() {
 					free(copy);
 				};
 
-				auto nanoseconds = benchmark(5, false, before, measure, after);
+				auto nanoseconds = benchmark(10, false, before, measure, after);
 				// dostajemy sekundy
 				cout << "," << fixed << nanoseconds * 10e-9 << flush;
 			}

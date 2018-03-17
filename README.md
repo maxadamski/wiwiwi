@@ -20,9 +20,13 @@ Stworzone w ramach zajęć.
   - al: algebra liniowa
   - lo: logika obliczeniowa
 - semestr 2
-  - algorytmy i struktury danych
-  - programowanie deklaratywne
-  - programowanie niskopoziomowe
-  - systemy operacyjne
-  - podstawy elektroniki
-  - fizyka dla informatyków
+  - aisd: algorytmy i struktury danych
+    - sprawozdania
+  - pd: programowanie deklaratywne
+    - rozwiązane zadania
+  - pn: programowanie niskopoziomowe
+    - projekt gra wideo
+  - so: systemy operacyjne
+  - pe: podstawy elektroniki
+  - fdi: fizyka dla informatyków
+    - rozwiązane zadania

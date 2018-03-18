@@ -174,7 +174,44 @@ void shell_sort(int *a, int len) {
 	}
 }
 
-void merge_sort(int *a, int len) {
+int max(int a, int b) {
+	return a > b ? a : b;
+}
+
+// n = lenth of a, p = first index of the second sublist
+void merge(int *a, int n, int p) {
+	int *A = copy_array(a, n);
+
+	for (int i = 0, l = 0, r = p; i < n;) {
+		if ((A[l] <= A[r] || r >= n) && l < p) {
+			//std::cout << "i="<<i<<" l="<<l<<" r="<<r << "; "; 
+			a[i++] = A[l++];
+			//print_array(a, n);
+		}
+		if ((A[r] <= A[l] || l >= p) && r < n) {
+			//std::cout << "i="<<i<<" l="<<l<<" r="<<r << "; "; 
+			a[i++] = A[r++];
+			//print_array(a, n);
+		}
+	}
+
+	free(A);
+}
+
+void merge_sort(int *a, int n) {
+	if (n <= 1) { 
+		return;
+	} else if (n == 2) {
+		merge(a, n, 1);
+	} else {
+		int q = n % 2 == 0 ? 0 : 1;
+		int p = n / 2;
+		//std::cout << "merge l\n";
+		merge_sort(a, p);
+		//std::cout << "merge r\n";
+		merge_sort(a + p, p + q);
+		merge(a, n, p);
+	}
 }
 
 void counting_sort(int *a, int len) {
@@ -206,6 +243,7 @@ int main() {
 	random_seed();
 
 	using namespace std;
+
 	typedef function<void(int*, int)> algorithm;
 	typedef function<int*(int)> generator;
 
@@ -221,11 +259,12 @@ int main() {
 	generators.push_back(make_pair("v-kształtne", &generate_v_shape_array));
 
 	vector<pair<string, algorithm>> algorithms;
+	algorithms.push_back(make_pair("c++ sort",       &cpp_sort));
 	//algorithms.push_back(make_pair("selection sort", &selection_sort));
 	//algorithms.push_back(make_pair("insertion sort", &insertion_sort));
-	algorithms.push_back(make_pair("bubble sort",    &bubble_sort));
+	//algorithms.push_back(make_pair("bubble sort",    &bubble_sort));
 	algorithms.push_back(make_pair("quick sort",     &quick_sort));
-	algorithms.push_back(make_pair("c++ sort",       &cpp_sort));
+	algorithms.push_back(make_pair("merge sort",     &merge_sort));
 	algorithms.push_back(make_pair("heap sort",      &heap_sort));
 	algorithms.push_back(make_pair("shell sort",     &shell_sort));
 	algorithms.push_back(make_pair("counting sort",  &counting_sort));
@@ -247,20 +286,16 @@ int main() {
 			int *array_orig = generator.second(len);
 			int *array_copy;
 			auto before = [&array_orig, &array_copy, len]() {
-				//array_copy = copy_array(array_orig, len);
-				return;
+				array_copy = copy_array(array_orig, len);
 			};
 			auto after = [&array_copy]() {
-				//free(array_copy);
-				return;
+				free(array_copy);
 			};
 			
 
 			for (auto algorithm : algorithms) {
-				auto measure = [algorithm, &array_orig, len]() {
-					int *copy = copy_array(array_orig, len);
-					algorithm.second(copy, len);
-					free(copy);
+				auto measure = [algorithm, &array_copy, len]() {
+					algorithm.second(array_copy, len);
 				};
 
 				auto nanoseconds = benchmark(10, false, before, measure, after);

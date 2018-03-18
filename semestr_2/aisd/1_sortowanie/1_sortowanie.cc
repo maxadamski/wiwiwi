@@ -81,6 +81,24 @@ void swap(int *a, int *b) {
 	*b = temp;
 }
 
+int max(int a, int b) {
+	return a > b ? a : b;
+}
+
+//
+// shit sort
+//
+
+void bubble_sort(int *a, int len) {
+	for (int i = 0; i < len; i += 1) {
+		for (int j = i + 1; j < len; j += 1) {
+			if(a[j] > a[j+1]) {
+				swap(&a[j], &a[j+1]);
+			}
+		}
+	}
+}
+
 void selection_sort(int *a, int len) {
 	for (int i = 0; i < len - 1; i += 1) {
 		int min = i;
@@ -101,64 +119,59 @@ void insertion_sort(int *a, int len) {
 	}
 }
 
-void bubble_sort(int *a, int len) {
-	for (int i = 0; i < len; i += 1) {
-		for (int j = i + 1; j < len; j += 1) {
-			if(a[j] > a[j+1]) {
-				swap(&a[j], &a[j+1]);
-			}
-		}
+//
+// quick sort
+//
+
+// algorytm z ksiazki algorytmy + struktury danych = programy
+void quick_sort_asp(int *a, int l, int p) {
+	int x = a[(l+p)/2];
+	int i = l, j = p;
+	while (true) {
+		while (a[i] < x) i++;
+		while (a[j] > x) j--;
+		if (i > j) break;
+		swap(&a[i], &a[j]);
+		i++; j--;
 	}
+	if (l < j) quick_sort_asp(a, l, j);
+	if (i < p) quick_sort_asp(a, i, p);
 }
 
 void quick_sort(int *a, int len) {
-	if (len < 2) return;
-//	int pivot = a[random(0, len - 1)];
-	int pivot = a[len / 2];
-	int i, j;
-	for (i = 0, j = len - 1; ; i++, j--) {
-		while (a[i] < pivot) i++;
-		while (a[j] > pivot) j--;
-		if (i >= j) break;
-		swap(&a[i], &a[j]);
-	}
-	quick_sort(a, i);
-	quick_sort(a + i, len - i);
+	quick_sort_asp(a, 0, len);
 }
 
+
+//
+// heap sort
+//
+
 void heapify(int *a, int len, int i) {
-   // Find largest among root, left child and right child
-   int max = i;
-   int l = 2*i + 1;
-   int r = 2*i + 2;
-
-   if (l < len && a[l] > a[max])
-     max = l;
-
-   if (r < len && a[r] > a[max])
-     max = r;
-
-   // Swap and continue heapifying if root is not largest
-   if (max != i) {
-     swap(&a[i], &a[max]);
-     heapify(a, len, max);
-   }
+	int max = i;
+	int l = 2*i + 1;
+	int r = 2*i + 2;
+	if (l < len && a[l] > a[max]) max = l;
+	if (r < len && a[r] > a[max]) max = r;
+	if (max != i) {
+		swap(&a[i], &a[max]);
+		heapify(a, len, max);
+	}
 }
 
 void heap_sort(int *a, int len) {
-   // Build max heap
-   for (int i = len / 2 - 1; i >= 0; i -= 1) {
-     heapify(a, len, i);
-   }
-
-   // Heap sort
-   for (int i = len - 1; i >= 0; i -= 1) {
-     swap(&a[0], &a[i]);
-     
-     // Heapify root element to get highest element at root again
-     heapify(a, i, 0);
-   }
+	for (int i = len / 2 - 1; i >= 0; i -= 1) {
+		heapify(a, len, i);
+	}
+	for (int i = len - 1; i >= 0; i -= 1) {
+		swap(&a[0], &a[i]);
+		heapify(a, i, 0);
+	}
 }
+
+//
+// shell sort
+//
 
 void insertion_sort_gap(int *a, int len, int gap) {
 	for (int i = gap; i < len; i += gap) {
@@ -176,9 +189,9 @@ void shell_sort(int *a, int len) {
 	}
 }
 
-int max(int a, int b) {
-	return a > b ? a : b;
-}
+//
+// merge sort
+//
 
 // n = lenth of a, p = first index of the second sublist
 void merge(int *a, int n, int p) {
@@ -207,6 +220,10 @@ void merge_sort(int *a, int n) {
 	}
 }
 
+//
+// counting sort
+//
+
 void counting_sort(int *a, int len) {
 	int *b = (int*) calloc(len, sizeof(int));
 	for (int i = 0; i < len; i += 1) {
@@ -220,6 +237,10 @@ void counting_sort(int *a, int len) {
 	}
 	free(b);
 }
+
+//
+// c++ sort
+//
 
 void cpp_sort(int *a, int len) {
 	std::sort(a, a + len);
@@ -248,7 +269,7 @@ auto get_generators() {
 	using namespace std;
 	vector<pair<string, generator>> generators;
 	generators.push_back(make_pair("losowe",
-		[](int len) { return generate_random_array(1, 1000, len); }));
+				[](int len) { return generate_random_array(1, 1000, len); }));
 	generators.push_back(make_pair("stałe", &generate_constant_array));
 	generators.push_back(make_pair("rosnące", &generate_increasing_array));
 	generators.push_back(make_pair("malejące", &generate_decreasing_array));
@@ -272,7 +293,6 @@ int main() {
 			cout << "," << algorithm.first << " - " << generator.first;
 	cout << "\n";
 
-
 	for (int len = len_min; len <= len_max; len += len_step) {
 		cerr << 100 * len / len_max << "% ";
 		cout << len;
@@ -285,17 +305,13 @@ int main() {
 			auto after = [&array_copy]() {
 				free(array_copy);
 			};
-			
-
 			for (auto algorithm : algorithms) {
 				auto measure = [algorithm, &array_copy, len]() {
 					algorithm.second(array_copy, len);
 				};
-
 				auto nanoseconds = benchmark(10, false, before, measure, after);
 				cout << "," << fixed << nanoseconds*10e-9 << flush; // dostajemy sekundy
 			}
-
 			free(array_orig);
 		}
 		cout << "\n";

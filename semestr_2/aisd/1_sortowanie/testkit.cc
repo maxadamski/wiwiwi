@@ -16,12 +16,12 @@ void random_seed() {
 	generator.seed(std::random_device()());
 }
 
-double benchmark(int passes, bool print_passes,
+long int benchmark(int passes, bool print_passes,
 	std::function<void()> before,
 	std::function<void()> measure,
 	std::function<void()> after) {
 
-	double average = 0;
+	long int average = 0;
 	for (int i = 0; i < passes; i += 1) {
 		before();
 		auto t0 = std::chrono::high_resolution_clock::now();
@@ -29,9 +29,10 @@ double benchmark(int passes, bool print_passes,
 		auto t1 = std::chrono::high_resolution_clock::now();
 		auto dt = std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
 		after();
-		average += (double) dt / passes;
-		if (print_passes) 
+		average += dt / passes;
+		if (print_passes) {
 			std::cerr << "[info] pass " << i+1 << " = " << dt << " ns\n";
+		}
 	}
 	return average;
 }

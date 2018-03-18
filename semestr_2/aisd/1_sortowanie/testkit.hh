@@ -11,7 +11,7 @@ void random_seed();
 // Zwraca uśredniony czas wykonywania f-i 'lambda' w nanosekundach
 // 'passes': ilosc powtorzen
 // 'print_passes': dla kazdego powtorzenia wypisz czas ktory uplynal
-double benchmark(int passes, bool print_passes,
+long int benchmark(int passes, bool print_passes,
 	std::function<void()> before,
 	std::function<void()> measure,
 	std::function<void()> after);

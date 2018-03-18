@@ -9,6 +9,8 @@
 #include <cstring>
 #include <algorithm>
 
+typedef std::function<void(int*, int)> algorithm;
+typedef std::function<int*(int)> generator;
 
 //
 // generowanie danych
@@ -17,7 +19,7 @@
 int *new_array(int length) {
 	int *array = (int*) malloc(sizeof(int) * length);
 	if (!array) {
-		std::cerr << "[error] make_random: could allocate memory!\n";
+		std::cerr << "[error] new_array: could allocate memory!\n";
 		exit(1);
 	}
 	return array;
@@ -181,20 +183,13 @@ int max(int a, int b) {
 // n = lenth of a, p = first index of the second sublist
 void merge(int *a, int n, int p) {
 	int *A = copy_array(a, n);
-
 	for (int i = 0, l = 0, r = p; i < n;) {
-		if ((A[l] <= A[r] || r >= n) && l < p) {
-			//std::cout << "i="<<i<<" l="<<l<<" r="<<r << "; "; 
+		if ((A[l] <= A[r] || r >= n) && l < p)
 			a[i++] = A[l++];
-			//print_array(a, n);
-		}
-		if ((A[r] <= A[l] || l >= p) && r < n) {
-			//std::cout << "i="<<i<<" l="<<l<<" r="<<r << "; "; 
-			a[i++] = A[r++];
-			//print_array(a, n);
-		}
-	}
 
+		if ((A[r] <= A[l] || l >= p) && r < n)
+			a[i++] = A[r++];
+	}
 	free(A);
 }
 
@@ -206,26 +201,21 @@ void merge_sort(int *a, int n) {
 	} else {
 		int q = n % 2 == 0 ? 0 : 1;
 		int p = n / 2;
-		//std::cout << "merge l\n";
 		merge_sort(a, p);
-		//std::cout << "merge r\n";
 		merge_sort(a + p, p + q);
 		merge(a, n, p);
 	}
 }
 
 void counting_sort(int *a, int len) {
-	int b_len = len + 1;
-	int *b = (int*) calloc(b_len, sizeof(int));
+	int *b = (int*) calloc(len, sizeof(int));
 	for (int i = 0; i < len; i += 1) {
 		b[i] += 1;
 	}
 
-	int p = 0;
-	for (int i = 0; i < b_len; i += 1) {
+	for (int i = 0, p = 0; i < len; i += 1) {
 		for (int j = b[i]; j > 0; j -= 1) {
-			a[p] = i;
-			p += 1;
+			a[p++] = i;
 		}
 	}
 	free(b);
@@ -239,16 +229,23 @@ void cpp_sort(int *a, int len) {
 // pomiary
 //
 
-int main() {
-	random_seed();
-
+auto get_algorithms() {
 	using namespace std;
+	vector<pair<string, algorithm>> algorithms;
+	//algorithms.push_back(make_pair("selection sort", &selection_sort));
+	//algorithms.push_back(make_pair("insertion sort", &insertion_sort));
+	algorithms.push_back(make_pair("bubble sort",    &bubble_sort));
+	algorithms.push_back(make_pair("quick sort",     &quick_sort));
+	algorithms.push_back(make_pair("merge sort",     &merge_sort));
+	algorithms.push_back(make_pair("heap sort",      &heap_sort));
+	algorithms.push_back(make_pair("shell sort",     &shell_sort));
+	algorithms.push_back(make_pair("counting sort",  &counting_sort));
+	algorithms.push_back(make_pair("c++ sort",       &cpp_sort));
+	return algorithms;
+}
 
-	typedef function<void(int*, int)> algorithm;
-	typedef function<int*(int)> generator;
-
-	int len_min = 1000, len_max = 15000, len_step = 1000;
-
+auto get_generators() {
+	using namespace std;
 	vector<pair<string, generator>> generators;
 	generators.push_back(make_pair("losowe",
 		[](int len) { return generate_random_array(1, 1000, len); }));
@@ -257,25 +254,22 @@ int main() {
 	generators.push_back(make_pair("malejące", &generate_decreasing_array));
 	generators.push_back(make_pair("a-kształtne", &generate_a_shape_array));
 	generators.push_back(make_pair("v-kształtne", &generate_v_shape_array));
+	return generators;
+}
 
-	vector<pair<string, algorithm>> algorithms;
-	algorithms.push_back(make_pair("c++ sort",       &cpp_sort));
-	//algorithms.push_back(make_pair("selection sort", &selection_sort));
-	//algorithms.push_back(make_pair("insertion sort", &insertion_sort));
-	//algorithms.push_back(make_pair("bubble sort",    &bubble_sort));
-	algorithms.push_back(make_pair("quick sort",     &quick_sort));
-	algorithms.push_back(make_pair("merge sort",     &merge_sort));
-	algorithms.push_back(make_pair("heap sort",      &heap_sort));
-	algorithms.push_back(make_pair("shell sort",     &shell_sort));
-	algorithms.push_back(make_pair("counting sort",  &counting_sort));
+int main() {
+	using namespace std;
+	random_seed();
+
+	int len_min = 1000, len_max = 15000, len_step = 1000;
+	auto algorithms = get_algorithms();
+	auto generators = get_generators();
 
 	// wydrukuj naglowek
 	cout << "length";
-	for (auto generator : generators) {
-		for (auto algorithm : algorithms) {
+	for (auto generator : generators)
+		for (auto algorithm : algorithms)
 			cout << "," << algorithm.first << " - " << generator.first;
-		}
-	}
 	cout << "\n";
 
 
@@ -299,8 +293,7 @@ int main() {
 				};
 
 				auto nanoseconds = benchmark(10, false, before, measure, after);
-				// dostajemy sekundy
-				cout << "," << fixed << nanoseconds * 10e-9 << flush;
+				cout << "," << fixed << nanoseconds*10e-9 << flush; // dostajemy sekundy
 			}
 
 			free(array_orig);

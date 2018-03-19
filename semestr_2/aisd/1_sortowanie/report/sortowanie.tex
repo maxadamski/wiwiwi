@@ -12,11 +12,29 @@
 
 \maketitle
 
-Corporis fugiat sapiente dolorem consequatur. Aut nostrum nihil sint sed quasi assumenda quia praesentium. Libero id eligendi sed. Aut qui maxime officiis sit est molestiae ea.
+W tym sprawozdaniu porównywana będzie efektywność różnych algorytmów sortujących, w odniesieniu do ich złożoności obliczeniowej, zużycia pamięci i czasu wykonywania. Brane pod uwagę będą także przypadki krańcowe, czyli dane wejściowe, dla których algorytm może mieć zdecydowanie dłuższy czas wykonywania, niż dla ciągu złożonego z liczb losowych, generowanych zgodnie z równomiernym rozkładem prawdopodobieństwa.
+
+Dla odniesienia, na wykresach zostały także umieszczone czasy dla algorytmu sortowania z biblioteki standardowej języka C++.
+
+Pierwszymi porównywanymi algorytmami będą sortowanie bąbelkowe (BS), sortowanie stogowe (HS), sortowanie przez zliczanie (CS) oraz sortowanie Shella (ShS). Czasy wykonywania są przedstawione na wykresach \ref{los_bub}, \ref{los} i \ref{los_bub_log}.
 
 \begin{figure}[h!]
-	\includegraphics[width=\linewidth]{plots/los_log.png}
+	\includegraphics[width=\linewidth]{plots/los_bub.png}
+	\caption{Czas sortowania losowych danych \label{los_bub}}
+\end{figure}
+
+Sortowanie bąbelkowe to algorytm o złożoności obliczeniowej $O(n^2)$ [\ref{los_bub}]. Dla danych losowych, w porównaniu z algorytmami HS, CS i ShS, sortowanie bąbelkowe zajmuje najwięcej czasu. Ponieważ, przy tablich o liczbie elementów większej niż 1000, skala czasu bardzo się wydłuża, algorytmy o złożoności $O(n \log n)$ zostały porównane na wykresie \ref{los}.
+
+Algorytmy sortowania stogowego, przez zliczanie i Shella to algorytmy o złożoności obliczeniowej $O(n \log n)$
+
+\begin{figure}[h!]
+	\includegraphics[width=\linewidth]{plots/los.png}
 	\caption{Czas sortowania losowych danych \label{los}}
+\end{figure}
+
+\begin{figure}[h!]
+	\includegraphics[width=\linewidth]{plots/los_bub_log.png}
+	\caption{Czas sortowania losowych danych ()\label{los_bub_log}}
 \end{figure}
 
 Officiis ducimus ipsum quidem perferendis labore qui. Reprehenderit assumenda hic ea ullam dolor tempore et ut. Saepe dolore cumque id est alias rerum consequatur animi. Quam nulla illum amet fugit non natus vel sint [\ref{los}].

@@ -282,7 +282,7 @@ int main() {
 	using namespace std;
 	random_seed();
 
-	int len_min = 1000, len_max = 15000, len_step = 1000;
+	int len_min = 1000, len_max = 2000000, len_step = 1000;
 	auto algorithms = get_algorithms();
 	auto generators = get_generators();
 
@@ -306,15 +306,28 @@ int main() {
 				free(array_copy);
 			};
 			for (auto algorithm : algorithms) {
+				bool a = generator.first == "a-kształtne";
+				bool v = generator.first == "v-kształtne";
+				bool q = algorithm.first == "quick sort";
+				bool b = algorithm.first == "bubble sort";
+				if ((q && (a || v) && len > 15000) || (b && len > 15000))  {
+					cout << "," << "NaN" << flush;
+					continue;
+				}
 				auto measure = [algorithm, &array_copy, len]() {
 					algorithm.second(array_copy, len);
 				};
-				auto nanoseconds = benchmark(10, false, before, measure, after);
+				auto nanoseconds = benchmark(1, false, before, measure, after);
 				cout << "," << fixed << nanoseconds*10e-9 << flush; // dostajemy sekundy
 			}
 			free(array_orig);
 		}
 		cout << "\n";
+
+		if (len == 15000) {
+			len_step = 50000;
+			len = 50000;
+		}
 	}
 	cerr << "\n";
 

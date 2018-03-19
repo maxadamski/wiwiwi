@@ -1,19 +1,22 @@
-import pandas as pd
 import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
 
-def plot(df, title, log=False, style=None):
-    df.plot(figsize=(6, 5), style=style)
+def plot(df, title, log=False, style=None, min=50000, max=1000000):
+    df[df.index <= max].plot(figsize=(6, 5), style=style)
     plt.style.use('seaborn-whitegrid')
     plt.xlabel('ilość elementów')
     plt.ylabel('czas (sekundy)')
-    plt.xlim(1000, 15000)
+    plt.xlim(min, max)
     if log: plt.yscale('log')
     filename = 'plots/' + title + '.png'
     plt.savefig(filename.replace(' ', '_'))
 
 def plot_with_log(df, title, style=None):
-    plot(df, title + '_log', log=True, style=style)
-    plot(df, title, log=False, style=style)
+    plot(df, title,                log=False, style=style, min=50000, max=1000000)
+    plot(df, title + '_small',     log=False, style=style, min=1000, max=15000)
+    plot(df, title + '_log',       log=True,  style=style, min=50000, max=1000000)
+    plot(df, title + '_small_log', log=True,  style=style, min=1000, max=15000)
 
 def column(algorithm, generator):
     return algorithm + ' - ' + generator
@@ -32,6 +35,12 @@ def plot_zad2():
         cols += [column(algorithm, gen2) for algorithm in algorithms]
         plot_with_log(df[cols], title, style=['+-']*4 + ['.:']*4)
 
+generators = ['losowe', 'stałe', 'rosnące', 'malejące', 'a-kształtne', 'v-kształtne' ]
+disabled =  ['quick sort - a-kształtne', 'quick sort - v-kształtne']
+disabled += [column('bubble sort', it) for it in generators]
 df = pd.read_csv('1_sortowanie.csv', index_col='length')
+df = df.replace(0, np.nan)
+#df[df.index > 15000][disabled] = np.nan
+
 plot_zad2()
 plot_zad1()

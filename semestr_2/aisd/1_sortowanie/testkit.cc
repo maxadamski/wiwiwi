@@ -24,9 +24,9 @@ long int benchmark(int passes, bool print_passes,
 	long int average = 0;
 	for (int i = 0; i < passes; i += 1) {
 		before();
-		auto t0 = std::chrono::high_resolution_clock::now();
+		auto t0 = std::chrono::steady_clock::now();
 		measure();
-		auto t1 = std::chrono::high_resolution_clock::now();
+		auto t1 = std::chrono::steady_clock::now();
 		auto dt = std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
 		after();
 		average += dt / passes;

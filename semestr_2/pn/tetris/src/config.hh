@@ -2,12 +2,10 @@
 #define CONFIG_H_INCLUDED
 
 #include "utils.hh"
-#include <SFML/Graphics.hpp>
-#include <array>
-#include <vector>
-#include <map>
 #include <string>
-
+#include <vector>
+#include <array>
+#include <map>
 
 // The Tetris matrix is 10 blocks wide,
 // and at least 22 blocks high.
@@ -15,18 +13,34 @@
 #define BOARD_W 10
 #define BOARD_H 22
 
-typedef char TetrominoType;
-typedef std::array<std::array<bool, 4>, 4> TetrominoShape;
+typedef std::vector<std::vector<bool>> TetrominoShape;
 typedef std::array<TetrominoShape, 4> TetrominoRotation;
-typedef std::map<TetrominoType, TetrominoRotation> RotationSystem;
-typedef std::map<TetrominoType, sf::Color> ColorTheme;
+typedef std::array<int, 3> RGBColor;
 
-const TetrominoType tetromino_names[] = {
-	'I', 'O', 'J', 'L', 'S', 'T', 'Z'
+enum TetrominoType {
+	I = 'I', O = 'O', J = 'J', L = 'L', S = 'S', T = 'T', Z = 'Z'
 };
 
-TetrominoShape tetromino_shape(FILE *file, int size);
-RotationSystem rotation_system(std::string path);
-ColorTheme color_theme(std::string path);
+class RotationSystem {
+	std::map<TetrominoType, TetrominoRotation> data;
+
+	public:
+		RotationSystem(std::string file_path);
+
+		TetrominoShape get_shape(TetrominoType type, int rotation);
+};
+
+class ColorScheme {
+	std::map<TetrominoType, RGBColor> data;
+
+	public:
+		ColorScheme(std::string file_path);
+
+		RGBColor get_color(TetrominoType type);
+};
+
+std::vector<char> tetromino_types() {
+	return {I, O, J, L, S, T, Z};
+}
 
 #endif

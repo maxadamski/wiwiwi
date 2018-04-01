@@ -1,76 +1,70 @@
 #include "config.hh"
-#include <cstdlib>
-#include <cassert>
 #include <cstdio>
-#include <cmath>
+#include <iostream>
+#include <fstream>
+#include <sstream>
 
-TetrominoShape tetromino_shape(FILE *file, int size) {
-	assert(size == 3 || size == 4);
-	TetrominoShape shape;
+// TODO: handle errors in user input
 
-	// each rotation is a 4x4 binary matrix
-	for (int y = 0; y < 4; y += 1) {
-		for (int x = 0; x < 4; x += 1) {
-			// if rotation is 3x3 fill right corner with zeros
-			// but not if reading the I and O tetrominos
-			if (size == 3 && (x == 3 || y == 0)) {
-				shape[y][x] = 0;
-			} else {
-				int value;
-				fscanf(file, "%d", &value);
-				shape[y][x] = value;
-			}
-		}
-	}
-
-	for (auto row : shape) {
-		for (auto col : row) {
-			fprintf(stderr, "%d ", col);
-		}
-		fprintf(stderr, "\n");
-	}
-	fprintf(stderr, "\n");
-
-	return shape;
+RGBColor color_from_hex(std::string s) {
+	if (s[0] == '0' && s[1] == 'x')
+		s.erase(0, 2);
+	if (s[0] == '#')
+		s.erase(0, 1);
+	int hex;
+	sscanf(s.c_str(), "%x", &hex);
+	return {hex & 0xFF0000, hex & 0x00FF00, hex & 0x0000FF};
 }
 
-RotationSystem rotation_system(std::string path) {
-	RotationSystem rotation_system;
-	FILE *file = fopen(path.c_str(), "r");
-	TetrominoType keys[] = {
-		'I', 'O', 'J', 'L', 'S', 'T', 'Z'
-	};
+RotationSystem::RotationSystem(std::string file_path) {
+	using namespace std;
+	ifstream data(file_path);
 
-	// read rotations for 7 tetrominos
-	for (int i = 0; i < 7; i += 1) {
+	for (auto type : tetromino_types()) {
+		int size = (type == I || type == O) ? 4 : 3;
 		TetrominoRotation rotation;
-		// each tetromino has 4 rotations
-		for (int j = 0; j < 4; j += 1) {
-			int shape_size = i >= 2 ? 3 : 4;
-			auto shape = tetromino_shape(file, shape_size);
-			rotation[j] = shape;
-		}
-		rotation_system[keys[i]] = rotation;
-	}
 
-	fclose(file);
-	return rotation_system;
+		for (int n = 0; n < 4; n++) {
+			TetrominoShape shape;
+			shape.resize(size);
+
+			for (int y = 0; y < size; y++) {
+				shape[y].resize(size);
+				string line; getline(data, line);
+				stringstream stream(line);
+
+				for (int x = 0; x < size; x++) {
+					string byte; getline(stream, byte, ' ');
+					shape[y][x] = stoi(byte);
+				}
+			}
+
+			rotation[n] = shape;
+		}
+
+		auto ttype = static_cast<TetrominoType>(type);
+		this->data[ttype] = rotation;
+	}
 }
 
-ColorTheme color_theme(std::string path) {
-	ColorTheme color_theme;
-	FILE *file = fopen(path.c_str(), "r");
+TetrominoShape RotationSystem::get_shape(TetrominoType type, int rotation) {
+	return this->data[type][rotation % 4];
+}
 
-	// read colors for 7 tetrominoes
-	for (int i = 0; i < 7; i += 1) {
-		char line[64];
-		fgets(line, 64, file);
-		char key, color[8];
-		sscanf(line, "%c %s", &key, color);
-		// TODO: read the color
-		color_theme[key] = sf::Color(0);
+ColorScheme::ColorScheme(std::string file_path) {
+	using namespace std;
+	ifstream data(file_path);
+	for (size_t i = 0; i < tetromino_types().size(); i++) {
+		string line; getline(data, line);
+		stringstream stream(line);
+		string type, hex;
+		getline(stream, type, ' ');
+		getline(stream, hex, ' ');
+		auto ttype = static_cast<TetrominoType>(type[0]);
+		this->data[ttype] = color_from_hex(hex);
 	}
+}
 
-	fclose(file);
-	return color_theme;
+RGBColor ColorScheme::get_color(TetrominoType type) {
+	return this->data[type];
 }

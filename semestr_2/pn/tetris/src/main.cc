@@ -1,8 +1,8 @@
 #include "main.hh"
 
 int main() {
-	Matrix matrix;
-
+	RotationSystem rotation_system(ROTATION_SYSTEM_PATH);
+	ColorScheme color_scheme(COLOR_SCHEME_PATH);
 
 	sf::Window window(sf::VideoMode(800, 600), "TETRIS", sf::Style::Fullscreen);
 	window.setVerticalSyncEnabled(true);

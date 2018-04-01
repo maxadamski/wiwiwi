@@ -4,8 +4,6 @@
 #include <fstream>
 #include <sstream>
 
-const std::vector<char> tetromino_types = {I, O, J, L, S, T, Z};
-
 // TODO: handle errors in user input
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -160,7 +158,37 @@ bool Matrix::collides(Matrix &parent) {
 			int y_ = this->origin.y + y;
 			int w = parent.get_size().x;
 			int h = parent.get_size().y;
-			if (this->data[y][x] && x_ < w && y_ < h && parent.data[y_][x_]) {
+			if (this->data[y][x] && x_ >= 0 && y_ >= 0 && x_ < w && y_ < h && parent.data[y_][x_]) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+bool Matrix::outside(Matrix &parent) {
+	for (int y = 0; y < this->get_size().y; y++) {
+		for (int x = 0; x < this->get_size().x; x++) {
+			int x_ = this->origin.x + x;
+			int y_ = this->origin.y + y;
+			int w = parent.get_size().x;
+			int h = parent.get_size().y;
+			if (this->data[y][x] && (x_ < 0 || y_ < 0 || x_ >= w || y_ >= h)) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+bool Matrix::outside_y(Matrix &parent) {
+	for (int y = 0; y < this->get_size().y; y++) {
+		for (int x = 0; x < this->get_size().x; x++) {
+			int x_ = this->origin.x + x;
+			int y_ = this->origin.y + y;
+			int w = parent.get_size().x;
+			int h = parent.get_size().y;
+			if (this->data[y][x] && (y_ < 0 || y_ >= h)) {
 				return true;
 			}
 		}
@@ -184,22 +212,23 @@ void Board::draw(Window &window) {
 	}
 }
 
-bool Board::contains(Matrix &matrix) {
-	return matrix.origin.x + matrix.get_size().x < this->board.get_size().x
-		&& matrix.origin.y + matrix.get_size().y < this->board.get_size().y;
-}
+#include <cassert>
 
-//void Board::insert(Matrix matrix, Vec2 origin) {
-//	for (int y = 0; y < this->get_size().y; y++) {
-//		for (int x = 0; x < this->get_size().x; x++) {
-//			int x_ = this->origin.x  + x;
-//			int y_ = this->origin.y  + y;
-//			if (this->data[y][x] && parent.data[y_][x_]) {
-//				return true;
-//			}
-//		}
-//	}
-//}
+void Board::insert(Matrix matrix) {
+	//assert(matrix.origin.x >= 0 && matrix.origin.y >= 0
+	//	&& matrix.origin.x + matrix.get_size().x < this->board.get_size().x
+	//	&& matrix.origin.y + matrix.get_size().y < this->board.get_size().y);
+
+	for (int y = 0; y < matrix.get_size().y; y++) {
+		for (int x = 0; x < matrix.get_size().x; x++) {
+			if (matrix.data[y][x].has_value()) {
+				int y_ = matrix.origin.y + y;
+				int x_ = matrix.origin.x + x;
+				this->board.data[y_][x_] = matrix.data[y][x];
+			}
+		}
+	}
+}
 
 // Overrides blocks in matrix with given tetromino
 //void Matrix::place(Tetromino tetromino, Vec2 point) {

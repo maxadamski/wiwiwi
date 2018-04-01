@@ -17,6 +17,8 @@ enum TetrominoType {
 	NONE
 };
 
+const std::vector<char> tetromino_types = {I, O, J, L, S, T, Z};
+
 class RotationSystem {
 	std::map<TetrominoType, TetrominoRotation> data;
 
@@ -71,6 +73,8 @@ class Matrix {
 		void rotate_left();
 		void draw(Window &window);
 		bool collides(Matrix &matrix);
+		bool outside(Matrix &matrix);
+		bool outside_y(Matrix &matrix);
 		Vec2 get_size();
 };
 
@@ -84,9 +88,8 @@ class Board {
 			block_size(block_size),
 			board(Matrix(NONE, Vec2(0, 0), size, block_size)) {};
 
-		void insert(Matrix matrix, Vec2 origin);
+		void insert(Matrix matrix);
 		void draw(Window &window);
-		bool contains(Matrix &matrix);
 };
 
 #endif

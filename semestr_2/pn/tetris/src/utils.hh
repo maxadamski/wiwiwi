@@ -2,26 +2,24 @@
 #define UTILS_H_INCLUDED
 
 #include <SFML/Graphics.hpp>
-#include <cstdlib>
-#include <cmath>
 
-typedef sf::Vector2i Vector2;
+typedef sf::Vector2i Vec2i;
+typedef sf::Vector2f Vec2f;
+typedef Vec2i Vec2;
+typedef sf::RenderWindow Window;
+typedef sf::Color Color;
 
-double distance(Vector2 a, Vector2 b) {
-	return 0;
-}
+int random(int min, int max);
+void random_seed();
 
-int min(int a, int b) {
-	return a < b ? a : b;
-}
+double distance(Vec2 u, Vec2 v);
+Vec2f to_f(Vec2i v);
+Vec2i to_i(Vec2f v);
+Vec2 mul(Vec2 u, int a);
+Vec2 mul(Vec2 u, Vec2 v);
+Vec2 add(Vec2 u, Vec2 v);
 
-int max(int a, int b) {
-	return a > b ? a : b;
-}
-
-int random(int start, int end) {
-	// TODO: use uniform int distribution
-	return rand() % (end - start) + start;
-}
+int min(int a, int b);
+int max(int a, int b);
 
 #endif

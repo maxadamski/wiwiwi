@@ -1,17 +1,12 @@
-#ifndef CONFIG_H_INCLUDED
-#define CONFIG_H_INCLUDED
+#ifndef GAME_H_INCLUDED
+#define GAME_H_INCLUDED
 
 #include "utils.hh"
-#include <string>
-#include <vector>
-#include <array>
-#include <map>
 
-// The Tetris matrix is 10 blocks wide,
-// and at least 22 blocks high.
-// Two topmost blocks are hidden.
-#define BOARD_W 10
-#define BOARD_H 22
+#include <string>
+#include <map>
+#include <vector>
+#include <optional>
 
 typedef std::vector<std::vector<bool>> TetrominoShape;
 typedef std::array<TetrominoShape, 4> TetrominoRotation;
@@ -39,8 +34,36 @@ class ColorScheme {
 		RGBColor get_color(TetrominoType type);
 };
 
-std::vector<char> tetromino_types() {
-	return {I, O, J, L, S, T, Z};
-}
+class Block {
+	TetrominoType type;
+	Color color;
+	// TODO: add sprite property
+
+	public:
+		Block();
+};
+
+class Matrix {
+	std::vector<std::vector<std::optional<Block>>> data;
+	Vec2 origin, size, block_size;
+	int rotation;
+
+	public:
+		Matrix(Vec2 origin, Vec2 size);
+
+		void rotate_right();
+		void draw(Window &window);
+};
+
+class Board {
+	Vec2 origin, size;
+	Matrix board;
+
+	public:
+		Board(Vec2 origin, Vec2 size):
+			origin(origin), size(size), board(Matrix(origin, size)) {};
+
+		void draw(Window &window);
+};
 
 #endif

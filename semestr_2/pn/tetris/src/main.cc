@@ -1,10 +1,12 @@
 #include "main.hh"
+#include <iostream>
 
 int main() {
 	RotationSystem rotation_system(ROTATION_SYSTEM_PATH);
 	ColorScheme color_scheme(COLOR_SCHEME_PATH);
+	//Board board(Vec2(0, 0), Vec2(BOARD_W, BOARD_H));
 
-	sf::Window window(sf::VideoMode(800, 600), "TETRIS", sf::Style::Fullscreen);
+	sf::RenderWindow window(sf::VideoMode(800, 600), "sfml-devel");
 	window.setVerticalSyncEnabled(true);
 	sf::Clock clock;
 
@@ -18,31 +20,24 @@ int main() {
 			switch (event.type) {
 				case sf::Event::Closed:
 					window.close();
+					std::cerr << "closed\n";
 					break;
 
 				case sf::Event::KeyPressed:
+					std::cerr << "pressed key\n";
 					break;
 
 				default:
 					break;
 			}
 		}
+
 		window.clear();
-		//matrix.draw(display_center);
+		//board.draw(window);
 		window.display();
 	}
 
-	//redraw = false;
-	//al_clear_to_color(BLACK);
-	//int bx, by, bw, bh;
-	//al_get_text_dimensions(kouryuu, "Max's Tetris ripoff", &bx, &by, &bw, &bh);
-	//int x = (display_size.w - bw) / 2.0;
-	//int y = 0 - by + 20;
-	//al_draw_textf(kouryuu, WHITE, x, y, ALLEGRO_ALIGN_INTEGER, "Max's Tetris ripoff");
-	//auto display_center = (Vector2) {
-	//	display_size.w / 2, display_size.h / 2
-	//};
-
+	std::cerr << "exiting cleanly\n";
 	return 0;
 }
 

@@ -106,11 +106,11 @@ BlockMatrix BlockFactory::get_blocks(TetrominoType type, int rotation) {
 // Matrix
 ///////////////////////////////////////////////////////////////////////////////
 
-Matrix::Matrix(Vec2 origin, Vec2 size, Vec2 block_size) {
+Matrix::Matrix(TetrominoType type, Vec2 origin, Vec2 size, Vec2 block_size) {
 	this->origin = origin;
-	this->size = size;
 	this->block_size = block_size;
 	this->rotation = 0;
+	this->type = type;
 
 	this->data.resize(size.y);
 	for (int y = 0; y < size.y; y++) {
@@ -126,17 +126,21 @@ void Matrix::rotate_right() {
 	this->rotation %= 4;
 }
 
-void Matrix::update_tetromino(TetrominoType type, BlockFactory &factory) {
-	this->data = factory.get_blocks(type, this->rotation);
+void Matrix::rotate_left() {
+	this->rotation = this->rotation > 0 ? this->rotation - 1 : 3;
+}
+
+void Matrix::update_tetromino(BlockFactory &factory) {
+	this->data = factory.get_blocks(this->type, this->rotation);
 }
 
 void Matrix::draw(Window &window) {
-	for (size_t y = 0; y < this->data.size(); y++) {
-		for (size_t x = 0; x < this->data[y].size(); x++) {
+	for (int y = 0; y < this->get_size().y; y++) {
+		for (int x = 0; x < this->get_size().x; x++) {
 			auto block = this->data[y][x];
 			if (block.has_value()) {
 				sf::RectangleShape rect(to_f(this->block_size));
-				auto pos = add(this->origin, mul(Vec2(x, y), this->block_size));
+				auto pos = mul(add(this->origin, Vec2(x, y)), this->block_size);
 				rect.setFillColor(block->color);
 				rect.setPosition(to_f(pos));
 				window.draw(rect);
@@ -145,21 +149,57 @@ void Matrix::draw(Window &window) {
 	}
 }
 
+Vec2 Matrix::get_size() {
+	return Vec2(this->data[0].size(), this->data.size());
+}
+
+bool Matrix::collides(Matrix &parent) {
+	for (int y = 0; y < this->get_size().y; y++) {
+		for (int x = 0; x < this->get_size().x; x++) {
+			int x_ = this->origin.x + x;
+			int y_ = this->origin.y + y;
+			int w = parent.get_size().x;
+			int h = parent.get_size().y;
+			if (this->data[y][x] && x_ < w && y_ < h && parent.data[y_][x_]) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // Board
 ///////////////////////////////////////////////////////////////////////////////
 
 void Board::draw(Window &window) {
-	sf::RectangleShape rect(to_f(mul(this->size, this->block_size)));
+	sf::RectangleShape rect(to_f(mul(this->board.get_size(), this->block_size)));
+	// TODO: center the board
 	rect.setPosition(Vec2f(0,0));
 	window.draw(rect);
 
 	this->board.draw(window);
+	if (this->falling.has_value()) {
+		this->falling->draw(window);
+	}
 }
 
-void Board::insert(Matrix matrix, Vec2 origin) {
-	
+bool Board::contains(Matrix &matrix) {
+	return matrix.origin.x + matrix.get_size().x < this->board.get_size().x
+		&& matrix.origin.y + matrix.get_size().y < this->board.get_size().y;
 }
+
+//void Board::insert(Matrix matrix, Vec2 origin) {
+//	for (int y = 0; y < this->get_size().y; y++) {
+//		for (int x = 0; x < this->get_size().x; x++) {
+//			int x_ = this->origin.x  + x;
+//			int y_ = this->origin.y  + y;
+//			if (this->data[y][x] && parent.data[y_][x_]) {
+//				return true;
+//			}
+//		}
+//	}
+//}
 
 // Overrides blocks in matrix with given tetromino
 //void Matrix::place(Tetromino tetromino, Vec2 point) {
@@ -182,34 +222,3 @@ void Board::insert(Matrix matrix, Vec2 origin) {
 //	matrix_override(matrix, tetromino, {4, 0}, BLOCK_FALLING);
 //}
 
-//void Board::draw(Window window) {
-//	Vec2 frame_size(
-//		(MATRIX_W + 2) * block_size.x,
-//		(MATRIX_H + 2) * block_size.y
-//	);
-//	Vec2 frame_origin(
-//		display_center.x - frame_size.x / 2,
-//		display_center.y - frame_size.y / 2
-//	);
-//
-//	auto buffer_size = (Vec2) {frame_size.x, block_edge*2};
-//	draw_rect_frame({frame_origin.x, frame_origin.y + block_edge*2}, 
-//			buffer_size, WHITE, 2);
-//	draw_rect_frame(frame_origin, frame_size, WHITE, 1);
-//	draw_rect_frame(frame_origin, buffer_size, RED, 2);
-//
-//	for (int y = 0; y < MATRIX_H; y += 1) {
-//		for (int x = 0; x < MATRIX_W; x += 1) {
-//			Block block = matrix->blocks[y][x];
-//
-//			if (block.type != BLOCK_NONE) {
-//				auto block_color = matrix->color_theme[block.tetromino_type];
-//				Vec2 block_origin(
-//					frame_origin.x + block_size.x * x,
-//					frame_origin.y + block_size.y * y
-//				);
-//				draw_rect_fill(block_origin, block_size, block_color);
-//			}
-//		}
-//	}
-//}

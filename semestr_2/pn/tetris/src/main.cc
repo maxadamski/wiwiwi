@@ -6,9 +6,16 @@ int main() {
 	RotationSystem rotation_system(ROTATION_SYSTEM_PATH);
 	ColorScheme color_scheme(COLOR_SCHEME_PATH);
 	BlockFactory bfactory(rotation_system, color_scheme);
-	Board board(Vec2(0, 0), Vec2(BOARD_W, BOARD_H), Vec2(32, 32));
-	Matrix oneL(Vec2(0, 0), Vec2(0, 0), Vec2(32, 32));
-	oneL.update_tetromino(L, bfactory);
+	Board board(Vec2(BOARD_W, BOARD_H));
+	board.falling = Matrix(T, Vec2(3, 0));
+	board.falling->update_tetromino(bfactory);
+
+	//Matrix oneL(L, Vec2(20, 0));
+	//Matrix oneT(T, Vec2(3, 0));
+	//oneL.update_tetromino(bfactory);
+	//oneT.update_tetromino(bfactory);
+	//std::cerr << oneT.collides(oneL) << "\n";
+	//
 
 	sf::RenderWindow window(sf::VideoMode(1280, 960), "sfml-devel");
 	window.setVerticalSyncEnabled(true);
@@ -29,7 +36,30 @@ int main() {
 					break;
 
 				case sf::Event::KeyPressed:
-					std::cerr << "[event] pressed key\n";
+					if (board.falling.has_value()) {
+						if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+							//std::cerr << "[event] press _\n";
+							board.falling->rotate_right();
+							board.falling->update_tetromino(bfactory);
+						}
+						if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+							//std::cerr << "[event] press <\n";
+							board.falling->origin.x += 1;
+						}
+						if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+							//std::cerr << "[event] press <\n";
+							board.falling->origin.x -= 1;
+						}
+						if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+							//std::cerr << "[event] press v\n";
+							board.falling->origin.y += 1;
+						}
+						if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+							// TODO: implement hold & remove debug capability
+							//std::cerr << "[event] press ^\n";
+							board.falling->origin.y -= 1;
+						}
+					}
 					break;
 
 				default:
@@ -37,9 +67,12 @@ int main() {
 			}
 		}
 
+		bool cont = board.contains(board.falling.value());
+		bool coll = board.board.collides(board.falling.value());
+		std::cerr << "cont: " << cont << ", coll: " << coll << "\n";
+
 		window.clear();
-		//board.draw(window);
-		oneL.draw(window);
+		board.draw(window);
 		window.display();
 	}
 

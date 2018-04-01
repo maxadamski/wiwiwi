@@ -8,6 +8,8 @@
 #include <vector>
 #include <optional>
 
+#define BLOCK_SIZE 32
+
 typedef std::vector<std::vector<bool>> TetrominoShape;
 typedef std::array<TetrominoShape, 4> TetrominoRotation;
 enum TetrominoType {
@@ -44,10 +46,10 @@ class Block {
 typedef std::vector<std::vector<std::optional<Block>>> BlockMatrix;
 
 class BlockFactory {
-	RotationSystem rotation_system;
-	ColorScheme color_scheme;
-
 	public:
+		RotationSystem rotation_system;
+		ColorScheme color_scheme;
+
 		BlockFactory(RotationSystem rotation_system, ColorScheme color_scheme):
 			rotation_system(rotation_system), color_scheme(color_scheme) {};
 
@@ -55,29 +57,36 @@ class BlockFactory {
 };
 
 class Matrix {
-	BlockMatrix data;
-	Vec2 origin, size, block_size;
-	int rotation = 0;
-
 	public:
-		Matrix(Vec2 origin, Vec2 size, Vec2 block_size);
+		Vec2 origin, block_size;
+		TetrominoType type;
+		int rotation = 0;
+		BlockMatrix data;
 
-		void update_tetromino(TetrominoType type, BlockFactory &factory);
+		Matrix(TetrominoType type, Vec2 origin, Vec2 size = Vec2(0, 0), 
+			Vec2 block_size = Vec2(BLOCK_SIZE, BLOCK_SIZE));
+
+		void update_tetromino(BlockFactory &factory);
 		void rotate_right();
+		void rotate_left();
 		void draw(Window &window);
+		bool collides(Matrix &matrix);
+		Vec2 get_size();
 };
 
 class Board {
-	Vec2 origin, size, block_size;
-	Matrix board;
-
 	public:
-		Board(Vec2 origin, Vec2 size, Vec2 block_size): 
-			origin(origin), size(size), block_size(block_size),
-			board(Matrix(origin, size, block_size)) {};
+		Vec2 block_size;
+		Matrix board;
+		std::optional<Matrix> falling = std::nullopt;
+
+		Board(Vec2 size, Vec2 block_size = Vec2(BLOCK_SIZE, BLOCK_SIZE)): 
+			block_size(block_size),
+			board(Matrix(NONE, Vec2(0, 0), size, block_size)) {};
 
 		void insert(Matrix matrix, Vec2 origin);
 		void draw(Window &window);
+		bool contains(Matrix &matrix);
 };
 
 #endif

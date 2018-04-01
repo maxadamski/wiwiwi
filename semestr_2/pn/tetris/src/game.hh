@@ -10,10 +10,9 @@
 
 typedef std::vector<std::vector<bool>> TetrominoShape;
 typedef std::array<TetrominoShape, 4> TetrominoRotation;
-typedef std::array<int, 3> RGBColor;
-
 enum TetrominoType {
-	I = 'I', O = 'O', J = 'J', L = 'L', S = 'S', T = 'T', Z = 'Z'
+	I = 'I', O = 'O', J = 'J', L = 'L', S = 'S', T = 'T', Z = 'Z',
+	NONE
 };
 
 class RotationSystem {
@@ -26,43 +25,58 @@ class RotationSystem {
 };
 
 class ColorScheme {
-	std::map<TetrominoType, RGBColor> data;
+	std::map<TetrominoType, Color> data;
 
 	public:
 		ColorScheme(std::string file_path);
 
-		RGBColor get_color(TetrominoType type);
+		Color get_color(TetrominoType type);
 };
 
 class Block {
-	TetrominoType type;
-	Color color;
-	// TODO: add sprite property
+	public:
+		Color color;
+		// TODO: add sprite property
+
+		Block(Color color): color(color) {};
+};
+
+typedef std::vector<std::vector<std::optional<Block>>> BlockMatrix;
+
+class BlockFactory {
+	RotationSystem rotation_system;
+	ColorScheme color_scheme;
 
 	public:
-		Block();
+		BlockFactory(RotationSystem rotation_system, ColorScheme color_scheme):
+			rotation_system(rotation_system), color_scheme(color_scheme) {};
+
+		BlockMatrix get_blocks(TetrominoType type, int rotation);
 };
 
 class Matrix {
-	std::vector<std::vector<std::optional<Block>>> data;
+	BlockMatrix data;
 	Vec2 origin, size, block_size;
-	int rotation;
+	int rotation = 0;
 
 	public:
-		Matrix(Vec2 origin, Vec2 size);
+		Matrix(Vec2 origin, Vec2 size, Vec2 block_size);
 
+		void update_tetromino(TetrominoType type, BlockFactory &factory);
 		void rotate_right();
 		void draw(Window &window);
 };
 
 class Board {
-	Vec2 origin, size;
+	Vec2 origin, size, block_size;
 	Matrix board;
 
 	public:
-		Board(Vec2 origin, Vec2 size):
-			origin(origin), size(size), board(Matrix(origin, size)) {};
+		Board(Vec2 origin, Vec2 size, Vec2 block_size): 
+			origin(origin), size(size), block_size(block_size),
+			board(Matrix(origin, size, block_size)) {};
 
+		void insert(Matrix matrix, Vec2 origin);
 		void draw(Window &window);
 };
 

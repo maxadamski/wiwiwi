@@ -54,28 +54,22 @@ int main() {
 					break;
 
 				case sf::Event::KeyPressed:
-					if (board.falling.has_value()) {
-						if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-							//std::cerr << "[event] press _\n";
-							rotate = true;
-						}
-						if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-							//std::cerr << "[event] press <\n";
-							dx = +1;
-						}
-						if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-							//std::cerr << "[event] press <\n";
-							dx = -1;
-						}
-						if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-							//std::cerr << "[event] press v\n";
-							dy = +1;
-						}
-						if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-							// TODO: implement hold & remove debug capability
-							//std::cerr << "[event] press ^\n";
-							dy = -1;
-						}
+					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+						//std::cerr << "[event] press _\n";
+						rotate = true;
+					} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+						//std::cerr << "[event] press <\n";
+						dx = +1;
+					} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+						//std::cerr << "[event] press <\n";
+						dx = -1;
+					} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+						//std::cerr << "[event] press v\n";
+						dy = +1;
+					} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+						// TODO: implement hold & remove debug capability
+						//std::cerr << "[event] press ^\n";
+						dy = -1;
 					}
 					break;
 

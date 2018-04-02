@@ -212,13 +212,7 @@ void Board::draw(Window &window) {
 	}
 }
 
-#include <cassert>
-
 void Board::insert(Matrix matrix) {
-	//assert(matrix.origin.x >= 0 && matrix.origin.y >= 0
-	//	&& matrix.origin.x + matrix.get_size().x < this->board.get_size().x
-	//	&& matrix.origin.y + matrix.get_size().y < this->board.get_size().y);
-
 	for (int y = 0; y < matrix.get_size().y; y++) {
 		for (int x = 0; x < matrix.get_size().x; x++) {
 			if (matrix.data[y][x].has_value()) {
@@ -229,25 +223,3 @@ void Board::insert(Matrix matrix) {
 		}
 	}
 }
-
-// Overrides blocks in matrix with given tetromino
-//void Matrix::place(Tetromino tetromino, Vec2 point) {
-//	auto system = this->rotation_system;
-//	auto shape = system[tetromino.type][tetromino.rotation];
-//	auto shape_size = (Vec2) { 4, 4 };
-//	Block block;
-//	block.type = type;
-//	block.tetromino_type = tetromino->type;
-//	for (int y = 0; y < shape_size.x; y += 1) {
-//		for (int x = 0; x < shape_size.y; x += 1) {
-//			if (shape[y][x] == 1) {
-//				this->blocks[point.y + y][point.x + x] = block;
-//			}
-//		}
-//	}
-//}
-//
-//void Matrix::spawn(Tetromino tetromino) {
-//	matrix_override(matrix, tetromino, {4, 0}, BLOCK_FALLING);
-//}
-

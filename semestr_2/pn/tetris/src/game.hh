@@ -9,6 +9,7 @@
 #include <optional>
 #include <functional>
 
+#define SPAWN_POS Vec2(3, -1)
 #define BLOCK_SIZE 32
 #define FREEZE 0.75
 #define ACTION 0.1
@@ -159,6 +160,7 @@ class Matrix {
 		Matrix(TetrominoType type, BlockFactory &factory):
 			factory(factory), type(type) {};
 
+		void rotate_reset();
 		void rotate_right();
 		void rotate_left();
 		void draw(Window &window, Vec2 offset = Vec2(0, 0));
@@ -194,6 +196,7 @@ class Board {
 		void draw(Window &window, bool shadow);
 		void freeze();
 		void spawn();
+		void hold_swap();
 		void hard_drop();
 		bool can_move_right(Matrix m);
 		bool can_move_left(Matrix m);

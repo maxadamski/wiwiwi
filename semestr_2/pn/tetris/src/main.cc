@@ -89,11 +89,18 @@ void render(Window &window, Board &board, State &state) {
 	hold_label.setPosition(to_f(Vec2(400, 450)));
 	window.draw(hold_label);
 
+	if (board.hold)
+		board.hold->draw(window, Vec2(400, 470));
+
 	window.display();
 }
 
 void update(Board &board, Input &input, State &state) {
 	int dx = 0, dy = 0, rotate = false;
+
+	if (input.hold) {
+		board.hold_swap();
+	}
 
 	if (state.gravity.timeout() && board.can_move_down(board.falling))
 		dy = 1;

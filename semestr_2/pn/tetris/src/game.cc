@@ -151,6 +151,11 @@ void Matrix::rotate_left() {
 	update();
 }
 
+void Matrix::rotate_reset() {
+	rotation = 0;
+	update();
+}
+
 void Matrix::update() {
 	data = factory.get_blocks(type, rotation);
 }
@@ -283,7 +288,22 @@ void Board::spawn() {
 	falling.update();
 	next = Matrix(tetromino_factory.next(), block_factory);
 	next.update();
-	falling.origin = Vec2(3, -1);
+	falling.origin = SPAWN_POS;
+}
+
+void Board::hold_swap() {
+	Matrix temp = falling;
+	temp.origin = Vec2(0, 0);
+	temp.rotate_reset();
+
+	if (hold)  {
+		falling = hold.value();
+		falling.origin = SPAWN_POS;
+	} else {
+		spawn();
+	}
+
+	hold = temp;
 }
 
 void Board::hard_drop() {

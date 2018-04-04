@@ -11,7 +11,7 @@
 
 #define SPAWN_POS Vec2(3, -1)
 #define BLOCK_SIZE 32
-#define FREEZE 0.75
+#define FREEZE 0.5
 #define ACTION 0.1
 
 typedef std::vector<std::vector<bool>> TetrominoShape;
@@ -125,15 +125,33 @@ struct State {
 	Timer action = Timer(sf::seconds(ACTION));
 
 	bool game_over = false;
-	int level = 1;
 	int score = 0;
+	int lines = 0;
 
-	sf::Time turn_length(int level) {
-		return sf::seconds(0.8);
+	int level() {
+		return lines / 10;
+	}
+
+	double turn_frames() {
+		int L = level();
+		if (L <= 9)
+			return 48 - L*5;
+		else if (L <= 29)
+			return 5 - (L-10)*0.5;
+		else
+			return 1;
+	}
+
+	sf::Time turn_length() {
+		return sf::seconds(turn_frames() / 60.0);
 	}
 
 	std::vector<Timer*> timers() {
 		return {&gravity, &freeze, &action};
+	}
+
+	void update_gravity() {
+		gravity = Timer(turn_length());
 	}
 
 	void update(sf::Time elapsed) {

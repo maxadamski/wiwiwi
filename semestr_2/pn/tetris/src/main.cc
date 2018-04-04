@@ -70,7 +70,7 @@ void render(Window &window, Board &board, State &state) {
 
 
 	std::ostringstream level;
-	level << std::setfill('0') << std::setw(8) << state.level;
+	level << std::setfill('0') << std::setw(8) << state.level();
 
 	sf::Text level_label("Level", kouryuu, 32);
 	level_label.setPosition(to_f(Vec2(400, 200)));
@@ -97,12 +97,17 @@ void render(Window &window, Board &board, State &state) {
 	window.display();
 }
 
+int score_for_lines(int lines, int level) {
+	if (lines <= 0 || lines > 4) return 0;
+	std::vector<int> mul = {40, 100, 300, 1200};
+	return mul[lines - 1] * (level + 1);
+}
+
 void update(Board &board, Input &input, State &state) {
 	int dx = 0, dy = 0, rotate = 0;
 
-	if (input.hold && !board.falling.was_on_hold()) {
+	if (input.hold && !board.falling.was_on_hold())
 		board.hold_swap();
-	}
 
 	if (state.gravity.timeout() && board.can_move_down(board.falling))
 		dy = 1;
@@ -147,12 +152,17 @@ void update(Board &board, Input &input, State &state) {
 	}
 
 	auto full_rows = board.full_lines();
-	if (!full_rows.empty()) {
-		for (auto row : full_rows) board.clear_row(row);
-	}
+	auto level_before = state.level();
+	state.lines += full_rows.size();
+	state.score += score_for_lines(full_rows.size(), state.level());
+	if (state.level() > level_before)
+		state.update_gravity();
+	for (auto row : full_rows) 
+		board.clear_row(row);
 
 	if (!board.can_move_down(board.falling) 
-			&& (state.freeze.timeout() || input.soft_drop || (!SONIC_DROP && input.hard_drop))) {
+			&& (state.freeze.timeout() || input.soft_drop 
+				|| (!SONIC_DROP && input.hard_drop))) {
 		board.freeze();
 		board.spawn();
 	}
@@ -160,18 +170,32 @@ void update(Board &board, Input &input, State &state) {
 
 int main() {
 	random_seed();
+
 	RotationSystem rotation_system(ROTATION_SYSTEM_PATH);
 	ColorScheme color_scheme(COLOR_SCHEME_PATH);
 	BlockFactory bfactory(rotation_system, color_scheme);
 	BaggedTetrominoFactory tfactory;
+
 	Board board(Vec2(BOARD_W, BOARD_H), tfactory, bfactory);
 	board.spawn();
-	kouryuu.loadFromFile(FONT_KOURYUU_PATH);
+
+	State state;
+	state.update_gravity();
 
 	sf::RenderWindow window(sf::VideoMode(960, 960), "sfml-devel");
 	window.setVerticalSyncEnabled(true);
 	sf::Clock clock;
-	State state;
+
+	kouryuu.loadFromFile(FONT_KOURYUU_PATH);
+
+	sf::Music music_a;
+	if (!music_a.openFromFile(MUSIC_A_PATH)) {
+		std::cerr << "[error] coldn't load " << MUSIC_A_PATH << "\n";
+		return 1;
+	}
+	music_a.setLoop(true);
+	music_a.setVolume(50);
+	music_a.play();
 
 	auto spu = sf::seconds(1.0 / 60);
 	while (window.isOpen()) {

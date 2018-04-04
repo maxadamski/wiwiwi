@@ -11,7 +11,6 @@
 
 typedef void (*Printer)(void*, std::string);
 
-typedef struct Student Student;
 struct Student {
 	// names: 2*8*12 bit * 10^7 = 240 MB
 	// index: 32     bit * 10^7 = 40 MB
@@ -33,23 +32,17 @@ void print_student(void *item, std::string terminator = "\n") {
 }
 
 auto read_names(std::string path, int rows) {
-	using namespace std;
-	vector<Student*> students;
-	ifstream data(path);
+	std::vector<Student*> students;
+	std::ifstream data(path);
 	for (int i = 0; i < rows; i++) {
-		string line; 
-		getline(data, line);
-		stringstream stream(line);
-		string first_name, last_name, index;
-		getline(stream, first_name, ',');
-		getline(stream, last_name, ',');
-		getline(stream, index, ',');
+		std::string first_name, last_name, index;
+		data >> first_name >> last_name >> index;
 		Student *student = new Student;
 		for (size_t i = 0; i < first_name.size(); i++)
 			student->first_name[i] = first_name[i];
 		for (size_t i = 0; i < last_name.size(); i++)
 			student->last_name[i] = last_name[i];
-		student->index = stoi(index);
+		student->index = std::stoi(index);
 		students.push_back(student);
 	}
 	return students;

@@ -47,9 +47,27 @@ Input get_input(Window &window) {
 	return input;
 }
 
+sf::Font kouryuu;
+#include <cstdio>
+
 void render(Window &window, Board &board, State &state) {
 	window.clear();
 	board.draw(window, SHADOW);
+
+	std::string score_string;
+	sprintf(&score_string[0], "%08d", state.score);
+	sf::Text score(score_string, kouryuu, 32);
+	score.setFillColor(Color(255,255,255));
+	score.setPosition(to_f(Vec2(300, 100)));
+	window.draw(score);
+
+	std::string level;
+	sprintf(&level[0], "%02d", state.level);
+	sf::Text level_label("level", kouryuu, 32);
+	sf::Text level_value(level, kouryuu, 32);
+	window.draw(level_label);
+	window.draw(level_value);
+	
 	window.display();
 }
 
@@ -120,6 +138,7 @@ int main() {
 	BaggedTetrominoFactory tfactory;
 	Board board(Vec2(BOARD_W, BOARD_H), tfactory, bfactory);
 	board.spawn();
+	kouryuu.loadFromFile("res/font/kouryuu.ttf");
 
 	sf::RenderWindow window(sf::VideoMode(1280, 960), "sfml-devel");
 	window.setVerticalSyncEnabled(true);

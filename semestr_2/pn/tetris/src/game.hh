@@ -124,6 +124,7 @@ struct State {
 
 	bool game_over = false;
 	int level = 1;
+	int score = 0;
 
 	sf::Time turn_length(int level) {
 		return sf::seconds(0.8);

@@ -11,7 +11,8 @@ struct Input {
 		 rotate_right = false,
 		 hold = false,
 		 soft_drop = false,
-		 hard_drop = false;
+		 hard_drop = false,
+		 sonic_drop = false;
 };
 
 Input get_input(Window &window) {
@@ -54,42 +55,58 @@ void render(Window &window, Board &board, State &state) {
 
 void update(Board &board, Input &input, State &state) {
 	int dx = 0, dy = 0, rotate = false;
-	if ((input.soft_drop || state.should_apply_gravity()) 
-			&& board.can_move_down(board.falling))
+
+	if (state.gravity.timeout() && board.can_move_down(board.falling))
 		dy = 1;
-	if (input.move_right && board.can_move_right(board.falling))
-		dx = 1;
-	if (input.move_left && board.can_move_left(board.falling))
-		dx = -1;
-	if (input.rotate_right && board.can_rotate_right(board.falling))
-		rotate = true;
+
+	if (!state.action.flag) {
+		if (input.soft_drop && board.can_move_down(board.falling))
+			dy = 1;
+
+		if (input.move_right && board.can_move_right(board.falling))
+			dx = 1;
+
+		if (input.move_left && board.can_move_left(board.falling))
+			dx = -1;
+
+		if (input.rotate_right && board.can_rotate_right(board.falling))
+			rotate = true;
+	}
+
+	if (dx != 0 || rotate) {
+		state.action.flag = true;
+	}
 
 	// too bad so sad
 	if (board.game_over()) {
-		std::cerr << "game over\n";
+		std::cerr << "[event] game over\n";
 		state.game_over = true;
 		return;
 	}
 
 	if (input.hard_drop) {
-
+		std::cerr << "[event] hard drop\n";
 		board.hard_drop();
-
 	} else {
-
 		board.falling.origin.y += dy;
+
+		if (rotate || dx != 0) state.freeze.reset();
+
 		if (rotate) {
 			board.falling.rotate_right();
-		} else if (dx != 0) {
+		} else {
 			board.falling.origin.x += dx;
-			state.reset_freeze();
 		}
+	}
 
+	auto full_rows = board.full_lines();
+	if (!full_rows.empty()) {
+		for (auto row : full_rows) board.clear_row(row);
 	}
 
 	if (!board.can_move_down(board.falling) 
-			&& (state.freeze_timeout() || input.soft_drop || input.hard_drop)) {
-		std::cerr << "freezing\n";
+			&& (state.freeze.timeout() || input.soft_drop || input.hard_drop)) {
+		std::cerr << "[event] freeze\n";
 		board.freeze();
 		board.spawn();
 	}
@@ -109,14 +126,14 @@ int main() {
 	sf::Clock clock;
 	State state;
 
-	auto spu = sf::seconds(1.0 / 50);
+	auto spu = sf::seconds(1.0 / 60);
 	while (window.isOpen()) {
 		auto start = clock.getElapsedTime();
 		auto input = get_input(window);
+		state.update(spu);
 		update(board, input, state);
 		render(window, board, state);
 		if (state.game_over) break;
-		state.update_turn(spu);
 		sf::sleep(start + spu - clock.restart());
 	}
 

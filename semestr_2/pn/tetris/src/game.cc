@@ -289,6 +289,26 @@ void Board::hard_drop() {
 		falling.origin.y += 1;
 }
 
+std::vector<int> Board::full_lines() {
+	std::vector<int> lines;
+	for (int y = 0; y < board.get_size().y; y++) {
+		bool full = true;
+		for (int x = 0; full && x < board.get_size().x; x++)
+			if (!board.data[y][x].has_value()) full = false;
+		if (full) lines.push_back(y);
+	}
+	return lines;
+}
+
+void Board::clear_row(int row) {
+	for (int x = 0; x < board.get_size().x; x++)
+		board.data[row][x] = std::nullopt;
+
+	for (int y = row; y > 0; y--)
+		for (int x = 0; x < board.get_size().x; x++)
+			board.data[y][x] = board.data[y-1][x];
+}
+
 //
 // Tetromino Factories
 //

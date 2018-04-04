@@ -10,6 +10,8 @@
 #include <functional>
 
 #define BLOCK_SIZE 32
+#define FREEZE 0.75
+#define ACTION 0.1
 
 typedef std::vector<std::vector<bool>> TetrominoShape;
 typedef std::array<TetrominoShape, 4> TetrominoRotation;
@@ -37,6 +39,10 @@ class ColorScheme {
 		ColorScheme(std::string file_path);
 
 		Color get_color(TetrominoType type);
+};
+
+class ScoringSystem {
+
 };
 
 struct Block {
@@ -90,38 +96,49 @@ struct Collision {
 	bool any();
 };
 
-#define FREEZE 0.8
+struct Timer {
+	sf::Time duration, remaining;
+	bool flag = false;
+
+	Timer(sf::Time duration):
+		duration(duration), remaining(sf::seconds(0)) {};
+
+	bool timeout() {
+		return remaining <= sf::seconds(0);
+	}
+
+	void tick(sf::Time elapsed) {
+		remaining -= elapsed;
+	}
+
+	void reset() {
+		remaining = duration;
+		flag = false;
+	}
+};
 
 struct State {
-	sf::Time turn = sf::seconds(0);
-	sf::Time freeze = sf::seconds(FREEZE);
+	Timer gravity = Timer(sf::seconds(0.8));
+	Timer freeze = Timer(sf::seconds(FREEZE));
+	Timer action = Timer(sf::seconds(ACTION));
+
 	bool game_over = false;
 	int level = 1;
 
-	bool should_apply_gravity() {
-		return turn >= turn_length(level);
-	}
-	
-	bool freeze_timeout() {
-		return freeze <= sf::seconds(0);
-	}
-
-	void reset_freeze() {
-		freeze = sf::seconds(FREEZE);
-	}
-
-	void update_turn(sf::Time elapsed) {
-		if (turn >= turn_length(level)) {
-			turn -= turn_length(level);
-		}
-		turn += elapsed;
-		freeze -= elapsed;
-		if (freeze < sf::seconds(0))
-			reset_freeze();
-	}
-
 	sf::Time turn_length(int level) {
 		return sf::seconds(0.8);
+	}
+
+	std::vector<Timer*> timers() {
+		return {&gravity, &freeze, &action};
+	}
+
+	void update(sf::Time elapsed) {
+		for (auto timer : timers())
+			if (timer->timeout())
+				timer->reset();
+			else
+				timer->tick(elapsed);
 	}
 };
 
@@ -179,6 +196,8 @@ class Board {
 		bool can_move_down(Matrix m);
 		bool can_rotate_right(Matrix m);
 		bool game_over();
+		std::vector<int> full_lines();
+		void clear_row(int row);
 };
 
 #endif

@@ -88,20 +88,34 @@ struct Collision {
 	bool any();
 };
 
+#define FREEZE 0.5
+
 struct State {
 	sf::Time turn = sf::seconds(0);
+	sf::Time freeze = sf::seconds(FREEZE);
 	bool game_over = false;
 	int level = 1;
 
 	bool should_apply_gravity() {
-		return turn >= turn_length(this->level);
+		return turn >= turn_length(level);
+	}
+	
+	bool freeze_timeout() {
+		return freeze <= sf::seconds(0);
+	}
+
+	void reset_freeze() {
+		freeze = sf::seconds(FREEZE);
 	}
 
 	void update_turn(sf::Time elapsed) {
-		if (turn >= turn_length(this->level)) {
-			turn -= turn_length(this->level);
+		if (turn >= turn_length(level)) {
+			turn -= turn_length(level);
 		}
 		turn += elapsed;
+		freeze -= elapsed;
+		if (freeze < sf::seconds(0))
+			reset_freeze();
 	}
 
 	sf::Time turn_length(int level) {
@@ -155,7 +169,6 @@ class Board {
 		}
 
 		void draw(Window &window);
-		bool should_freeze();
 		void freeze();
 		void spawn();
 		bool can_move_right();

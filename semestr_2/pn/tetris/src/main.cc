@@ -68,16 +68,23 @@ void update(Board &board, Input &input, State &state) {
 		return;
 	}
 
-	board.falling.origin.y += dy;
-	if (rotate) {
-		board.falling.rotate_right();
+	if (input.hard_drop) {
+
+
+
 	} else {
-		board.falling.origin.x += dx;
+
+		board.falling.origin.y += dy;
+		if (rotate) {
+			board.falling.rotate_right();
+		} else if (dx != 0) {
+			board.falling.origin.x += dx;
+			state.reset_freeze();
+		}
+
 	}
 
-
-	// freeze tetromino
-	if (dy > 0 && board.should_freeze()) {
+	if (!board.can_move_down() && (state.freeze_timeout() || input.soft_drop || input.hard_drop)) {
 		std::cerr << "freezing\n";
 		board.freeze();
 		board.spawn();

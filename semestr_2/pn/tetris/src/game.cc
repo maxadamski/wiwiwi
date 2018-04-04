@@ -243,10 +243,6 @@ bool Board::can_move_down() {
 	return !(col.bottom || col.intersect);
 }
 
-bool Board::should_freeze() {
-	return !this->can_move_down();
-}
-
 bool Board::game_over() {
 	for (int y = 0; y < 2; y++) {
 		for (int x = 0; x < this->board.get_size().x; x++) {

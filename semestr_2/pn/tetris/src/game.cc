@@ -101,6 +101,20 @@ BlockMatrix BlockFactory::get_blocks(TetrominoType type, int rotation) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// Block
+///////////////////////////////////////////////////////////////////////////////
+
+void Block::draw(Window &window, Vec2 origin, Vec2 size) {
+	sf::RectangleShape rect(to_f(size));
+	if (shadow)
+		rect.setFillColor(Color(0, 0, 0, 255*0.2));
+	else
+		rect.setFillColor(color);
+	rect.setPosition(to_f(origin));
+	window.draw(rect);
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // Matrix
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -144,14 +158,10 @@ void Matrix::update() {
 void Matrix::draw(Window &window) {
 	for (int y = 0; y < get_size().y; y++) {
 		for (int x = 0; x < get_size().x; x++) {
+			auto point = mul(add(origin, Vec2(x, y)), block_size);
 			auto block = data[y][x];
 			if (block.has_value()) {
-				sf::RectangleShape rect(to_f(block_size));
-				auto pos = mul(add(origin, Vec2(x, y)), block_size);
-				auto color = block->color;
-				rect.setFillColor(color);
-				rect.setPosition(to_f(pos));
-				window.draw(rect);
+				block->draw(window, point, block_size);
 			}
 		}
 	}
@@ -199,7 +209,21 @@ void Board::draw(Window &window, bool shadow) {
 	rect.setPosition(Vec2f(0,0));
 	window.draw(rect);
 	board.draw(window);
-	if (shadow) ;
+	if (shadow) {
+		Matrix s = falling;
+		// hard drop the shadow
+		while (can_move_down(s))
+			s.origin.y += 1;
+		// recolor it
+		for (int y = 0; y < s.get_size().y; y++) {
+			for (int x = 0; x < s.get_size().x; x++) {
+				if (s.data[y][x].has_value()) {
+					s.data[y][x]->shadow = true;
+				}
+			}
+		}
+		s.draw(window);
+	};
 	falling.draw(window);
 }
 

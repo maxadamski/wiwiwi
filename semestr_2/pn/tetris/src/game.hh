@@ -164,8 +164,8 @@ class Board {
 			tetromino_factory(tetromino_factory), block_factory(block_factory),
 			falling(Matrix(tetromino_factory.next(), block_factory)),
 			board(Matrix(NONE, block_factory)) {
-			this->board.set_size(size);
-			this->falling.update();
+			board.set_size(size);
+			falling.update();
 		}
 
 		void draw(Window &window);

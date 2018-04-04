@@ -272,6 +272,12 @@ bool Board::can_rotate_right(Matrix m) {
 	return !col.any();
 }
 
+bool Board::can_rotate_left(Matrix m) {
+	m.rotate_left();
+	auto col = m.collision(board);
+	return !col.any();
+}
+
 bool Board::game_over() {
 	for (int y = 0; y < 2; y++) {
 		for (int x = 0; x < board.get_size().x; x++) {

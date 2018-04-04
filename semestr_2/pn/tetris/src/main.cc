@@ -27,6 +27,8 @@ Input get_input(Window &window) {
 		case sf::Event::KeyPressed:
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 				input.rotate_right = true;
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
+				input.rotate_left = true;
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 				input.move_right = true;
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
@@ -96,7 +98,7 @@ void render(Window &window, Board &board, State &state) {
 }
 
 void update(Board &board, Input &input, State &state) {
-	int dx = 0, dy = 0, rotate = false;
+	int dx = 0, dy = 0, rotate = 0;
 
 	if (input.hold && !board.falling.was_on_hold()) {
 		board.hold_swap();
@@ -108,18 +110,17 @@ void update(Board &board, Input &input, State &state) {
 	if (!state.action.flag) {
 		if (input.soft_drop && board.can_move_down(board.falling))
 			dy = 1;
-
 		if (input.move_right && board.can_move_right(board.falling))
 			dx = 1;
-
 		if (input.move_left && board.can_move_left(board.falling))
 			dx = -1;
-
 		if (input.rotate_right && board.can_rotate_right(board.falling))
-			rotate = true;
+			rotate = 1;
+		if (input.rotate_left && board.can_rotate_left(board.falling))
+			rotate = -1;
 	}
 
-	if (dx != 0 || rotate) {
+	if (dx != 0 || rotate != 0) {
 		state.action.flag = true;
 	}
 
@@ -135,9 +136,10 @@ void update(Board &board, Input &input, State &state) {
 	} else {
 		board.falling.origin.y += dy;
 
-		if (rotate || dx != 0) state.freeze.reset();
+		if (rotate != 0 || dx != 0)
+			state.freeze.reset();
 
-		if (rotate) {
+		if (rotate != 0) {
 			board.falling.rotate_right();
 		} else {
 			board.falling.origin.x += dx;
@@ -150,7 +152,7 @@ void update(Board &board, Input &input, State &state) {
 	}
 
 	if (!board.can_move_down(board.falling) 
-			&& (state.freeze.timeout() || input.soft_drop || input.hard_drop)) {
+			&& (state.freeze.timeout() || input.soft_drop || (!SONIC_DROP && input.hard_drop))) {
 		board.freeze();
 		board.spawn();
 	}

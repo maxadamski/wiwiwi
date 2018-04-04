@@ -20,5 +20,6 @@
 #define FONT_KOURYUU_BASE 11
 #define WINDOW_TITLE "Max's Tetris Ripoff"
 #define WINDOW_STYLE sf::Style::Fullscreen
+#define SONIC_DROP false
 
 #endif

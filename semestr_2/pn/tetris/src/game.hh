@@ -205,6 +205,7 @@ class Board {
 		bool can_move_left(Matrix m);
 		bool can_move_down(Matrix m);
 		bool can_rotate_right(Matrix m);
+		bool can_rotate_left(Matrix m);
 		bool game_over();
 		std::vector<int> full_lines();
 		void clear_row(int row);

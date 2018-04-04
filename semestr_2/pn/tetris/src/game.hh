@@ -161,7 +161,7 @@ class Matrix {
 
 		void rotate_right();
 		void rotate_left();
-		void draw(Window &window);
+		void draw(Window &window, Vec2 offset = Vec2(0, 0));
 		Collision collision(Matrix &board);
 		Vec2 get_size();
 		void set_size(Vec2 size);
@@ -178,11 +178,14 @@ class Board {
 
 	public:
 		Matrix falling;
+		Matrix next;
 		Matrix board;
+		std::optional<Matrix> hold = std::nullopt;
 
 		Board(Vec2 size, TetrominoFactory &tetromino_factory, BlockFactory &block_factory):
 			tetromino_factory(tetromino_factory), block_factory(block_factory),
 			falling(Matrix(tetromino_factory.next(), block_factory)),
+			next(Matrix(tetromino_factory.next(), block_factory)),
 			board(Matrix(NONE, block_factory)) {
 			board.set_size(size);
 			falling.update();

@@ -49,25 +49,46 @@ Input get_input(Window &window) {
 
 sf::Font kouryuu;
 #include <cstdio>
+#include <iomanip>
 
 void render(Window &window, Board &board, State &state) {
 	window.clear();
 	board.draw(window, SHADOW);
 
-	std::string score_string;
-	sprintf(&score_string[0], "%08d", state.score);
-	sf::Text score(score_string, kouryuu, 32);
-	score.setFillColor(Color(255,255,255));
-	score.setPosition(to_f(Vec2(300, 100)));
-	window.draw(score);
+	std::ostringstream score;
+	score << std::setfill('0') << std::setw(8) << state.score;
 
-	std::string level;
-	sprintf(&level[0], "%02d", state.level);
-	sf::Text level_label("level", kouryuu, 32);
-	sf::Text level_value(level, kouryuu, 32);
+	sf::Text score_label("Score", kouryuu, 32);
+	score_label.setPosition(to_f(Vec2(400, 100)));
+	window.draw(score_label);
+
+	sf::Text score_value(score.str(), kouryuu, 32);
+	score_value.setPosition(to_f(Vec2(400, 140)));
+	window.draw(score_value);
+
+
+	std::ostringstream level;
+	level << std::setfill('0') << std::setw(8) << state.level;
+
+	sf::Text level_label("Level", kouryuu, 32);
+	level_label.setPosition(to_f(Vec2(400, 200)));
 	window.draw(level_label);
+
+	sf::Text level_value(level.str(), kouryuu, 32);
+	level_value.setPosition(to_f(Vec2(400, 240)));
 	window.draw(level_value);
 	
+
+	sf::Text next_label("Next", kouryuu, 32);
+	next_label.setPosition(to_f(Vec2(400, 300)));
+	window.draw(next_label);
+
+	board.next.draw(window, Vec2(400, 320));
+
+	sf::Text hold_label("Hold", kouryuu, 32);
+	hold_label.setPosition(to_f(Vec2(400, 450)));
+	window.draw(hold_label);
+
 	window.display();
 }
 
@@ -103,7 +124,6 @@ void update(Board &board, Input &input, State &state) {
 	}
 
 	if (input.hard_drop) {
-		std::cerr << "[event] hard drop\n";
 		board.hard_drop();
 	} else {
 		board.falling.origin.y += dy;
@@ -124,7 +144,6 @@ void update(Board &board, Input &input, State &state) {
 
 	if (!board.can_move_down(board.falling) 
 			&& (state.freeze.timeout() || input.soft_drop || input.hard_drop)) {
-		std::cerr << "[event] freeze\n";
 		board.freeze();
 		board.spawn();
 	}
@@ -138,9 +157,9 @@ int main() {
 	BaggedTetrominoFactory tfactory;
 	Board board(Vec2(BOARD_W, BOARD_H), tfactory, bfactory);
 	board.spawn();
-	kouryuu.loadFromFile("res/font/kouryuu.ttf");
+	kouryuu.loadFromFile(FONT_KOURYUU_PATH);
 
-	sf::RenderWindow window(sf::VideoMode(1280, 960), "sfml-devel");
+	sf::RenderWindow window(sf::VideoMode(960, 960), "sfml-devel");
 	window.setVerticalSyncEnabled(true);
 	sf::Clock clock;
 	State state;

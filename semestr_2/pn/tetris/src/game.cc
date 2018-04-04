@@ -155,13 +155,13 @@ void Matrix::update() {
 	data = factory.get_blocks(type, rotation);
 }
 
-void Matrix::draw(Window &window) {
+void Matrix::draw(Window &window, Vec2 offset) {
 	for (int y = 0; y < get_size().y; y++) {
 		for (int x = 0; x < get_size().x; x++) {
 			auto point = mul(add(origin, Vec2(x, y)), block_size);
 			auto block = data[y][x];
 			if (block.has_value()) {
-				block->draw(window, point, block_size);
+				block->draw(window, add(offset, point), block_size);
 			}
 		}
 	}
@@ -279,8 +279,10 @@ void Board::freeze() {
 }
 
 void Board::spawn() {
-	falling = Matrix(tetromino_factory.next(), block_factory);
+	falling = next;
 	falling.update();
+	next = Matrix(tetromino_factory.next(), block_factory);
+	next.update();
 	falling.origin = Vec2(3, -1);
 }
 

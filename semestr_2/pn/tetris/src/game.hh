@@ -168,13 +168,14 @@ class Board {
 			falling.update();
 		}
 
-		void draw(Window &window);
+		void draw(Window &window, bool shadow);
 		void freeze();
 		void spawn();
-		bool can_move_right();
-		bool can_move_left();
-		bool can_rotate_right();
-		bool can_move_down();
+		void hard_drop();
+		bool can_move_right(Matrix m);
+		bool can_move_left(Matrix m);
+		bool can_move_down(Matrix m);
+		bool can_rotate_right(Matrix m);
 		bool game_over();
 };
 

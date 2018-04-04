@@ -193,13 +193,13 @@ bool Collision::any() {
 // Board
 ///////////////////////////////////////////////////////////////////////////////
 
-void Board::draw(Window &window) {
+void Board::draw(Window &window, bool shadow) {
 	sf::RectangleShape rect(to_f(mul(board.get_size(), block_size)));
 	// TODO: center the board
 	rect.setPosition(Vec2f(0,0));
 	window.draw(rect);
-
 	board.draw(window);
+	if (shadow) ;
 	falling.draw(window);
 }
 
@@ -215,32 +215,28 @@ void Board::insert(Matrix matrix) {
 	}
 }
 
-bool Board::can_move_right() {
-	Matrix future = falling;
-	future.origin.x += 1;
-	auto col = future.collision(board);
+bool Board::can_move_right(Matrix m) {
+	m.origin.x += 1;
+	auto col = m.collision(board);
 	return !(col.right || col.intersect);
 }
 
-bool Board::can_move_left() {
-	Matrix future = falling;
-	future.origin.x -= 1;
-	auto col = future.collision(board);
+bool Board::can_move_left(Matrix m) {
+	m.origin.x -= 1;
+	auto col = m.collision(board);
 	return !(col.left || col.intersect);
 }
 
-bool Board::can_rotate_right() {
-	Matrix future = falling;
-	future.rotate_right();
-	auto col = future.collision(board);
-	return !col.any();
+bool Board::can_move_down(Matrix m) {
+	m.origin.y += 1;
+	auto col = m.collision(board);
+	return !(col.bottom || col.intersect);
 }
 
-bool Board::can_move_down() {
-	Matrix future = falling;
-	future.origin.y += 1;
-	auto col = future.collision(board);
-	return !(col.bottom || col.intersect);
+bool Board::can_rotate_right(Matrix m) {
+	m.rotate_right();
+	auto col = m.collision(board);
+	return !col.any();
 }
 
 bool Board::game_over() {
@@ -262,6 +258,11 @@ void Board::spawn() {
 	falling = Matrix(tetromino_factory.next(), block_factory);
 	falling.update();
 	falling.origin = Vec2(3, -1);
+}
+
+void Board::hard_drop() {
+	while (can_move_down(falling))
+		falling.origin.y += 1;
 }
 
 //

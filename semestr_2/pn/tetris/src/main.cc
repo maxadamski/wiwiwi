@@ -2,6 +2,8 @@
 #include <iostream>
 #include <algorithm>
 
+#define SHADOW true
+
 struct Input {
 	bool move_right = false,
 		 move_left = false,
@@ -46,19 +48,20 @@ Input get_input(Window &window) {
 
 void render(Window &window, Board &board, State &state) {
 	window.clear();
-	board.draw(window);
+	board.draw(window, SHADOW);
 	window.display();
 }
 
 void update(Board &board, Input &input, State &state) {
 	int dx = 0, dy = 0, rotate = false;
-	if ((input.soft_drop || state.should_apply_gravity()) && board.can_move_down())
+	if ((input.soft_drop || state.should_apply_gravity()) 
+			&& board.can_move_down(board.falling))
 		dy = 1;
-	if (input.move_right && board.can_move_right())
+	if (input.move_right && board.can_move_right(board.falling))
 		dx = 1;
-	if (input.move_left && board.can_move_left())
+	if (input.move_left && board.can_move_left(board.falling))
 		dx = -1;
-	if (input.rotate_right && board.can_rotate_right())
+	if (input.rotate_right && board.can_rotate_right(board.falling))
 		rotate = true;
 
 	// too bad so sad
@@ -70,7 +73,7 @@ void update(Board &board, Input &input, State &state) {
 
 	if (input.hard_drop) {
 
-
+		board.hard_drop();
 
 	} else {
 
@@ -84,7 +87,8 @@ void update(Board &board, Input &input, State &state) {
 
 	}
 
-	if (!board.can_move_down() && (state.freeze_timeout() || input.soft_drop || input.hard_drop)) {
+	if (!board.can_move_down(board.falling) 
+			&& (state.freeze_timeout() || input.soft_drop || input.hard_drop)) {
 		std::cerr << "freezing\n";
 		board.freeze();
 		board.spawn();

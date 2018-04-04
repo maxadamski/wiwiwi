@@ -2,15 +2,19 @@
 #include <random>
 #include <cmath>
 
-std::mt19937 generator;
+std::mt19937 rng;
 
 int random(int min, int max) {
 	std::uniform_int_distribution<std::mt19937::result_type> dist(min, max);
-	return dist(generator);
+	return dist(rng);
+}
+
+std::mt19937 &random_generator() {
+	return rng;
 }
 
 void random_seed() {
-	generator.seed(std::random_device()());
+	rng.seed(std::random_device()());
 }
 
 double distance(Vec2 u, Vec2 v) {

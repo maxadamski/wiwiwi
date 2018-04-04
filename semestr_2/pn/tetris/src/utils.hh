@@ -3,12 +3,16 @@
 
 #include <SFML/Graphics.hpp>
 
+#include <random>
+
 typedef sf::Vector2i Vec2i;
 typedef sf::Vector2f Vec2f;
 typedef Vec2i Vec2;
 typedef sf::RenderWindow Window;
 typedef sf::Color Color;
 
+
+std::mt19937 &random_generator();
 int random(int min, int max);
 void random_seed();
 

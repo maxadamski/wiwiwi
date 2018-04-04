@@ -104,12 +104,7 @@ BlockMatrix BlockFactory::get_blocks(TetrominoType type, int rotation) {
 // Matrix
 ///////////////////////////////////////////////////////////////////////////////
 
-Matrix::Matrix(TetrominoType type, Vec2 origin, Vec2 size, Vec2 block_size) {
-	this->origin = origin;
-	this->block_size = block_size;
-	this->rotation = 0;
-	this->type = type;
-
+void Matrix::set_size(Vec2 size) {
 	this->data.resize(size.y);
 	for (int y = 0; y < size.y; y++) {
 		this->data[y].resize(size.x);
@@ -119,17 +114,31 @@ Matrix::Matrix(TetrominoType type, Vec2 origin, Vec2 size, Vec2 block_size) {
 	}
 }
 
+Vec2 Matrix::get_size() {
+	return Vec2(this->get_width(), this->get_height());
+}
+
+int Matrix::get_width() {
+	return this->data[0].size();
+}
+
+int Matrix::get_height() {
+	return this->data.size();
+}
+
 void Matrix::rotate_right() {
 	this->rotation += 1;
 	this->rotation %= 4;
+	this->update();
 }
 
 void Matrix::rotate_left() {
 	this->rotation = this->rotation > 0 ? this->rotation - 1 : 3;
+	this->update();
 }
 
-void Matrix::update_tetromino(BlockFactory &factory) {
-	this->data = factory.get_blocks(this->type, this->rotation);
+void Matrix::update() {
+	this->data = this->factory.get_blocks(this->type, this->rotation);
 }
 
 void Matrix::draw(Window &window) {
@@ -139,7 +148,8 @@ void Matrix::draw(Window &window) {
 			if (block.has_value()) {
 				sf::RectangleShape rect(to_f(this->block_size));
 				auto pos = mul(add(this->origin, Vec2(x, y)), this->block_size);
-				rect.setFillColor(block->color);
+				auto color = block->color;
+				rect.setFillColor(color);
 				rect.setPosition(to_f(pos));
 				window.draw(rect);
 			}
@@ -147,53 +157,32 @@ void Matrix::draw(Window &window) {
 	}
 }
 
-Vec2 Matrix::get_size() {
-	return Vec2(this->data[0].size(), this->data.size());
-}
 
-bool Matrix::collides(Matrix &parent) {
-	for (int y = 0; y < this->get_size().y; y++) {
-		for (int x = 0; x < this->get_size().x; x++) {
-			int x_ = this->origin.x + x;
-			int y_ = this->origin.y + y;
-			int w = parent.get_size().x;
-			int h = parent.get_size().y;
-			if (this->data[y][x] && x_ >= 0 && y_ >= 0 && x_ < w && y_ < h && parent.data[y_][x_]) {
-				return true;
+Collision Matrix::collision(Matrix &board) {
+	Collision res;
+	for (int y = 0; y < this->get_height(); y++) {
+		for (int x = 0; x < this->get_width(); x++) {
+			int Y = this->origin.y + board.origin.y + y;
+			int X = this->origin.x + board.origin.x + x;
+			if (this->data[y][x].has_value()) {
+				if (X < board.get_width() && Y < board.get_height() && board.data[Y][X].has_value())
+					res.intersect = true;
+				if (X < board.origin.x)
+					res.left = true;
+				if (X >= board.get_width())
+					res.right = true;
+				if (Y < board.origin.y)
+					res.top = true;
+				if (Y >= board.get_height())
+					res.bottom = true;
 			}
 		}
 	}
-	return false;
+	return res;
 }
 
-bool Matrix::outside(Matrix &parent) {
-	for (int y = 0; y < this->get_size().y; y++) {
-		for (int x = 0; x < this->get_size().x; x++) {
-			int x_ = this->origin.x + x;
-			int y_ = this->origin.y + y;
-			int w = parent.get_size().x;
-			int h = parent.get_size().y;
-			if (this->data[y][x] && (x_ < 0 || y_ < 0 || x_ >= w || y_ >= h)) {
-				return true;
-			}
-		}
-	}
-	return false;
-}
-
-bool Matrix::outside_y(Matrix &parent) {
-	for (int y = 0; y < this->get_size().y; y++) {
-		for (int x = 0; x < this->get_size().x; x++) {
-			int x_ = this->origin.x + x;
-			int y_ = this->origin.y + y;
-			int w = parent.get_size().x;
-			int h = parent.get_size().y;
-			if (this->data[y][x] && (y_ < 0 || y_ >= h)) {
-				return true;
-			}
-		}
-	}
-	return false;
+bool Collision::any() {
+	return this->left || this->right || this->top || this->bottom || this->intersect;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -207,19 +196,93 @@ void Board::draw(Window &window) {
 	window.draw(rect);
 
 	this->board.draw(window);
-	if (this->falling.has_value()) {
-		this->falling->draw(window);
-	}
+	this->falling.draw(window);
 }
 
 void Board::insert(Matrix matrix) {
 	for (int y = 0; y < matrix.get_size().y; y++) {
 		for (int x = 0; x < matrix.get_size().x; x++) {
-			if (matrix.data[y][x].has_value()) {
-				int y_ = matrix.origin.y + y;
-				int x_ = matrix.origin.x + x;
-				this->board.data[y_][x_] = matrix.data[y][x];
+			int Y = matrix.origin.y + this->board.origin.y + y;
+			int X = matrix.origin.x + this->board.origin.x + x;
+			if (matrix.data[y][x].has_value() 
+					&& X < this->board.get_size().x
+					&& Y < this->board.get_size().y) {
+				this->board.data[Y][X] = matrix.data[y][x];
 			}
 		}
 	}
 }
+
+bool Board::can_move_right() {
+	Matrix future = this->falling;
+	future.origin.x += 1;
+	auto col = future.collision(this->board);
+	return !(col.right || col.intersect);
+}
+
+bool Board::can_move_left() {
+	Matrix future = this->falling;
+	future.origin.x -= 1;
+	auto col = future.collision(this->board);
+	return !(col.left || col.intersect);
+}
+
+bool Board::can_rotate_right() {
+	Matrix future = this->falling;
+	future.rotate_right();
+	auto col = future.collision(this->board);
+	return !col.any();
+}
+
+bool Board::can_move_down() {
+	Matrix future = this->falling;
+	future.origin.y += 1;
+	auto col = future.collision(this->board);
+	return !(col.bottom || col.intersect);
+}
+
+bool Board::should_freeze() {
+	return !this->can_move_down();
+}
+
+bool Board::is_game_over() {
+	for (int y = 0; y < 2; y++) {
+		for (int x = 0; x < this->board.get_size().x; x++) {
+			if (this->board.data[y][x].has_value()) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+void Board::freeze() {
+	this->insert(this->falling);
+}
+
+void Board::spawn() {
+	this->falling = Matrix(this->tetromino_factory.next(), this->block_factory);
+	this->falling.update();
+	this->falling.origin = Vec2(3, 0);
+}
+
+//
+// Tetromino Factories
+//
+
+TetrominoType RandomTetrominoFactory::next() {
+	auto index = random(0, tetromino_types.size() - 1);
+	auto type = tetromino_types[index];
+	return static_cast<TetrominoType>(type);
+}
+
+TetrominoType BaggedTetrominoFactory::next() {
+	if (this->bag.empty()) {
+		this->bag = tetromino_types;
+		std::shuffle(this->bag.begin(), this->bag.end(), random_generator());
+	}
+	auto type = this->bag.back();
+	this->bag.pop_back();
+	return static_cast<TetrominoType>(type);
+}
+

@@ -7,11 +7,13 @@
 #include <map>
 #include <vector>
 #include <optional>
+#include <functional>
 
 #define BLOCK_SIZE 32
 
 typedef std::vector<std::vector<bool>> TetrominoShape;
 typedef std::array<TetrominoShape, 4> TetrominoRotation;
+
 enum TetrominoType {
 	I = 'I', O = 'O', J = 'J', L = 'L', S = 'S', T = 'T', Z = 'Z',
 	NONE
@@ -48,9 +50,10 @@ class Block {
 typedef std::vector<std::vector<std::optional<Block>>> BlockMatrix;
 
 class BlockFactory {
+	RotationSystem rotation_system;
+	ColorScheme color_scheme;
+
 	public:
-		RotationSystem rotation_system;
-		ColorScheme color_scheme;
 
 		BlockFactory(RotationSystem rotation_system, ColorScheme color_scheme):
 			rotation_system(rotation_system), color_scheme(color_scheme) {};
@@ -58,38 +61,84 @@ class BlockFactory {
 		BlockMatrix get_blocks(TetrominoType type, int rotation);
 };
 
-class Matrix {
+class TetrominoFactory {
 	public:
-		Vec2 origin, block_size;
-		TetrominoType type;
-		int rotation = 0;
+		virtual TetrominoType next() = 0;
+};
+
+class BaggedTetrominoFactory : public TetrominoFactory {
+	std::vector<char> bag;
+
+	public:
+		TetrominoType next();
+};
+
+class RandomTetrominoFactory : public TetrominoFactory {
+	public:
+		TetrominoType next();
+};
+
+typedef struct Collision Collision;
+struct Collision {
+	bool top = false, right = false, bottom = false, left = false, 
+		 intersect = false;
+
+	bool any();
+};
+
+class Matrix {
+	Vec2 block_size = Vec2(BLOCK_SIZE, BLOCK_SIZE);
+	BlockFactory factory;
+	TetrominoType type;
+	int rotation = 0;
+
+	int get_width();
+	int get_height();
+
+	public:
+		Vec2 origin = Vec2(0, 0);
 		BlockMatrix data;
 
-		Matrix(TetrominoType type, Vec2 origin, Vec2 size = Vec2(0, 0), 
-			Vec2 block_size = Vec2(BLOCK_SIZE, BLOCK_SIZE));
+		Matrix(TetrominoType type, BlockFactory &factory):
+			factory(factory), type(type) {};
 
-		void update_tetromino(BlockFactory &factory);
 		void rotate_right();
 		void rotate_left();
 		void draw(Window &window);
-		bool collides(Matrix &matrix);
-		bool outside(Matrix &matrix);
-		bool outside_y(Matrix &matrix);
+		Collision collision(Matrix &board);
 		Vec2 get_size();
+		void set_size(Vec2 size);
+		void update();
 };
 
 class Board {
+	Vec2 block_size = Vec2(BLOCK_SIZE, BLOCK_SIZE);
+	TetrominoFactory &tetromino_factory;
+	BlockFactory block_factory;
+
+	void insert(Matrix matrix);
+
 	public:
-		Vec2 block_size;
+		Matrix falling;
 		Matrix board;
-		std::optional<Matrix> falling = std::nullopt;
 
-		Board(Vec2 size, Vec2 block_size = Vec2(BLOCK_SIZE, BLOCK_SIZE)): 
-			block_size(block_size),
-			board(Matrix(NONE, Vec2(0, 0), size, block_size)) {};
+		Board(Vec2 size, TetrominoFactory &tetromino_factory, BlockFactory &block_factory):
+			tetromino_factory(tetromino_factory), block_factory(block_factory),
+			falling(Matrix(tetromino_factory.next(), block_factory)),
+			board(Matrix(NONE, block_factory)) {
+			this->board.set_size(size);
+			this->falling.update();
+		}
 
-		void insert(Matrix matrix);
 		void draw(Window &window);
+		void freeze();
+		void spawn();
+		bool can_move_right();
+		bool can_move_left();
+		bool can_rotate_right();
+		bool can_move_down();
+		bool should_freeze();
+		bool is_game_over();
 };
 
 #endif

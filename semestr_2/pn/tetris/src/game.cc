@@ -157,6 +157,10 @@ void Matrix::draw(Window &window) {
 	}
 }
 
+bool Matrix::valid_point(Vec2 point) {
+	return point.x >= this->origin.x && point.x < this->origin.x + this->get_width()
+		&& point.y >= this->origin.y && point.y < this->origin.y + this->get_height();
+}
 
 Collision Matrix::collision(Matrix &board) {
 	Collision res;
@@ -165,7 +169,7 @@ Collision Matrix::collision(Matrix &board) {
 			int Y = this->origin.y + board.origin.y + y;
 			int X = this->origin.x + board.origin.x + x;
 			if (this->data[y][x].has_value()) {
-				if (X < board.get_width() && Y < board.get_height() && board.data[Y][X].has_value())
+				if (board.valid_point(Vec2(X, Y)) && board.data[Y][X].has_value())
 					res.intersect = true;
 				if (X < board.origin.x)
 					res.left = true;
@@ -204,9 +208,7 @@ void Board::insert(Matrix matrix) {
 		for (int x = 0; x < matrix.get_size().x; x++) {
 			int Y = matrix.origin.y + this->board.origin.y + y;
 			int X = matrix.origin.x + this->board.origin.x + x;
-			if (matrix.data[y][x].has_value() 
-					&& X < this->board.get_size().x
-					&& Y < this->board.get_size().y) {
+			if (matrix.data[y][x].has_value() && this->board.valid_point(Vec2(X, Y))) {
 				this->board.data[Y][X] = matrix.data[y][x];
 			}
 		}
@@ -245,7 +247,7 @@ bool Board::should_freeze() {
 	return !this->can_move_down();
 }
 
-bool Board::is_game_over() {
+bool Board::game_over() {
 	for (int y = 0; y < 2; y++) {
 		for (int x = 0; x < this->board.get_size().x; x++) {
 			if (this->board.data[y][x].has_value()) {
@@ -263,7 +265,7 @@ void Board::freeze() {
 void Board::spawn() {
 	this->falling = Matrix(this->tetromino_factory.next(), this->block_factory);
 	this->falling.update();
-	this->falling.origin = Vec2(3, 0);
+	this->falling.origin = Vec2(3, -1);
 }
 
 //

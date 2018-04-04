@@ -78,12 +78,35 @@ class RandomTetrominoFactory : public TetrominoFactory {
 		TetrominoType next();
 };
 
-typedef struct Collision Collision;
 struct Collision {
-	bool top = false, right = false, bottom = false, left = false, 
+	bool top = false,
+		 right = false,
+		 bottom = false,
+		 left = false,
 		 intersect = false;
 
 	bool any();
+};
+
+struct State {
+	sf::Time turn = sf::seconds(0);
+	bool game_over = false;
+	int level = 1;
+
+	bool should_apply_gravity() {
+		return turn >= turn_length(this->level);
+	}
+
+	void update_turn(sf::Time elapsed) {
+		if (turn >= turn_length(this->level)) {
+			turn -= turn_length(this->level);
+		}
+		turn += elapsed;
+	}
+
+	sf::Time turn_length(int level) {
+		return sf::seconds(0.8);
+	}
 };
 
 class Matrix {
@@ -109,6 +132,7 @@ class Matrix {
 		Vec2 get_size();
 		void set_size(Vec2 size);
 		void update();
+		bool valid_point(Vec2 point);
 };
 
 class Board {
@@ -131,14 +155,14 @@ class Board {
 		}
 
 		void draw(Window &window);
+		bool should_freeze();
 		void freeze();
 		void spawn();
 		bool can_move_right();
 		bool can_move_left();
 		bool can_rotate_right();
 		bool can_move_down();
-		bool should_freeze();
-		bool is_game_over();
+		bool game_over();
 };
 
 #endif

@@ -2,42 +2,14 @@
 #include <iostream>
 #include <algorithm>
 
-typedef struct Input Input;
 struct Input {
-	bool move_right, move_left, rotate_left, rotate_right, 
-		 hold, soft_drop, hard_drop;
-
-	Input() {
-		rotate_right = false;
-		rotate_left = false;
-		move_right = false;
-		move_left = false;
-		soft_drop = false;
-		hard_drop = false;
-		hold = false;
-	}
-};
-
-typedef struct State State;
-struct State {
-	sf::Time turn = sf::seconds(0);
-	bool game_over = false;
-	int level = 1;
-
-	bool should_apply_gravity() {
-		return turn >= turn_length(this->level);
-	}
-
-	void update_turn(sf::Time elapsed) {
-		if (turn >= turn_length(this->level)) {
-			turn -= turn_length(this->level);
-		}
-		turn += elapsed;
-	}
-
-	sf::Time turn_length(int level) {
-		return sf::seconds(0.8);
-	}
+	bool move_right = false,
+		 move_left = false,
+		 rotate_left = false,
+		 rotate_right = false,
+		 hold = false,
+		 soft_drop = false,
+		 hard_drop = false;
 };
 
 Input get_input(Window &window) {
@@ -90,7 +62,7 @@ void update(Board &board, Input &input, State &state) {
 		rotate = true;
 
 	// too bad so sad
-	if (board.is_game_over()) {
+	if (board.game_over()) {
 		std::cerr << "game over\n";
 		state.game_over = true;
 		return;
@@ -136,7 +108,6 @@ int main() {
 		state.update_turn(spu);
 		sf::sleep(start + spu - clock.restart());
 	}
-
 
 	std::cerr << "[event] exiting gracefully\n";
 	return 0;

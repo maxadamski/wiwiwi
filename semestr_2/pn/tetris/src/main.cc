@@ -98,7 +98,7 @@ void render(Window &window, Board &board, State &state) {
 void update(Board &board, Input &input, State &state) {
 	int dx = 0, dy = 0, rotate = false;
 
-	if (input.hold) {
+	if (input.hold && !board.falling.was_on_hold()) {
 		board.hold_swap();
 	}
 

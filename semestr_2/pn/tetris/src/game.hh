@@ -76,6 +76,7 @@ class TetrominoFactory {
 };
 
 class BaggedTetrominoFactory : public TetrominoFactory {
+	std::optional<char> last = std::nullopt;
 	std::vector<char> bag;
 
 	public:
@@ -155,6 +156,7 @@ class Matrix {
 
 	public:
 		Vec2 origin = Vec2(0, 0);
+		int hold_count = 0;
 		BlockMatrix data;
 
 		Matrix(TetrominoType type, BlockFactory &factory):
@@ -169,6 +171,7 @@ class Matrix {
 		void set_size(Vec2 size);
 		void update();
 		bool valid_point(Vec2 point);
+		bool was_on_hold();
 };
 
 class Board {

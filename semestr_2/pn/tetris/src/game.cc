@@ -140,6 +140,10 @@ int Matrix::get_height() {
 	return data.size();
 }
 
+bool Matrix::was_on_hold() {
+	return hold_count > 0;
+}
+
 void Matrix::rotate_right() {
 	rotation += 1;
 	rotation %= 4;
@@ -295,6 +299,7 @@ void Board::hold_swap() {
 	Matrix temp = falling;
 	temp.origin = Vec2(0, 0);
 	temp.rotate_reset();
+	temp.hold_count += 1;
 
 	if (hold)  {
 		falling = hold.value();
@@ -344,9 +349,12 @@ TetrominoType RandomTetrominoFactory::next() {
 TetrominoType BaggedTetrominoFactory::next() {
 	if (bag.empty()) {
 		bag = tetromino_types;
-		std::shuffle(bag.begin(), bag.end(), random_generator());
+		do {
+			std::shuffle(bag.begin(), bag.end(), random_generator());
+		} while (last && last.value() == bag.back());
 	}
 	auto type = bag.back();
+	last = type;
 	bag.pop_back();
 	return static_cast<TetrominoType>(type);
 }

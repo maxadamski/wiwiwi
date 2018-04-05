@@ -15,8 +15,8 @@
 #define RED_COLOR 0xF15C5CFF
 #define SPAWN_POS Vec2(3, -1)
 #define BLOCK_SIZE 32
-#define FREEZE 0.5
-#define ACTION 0.1
+#define FREEZE 0.6
+#define ACTION 0.05
 
 typedef std::vector<std::vector<bool>> TetrominoShape;
 typedef std::array<TetrominoShape, 4> TetrominoRotation;

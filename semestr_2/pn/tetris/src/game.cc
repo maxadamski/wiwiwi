@@ -377,12 +377,10 @@ int State::level() {
 
 double State::turn_frames() {
 	int L = level();
-	if (L <= 9)
+	if (L <= 8)
 		return 48 - L*5;
-	else if (L <= 29)
-		return 5 - (L-10)*0.5;
 	else
-		return 1;
+		return max(6 - (L-9)*0.25, 1);
 }
 
 sf::Time State::turn_length() {

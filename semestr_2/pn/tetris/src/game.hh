@@ -111,6 +111,7 @@ struct State {
 	void update_gravity();
 	void update(sf::Time elapsed);
 	int elapsed_seconds();
+	void write_report(std::string path);
 
 	private:
 		double turn_frames();

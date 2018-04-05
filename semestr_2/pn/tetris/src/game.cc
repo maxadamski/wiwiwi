@@ -56,7 +56,6 @@ ColorScheme::ColorScheme(std::string file_path) {
 		input >> type >> std::hex >> color;
 		color = color << 8 | 0xFF;
 		auto tetromino_type = static_cast<TetrominoType>(type[0]);
-		std::cerr << type << std::setw(8) << std::setfill('0') << std::hex << color << "\n";
 		data[tetromino_type] = Color(color);
 	}
 	std::cerr << "[done] reading color scheme\n";
@@ -407,5 +406,15 @@ void State::update(sf::Time elapsed) {
 			timer->reset();
 		else
 			timer->tick(elapsed);
+}
+
+void State::write_report(std::string path) {
+	std::ofstream report(path, std::ios::app);
+	report << "---\n";
+	report << "score " << score << "\n";
+	report << "time " << elapsed_seconds() << "\n";
+	report << "level " << level() << "\n";
+	report << "lines " << lines << "\n";
+	std::cerr << "[done] writing report\n";
 }
 

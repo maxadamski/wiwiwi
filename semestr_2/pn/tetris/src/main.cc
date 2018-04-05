@@ -1,10 +1,10 @@
 #include "main.hh"
 #include <iostream>
-#include <algorithm>
-#include <cstdio>
 #include <iomanip>
+#include <fstream>
 
 sf::Font kouryuu;
+
 
 struct Input {
 	bool move_right = false,
@@ -172,6 +172,7 @@ void update(Board &board, Input &input, State &state) {
 	if (board.game_over()) {
 		std::cerr << "[event] game over\n";
 		state.game_over = true;
+		state.write_report("report.txt");
 		return;
 	}
 
@@ -226,17 +227,7 @@ int main() {
 	sf::RenderWindow window(sf::VideoMode(WINDOW_W, WINDOW_H), "sfml-devel");
 	window.setVerticalSyncEnabled(true);
 	sf::Clock clock;
-
 	kouryuu.loadFromFile(FONT_KOURYUU_PATH);
-
-	sf::Music music_a;
-	if (!music_a.openFromFile(MUSIC_A_PATH)) {
-		std::cerr << "[error] coldn't load " << MUSIC_A_PATH << "\n";
-		return 1;
-	}
-	music_a.setLoop(true);
-	music_a.setVolume(50);
-	music_a.play();
 
 	auto spu = sf::seconds(1.0 / 60);
 	while (window.isOpen()) {

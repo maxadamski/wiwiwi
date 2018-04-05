@@ -400,7 +400,8 @@ int State::elapsed_seconds() {
 }
 
 void State::update(sf::Time elapsed) {
-	elapsed_time += elapsed;
+	if (!game_over)
+		elapsed_time += elapsed;
 	for (auto timer : timers())
 		if (timer->timeout())
 			timer->reset();

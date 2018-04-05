@@ -92,9 +92,11 @@ void render(Window &window, Board &board, State &state) {
 	title.setPosition(to_f(Vec2((window_w - title.getLocalBounds().width) / 2, 20)));
 	w.draw(title);
 
-	sf::Text gover("Game Over!", font, font_s);
-	gover.setPosition(to_f(Vec2((window_w - gover.getLocalBounds().width) / 2, 20 + line_h)));
-	w.draw(gover);
+	if (state.game_over) {
+		sf::Text gover("Game Over!", font, font_s);
+		gover.setPosition(to_f(Vec2((window_w - gover.getLocalBounds().width) / 2, 20 + line_h)));
+		w.draw(gover);
+	}
 
 	std::vector<std::string> motivational = {
 		"Death is only but a consequence of life",
@@ -142,6 +144,8 @@ int score_for_lines(int lines, int level) {
 }
 
 void update(Board &board, Input &input, State &state) {
+	if (state.game_over) return;
+
 	int dx = 0, dy = 0, rotate = 0;
 
 	if (input.hold && !board.falling.was_on_hold())
@@ -244,7 +248,6 @@ int main() {
 		state.update(spu);
 		update(board, input, state);
 		render(window, board, state);
-		if (state.game_over) break;
 		sf::sleep(start + spu - clock.restart());
 	}
 

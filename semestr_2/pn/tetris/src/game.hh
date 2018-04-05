@@ -9,6 +9,10 @@
 #include <optional>
 #include <functional>
 
+#define BOARD_COLOR 0xF0F5F9FF
+#define FONT_COLOR 0xC9D6DFFF
+#define BG_COLOR 0x1E2022FF
+#define RED_COLOR 0xF15C5CFF
 #define SPAWN_POS Vec2(3, -1)
 #define BLOCK_SIZE 32
 #define FREEZE 0.5

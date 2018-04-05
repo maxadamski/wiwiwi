@@ -1,8 +1,10 @@
 #include "main.hh"
 #include <iostream>
 #include <algorithm>
+#include <cstdio>
+#include <iomanip>
 
-#define SHADOW true
+sf::Font kouryuu;
 
 struct Input {
 	bool move_right = false,
@@ -49,14 +51,11 @@ Input get_input(Window &window) {
 	return input;
 }
 
-sf::Font kouryuu;
-#include <cstdio>
-#include <iomanip>
-
 Vec2 draw_label(Window &w, std::string text, Vec2 position,
 		sf::Font font = kouryuu, int font_size = 32) {
 	sf::Text label(text, font, font_size);
 	label.setPosition(to_f(position));
+	label.setFillColor(Color(FONT_COLOR));
 	w.draw(label);
 	return position;
 }
@@ -83,25 +82,22 @@ void render(Window &window, Board &board, State &state) {
 	time  << std::setfill('0') << std::setw(8) << state.elapsed_seconds();
 	lines << std::setfill('0') << std::setw(8) << state.lines;
 
-	window.clear();
+	window.clear(Color(BG_COLOR));
 
 	board.draw(window, Vec2(tetron_x, tetron_y), SHADOW);
 
 
-	sf::Text title("Max's Amazingly Shameless Tetris Ripoff", font, font_s);
-	title.setPosition(to_f(Vec2((window_w - title.getLocalBounds().width) / 2, 20)));
+	sf::Text title("Max's Totally Amazing Tetris Clone", font, font_s);
+	title.setPosition(to_f(Vec2((window_w - title.getLocalBounds().width) / 2, 45)));
+	title.setFillColor(Color(FONT_COLOR));
 	w.draw(title);
 
 	if (state.game_over) {
 		sf::Text gover("Game Over!", font, font_s);
-		gover.setPosition(to_f(Vec2((window_w - gover.getLocalBounds().width) / 2, 20 + line_h)));
+		gover.setPosition(to_f(Vec2((window_w - gover.getLocalBounds().width) / 2, tetron_y + tetron_h + 45)));
+		gover.setFillColor(Color(RED_COLOR));
 		w.draw(gover);
 	}
-
-	std::vector<std::string> motivational = {
-		"Death is only but a consequence of life",
-		"Winning isn't everything",
-	};
 
 	Vec2 time_section = draw_label(w, "Time", 
 		Vec2(bar_x, bar_y));

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <iomanip>
 
 // TODO: handle errors in user input
 
@@ -48,26 +49,17 @@ TetrominoShape RotationSystem::get_shape(TetrominoType type, int rotation) {
 // ColorScheme
 ///////////////////////////////////////////////////////////////////////////////
 
-Color color_from_hex(std::string s) {
-	if (s[0] == '0' && s[1] == 'x')
-		s.erase(0, 2);
-	if (s[0] == '#')
-		s.erase(0, 1);
-	int hex;
-	sscanf(s.c_str(), "%x", &hex);
-	return Color(hex);
-}
-
 ColorScheme::ColorScheme(std::string file_path) {
-	using namespace std;
-	ifstream input(file_path);
+	std::ifstream input(file_path);
 	for (size_t i = 0; i < tetromino_types.size(); i++) {
-		string type, hex;
-		input >> type >> hex;
-		auto ttype = static_cast<TetrominoType>(type[0]);
-		data[ttype] = color_from_hex(hex);
+		std::string type; unsigned int color;
+		input >> type >> std::hex >> color;
+		color = color << 8 | 0xFF;
+		auto tetromino_type = static_cast<TetrominoType>(type[0]);
+		std::cerr << type << std::setw(8) << std::setfill('0') << std::hex << color << "\n";
+		data[tetromino_type] = Color(color);
 	}
-	cerr << "[done] reading color scheme\n";
+	std::cerr << "[done] reading color scheme\n";
 }
 
 Color ColorScheme::get_color(TetrominoType type) {
@@ -80,9 +72,7 @@ Color ColorScheme::get_color(TetrominoType type) {
 
 BlockMatrix BlockFactory::get_blocks(TetrominoType type, int rotation) {
 	auto shape = rotation_system.get_shape(type, rotation);
-	// FIXME: color schemes don't work
-	//auto color = color_scheme.get_color(type);
-	auto color = Color(random(0, 255), random(0, 255), random(0, 255));
+	auto color = color_scheme.get_color(type);
 
 	BlockMatrix blocks;
 	blocks.resize(shape.size());
@@ -106,12 +96,23 @@ BlockMatrix BlockFactory::get_blocks(TetrominoType type, int rotation) {
 
 void Block::draw(Window &window, Vec2 origin, Vec2 size) {
 	sf::RectangleShape rect(to_f(size));
-	if (shadow)
-		rect.setFillColor(Color(0, 0, 0, 255*0.2));
-	else
-		rect.setFillColor(color);
 	rect.setPosition(to_f(origin));
-	window.draw(rect);
+
+	int padding = 10;
+	Vec2 front_size = add(size, Vec2(-2*padding, -2*padding));
+	Vec2 front_pos = add(origin, Vec2(padding, padding));
+	sf::RectangleShape front(to_f(front_size));
+	front.setPosition(to_f(front_pos));
+
+	if (shadow) {
+		rect.setFillColor(Color(0, 0, 0, 255*0.2));
+		window.draw(rect);
+	} else {
+		front.setFillColor(Color(0, 0, 0, 255*0.15));
+		rect.setFillColor(color);
+		window.draw(rect);
+		window.draw(front);
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -215,6 +216,7 @@ bool Collision::any() {
 void Board::draw(Window &window, Vec2 offset, bool shadow) {
 	sf::RectangleShape rect(to_f(mul(board.get_size(), block_size)));
 	// TODO: center the board
+	rect.setFillColor(Color(BOARD_COLOR));
 	rect.setPosition(to_f(offset));
 	window.draw(rect);
 	board.draw(window, offset);

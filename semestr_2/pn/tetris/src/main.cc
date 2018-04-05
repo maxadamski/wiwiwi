@@ -163,6 +163,7 @@ void update(Board &board, Input &input, State &state) {
 			rotate = -1;
 	}
 
+
 	if (dx != 0 || rotate != 0) {
 		state.action.flag = true;
 	}
@@ -178,16 +179,24 @@ void update(Board &board, Input &input, State &state) {
 		board.hard_drop();
 		state.score += TETROMINO_POINTS;
 	} else {
-		board.falling.origin.y += dy;
-
-		if (rotate != 0 || dx != 0)
+		if (dy != 0 || dx != 0 || rotate != 0)
 			state.freeze.reset();
 
-		if (rotate != 0) {
+		board.falling.origin.y += dy;
+
+		if (rotate == 1)
 			board.falling.rotate_right();
-		} else {
+		else if (rotate == -1)
+			board.falling.rotate_left();
+		else
 			board.falling.origin.x += dx;
-		}
+	}
+
+	if (!board.can_move_down(board.falling) 
+			&& (state.freeze.timeout() || input.hard_drop || input.soft_drop)) {
+		state.score += TETROMINO_POINTS;
+		board.freeze();
+		board.spawn();
 	}
 
 	auto full_rows = board.full_lines();
@@ -198,14 +207,6 @@ void update(Board &board, Input &input, State &state) {
 		state.update_gravity();
 	for (auto row : full_rows) 
 		board.clear_row(row);
-
-	if (!board.can_move_down(board.falling) 
-			&& (state.freeze.timeout() || input.soft_drop 
-				|| (!SONIC_DROP && input.hard_drop))) {
-		state.score += TETROMINO_POINTS;
-		board.freeze();
-		board.spawn();
-	}
 }
 
 int main() {

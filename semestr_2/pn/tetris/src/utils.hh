@@ -11,6 +11,17 @@ typedef Vec2i Vec2;
 typedef sf::RenderWindow Window;
 typedef sf::Color Color;
 
+struct Timer {
+	sf::Time duration, remaining;
+	bool flag = false;
+
+	Timer(sf::Time duration):
+		duration(duration), remaining(sf::seconds(0)) {};
+
+	bool timeout();
+	void tick(sf::Time elapsed);
+	void reset();
+};
 
 std::mt19937 &random_generator();
 int random(int min, int max);

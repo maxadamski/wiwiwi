@@ -42,10 +42,6 @@ class ColorScheme {
 		Color get_color(TetrominoType type);
 };
 
-class ScoringSystem {
-
-};
-
 struct Block {
 	Color color;
 	bool shadow = false;
@@ -63,7 +59,6 @@ class BlockFactory {
 	ColorScheme color_scheme;
 
 	public:
-
 		BlockFactory(RotationSystem rotation_system, ColorScheme color_scheme):
 			rotation_system(rotation_system), color_scheme(color_scheme) {};
 
@@ -98,69 +93,24 @@ struct Collision {
 	bool any();
 };
 
-struct Timer {
-	sf::Time duration, remaining;
-	bool flag = false;
-
-	Timer(sf::Time duration):
-		duration(duration), remaining(sf::seconds(0)) {};
-
-	bool timeout() {
-		return remaining <= sf::seconds(0);
-	}
-
-	void tick(sf::Time elapsed) {
-		remaining -= elapsed;
-	}
-
-	void reset() {
-		remaining = duration;
-		flag = false;
-	}
-};
-
 struct State {
-	Timer gravity = Timer(sf::seconds(0.8));
-	Timer freeze = Timer(sf::seconds(FREEZE));
-	Timer action = Timer(sf::seconds(ACTION));
+	Timer gravity = Timer(sf::seconds(0.8)),
+		  freeze = Timer(sf::seconds(FREEZE)),
+		  action = Timer(sf::seconds(ACTION));
 
+	sf::Time elapsed_time = sf::seconds(0);
+	int score = 0, lines = 0;
 	bool game_over = false;
-	int score = 0;
-	int lines = 0;
 
-	int level() {
-		return lines / 10;
-	}
+	int level();
+	sf::Time turn_length();
+	void update_gravity();
+	void update(sf::Time elapsed);
+	int elapsed_seconds();
 
-	double turn_frames() {
-		int L = level();
-		if (L <= 9)
-			return 48 - L*5;
-		else if (L <= 29)
-			return 5 - (L-10)*0.5;
-		else
-			return 1;
-	}
-
-	sf::Time turn_length() {
-		return sf::seconds(turn_frames() / 60.0);
-	}
-
-	std::vector<Timer*> timers() {
-		return {&gravity, &freeze, &action};
-	}
-
-	void update_gravity() {
-		gravity = Timer(turn_length());
-	}
-
-	void update(sf::Time elapsed) {
-		for (auto timer : timers())
-			if (timer->timeout())
-				timer->reset();
-			else
-				timer->tick(elapsed);
-	}
+	private:
+		double turn_frames();
+		std::vector<Timer*> timers();
 };
 
 class Matrix {
@@ -214,7 +164,9 @@ class Board {
 			falling.update();
 		}
 
-		void draw(Window &window, bool shadow);
+		void draw(Window &window, 
+				Vec2 offset = Vec2(0, 0), 
+				bool shadow = true);
 		void freeze();
 		void spawn();
 		void hold_swap();

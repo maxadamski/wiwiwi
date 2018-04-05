@@ -212,12 +212,12 @@ bool Collision::any() {
 // Board
 ///////////////////////////////////////////////////////////////////////////////
 
-void Board::draw(Window &window, bool shadow) {
+void Board::draw(Window &window, Vec2 offset, bool shadow) {
 	sf::RectangleShape rect(to_f(mul(board.get_size(), block_size)));
 	// TODO: center the board
-	rect.setPosition(Vec2f(0,0));
+	rect.setPosition(to_f(offset));
 	window.draw(rect);
-	board.draw(window);
+	board.draw(window, offset);
 	if (shadow) {
 		Matrix s = falling;
 		// hard drop the shadow
@@ -231,9 +231,9 @@ void Board::draw(Window &window, bool shadow) {
 				}
 			}
 		}
-		s.draw(window);
+		s.draw(window, offset);
 	};
-	falling.draw(window);
+	falling.draw(window, offset);
 }
 
 void Board::insert(Matrix matrix) {
@@ -342,9 +342,9 @@ void Board::clear_row(int row) {
 			board.data[y][x] = board.data[y-1][x];
 }
 
-//
-// Tetromino Factories
-//
+///////////////////////////////////////////////////////////////////////////////
+// TetrominoFactory
+///////////////////////////////////////////////////////////////////////////////
 
 TetrominoType RandomTetrominoFactory::next() {
 	auto index = random(0, tetromino_types.size() - 1);
@@ -363,5 +363,48 @@ TetrominoType BaggedTetrominoFactory::next() {
 	last = type;
 	bag.pop_back();
 	return static_cast<TetrominoType>(type);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// TetrominoFactory
+///////////////////////////////////////////////////////////////////////////////
+
+int State::level() {
+	return lines / 10;
+}
+
+double State::turn_frames() {
+	int L = level();
+	if (L <= 9)
+		return 48 - L*5;
+	else if (L <= 29)
+		return 5 - (L-10)*0.5;
+	else
+		return 1;
+}
+
+sf::Time State::turn_length() {
+	return sf::seconds(turn_frames() / 60.0);
+}
+
+std::vector<Timer*> State::timers() {
+	return {&gravity, &freeze, &action};
+}
+
+void State::update_gravity() {
+	gravity = Timer(turn_length());
+}
+
+int State::elapsed_seconds() {
+	return elapsed_time.asSeconds();
+}
+
+void State::update(sf::Time elapsed) {
+	elapsed_time += elapsed;
+	for (auto timer : timers())
+		if (timer->timeout())
+			timer->reset();
+		else
+			timer->tick(elapsed);
 }
 

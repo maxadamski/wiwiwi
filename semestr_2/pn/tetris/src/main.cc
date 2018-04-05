@@ -53,46 +53,84 @@ sf::Font kouryuu;
 #include <cstdio>
 #include <iomanip>
 
+Vec2 draw_label(Window &w, std::string text, Vec2 position,
+		sf::Font font = kouryuu, int font_size = 32) {
+	sf::Text label(text, font, font_size);
+	label.setPosition(to_f(position));
+	w.draw(label);
+	return position;
+}
+
 void render(Window &window, Board &board, State &state) {
-	window.clear();
-	board.draw(window, SHADOW);
+	Window &w = window;
 
-	std::ostringstream score;
-	score << std::setfill('0') << std::setw(8) << state.score;
+	auto font = kouryuu;
+	int window_w = WINDOW_W, window_h = WINDOW_H;
+	int font_s = 32;
+	int line_h = font_s + 8;
+	int section_pad = 20;
+	int bar_w = 5*BLOCK_SIZE;
+	int tetron_w = BOARD_W * BLOCK_SIZE, tetron_h = BOARD_H * BLOCK_SIZE;
+	int tetron_x = (window_w - tetron_w - bar_w - section_pad) / 2 - 10;
+	int tetron_y = (window_h - tetron_h) / 2;
+	int bar_x = tetron_x + tetron_w + section_pad;
+	int bar_y = tetron_y;
+	int tetromino_h = 3*BLOCK_SIZE;
 
-	sf::Text score_label("Score", kouryuu, 32);
-	score_label.setPosition(to_f(Vec2(400, 100)));
-	window.draw(score_label);
-
-	sf::Text score_value(score.str(), kouryuu, 32);
-	score_value.setPosition(to_f(Vec2(400, 140)));
-	window.draw(score_value);
-
-
-	std::ostringstream level;
+	std::ostringstream level, score, time, lines;
 	level << std::setfill('0') << std::setw(8) << state.level();
+	score << std::setfill('0') << std::setw(8) << state.score;
+	time  << std::setfill('0') << std::setw(8) << state.elapsed_seconds();
+	lines << std::setfill('0') << std::setw(8) << state.lines;
 
-	sf::Text level_label("Level", kouryuu, 32);
-	level_label.setPosition(to_f(Vec2(400, 200)));
-	window.draw(level_label);
+	window.clear();
 
-	sf::Text level_value(level.str(), kouryuu, 32);
-	level_value.setPosition(to_f(Vec2(400, 240)));
-	window.draw(level_value);
-	
+	board.draw(window, Vec2(tetron_x, tetron_y), SHADOW);
 
-	sf::Text next_label("Next", kouryuu, 32);
-	next_label.setPosition(to_f(Vec2(400, 300)));
-	window.draw(next_label);
 
-	board.next.draw(window, Vec2(400, 320));
+	sf::Text title("Max's Amazingly Shameless Tetris Ripoff", font, font_s);
+	title.setPosition(to_f(Vec2((window_w - title.getLocalBounds().width) / 2, 20)));
+	w.draw(title);
 
-	sf::Text hold_label("Hold", kouryuu, 32);
-	hold_label.setPosition(to_f(Vec2(400, 450)));
-	window.draw(hold_label);
+	sf::Text gover("Game Over!", font, font_s);
+	gover.setPosition(to_f(Vec2((window_w - gover.getLocalBounds().width) / 2, 20 + line_h)));
+	w.draw(gover);
 
+	std::vector<std::string> motivational = {
+		"Death is only but a consequence of life",
+		"Winning isn't everything",
+	};
+
+	Vec2 time_section = draw_label(w, "Time", 
+		Vec2(bar_x, bar_y));
+	Vec2 time_value = draw_label(w, time.str(), 
+		Vec2(bar_x, time_section.y + line_h));
+
+	Vec2 line_section = draw_label(w, "Lines", 
+		Vec2(bar_x, time_value.y + line_h + section_pad));
+	Vec2 line_value = draw_label(w, lines.str(), 
+		Vec2(bar_x, line_section.y + line_h));
+
+	Vec2 level_section = draw_label(w, "Level", 
+		Vec2(bar_x, line_value.y + line_h + section_pad));
+	Vec2 level_value = draw_label(w, level.str(), 
+		Vec2(bar_x, level_section.y + line_h));
+
+	Vec2 score_label_pos = draw_label(w, "Score",
+		Vec2(bar_x, level_value.y + line_h + section_pad));
+	Vec2 score_value_pos = draw_label(w, score.str(), 
+		Vec2(bar_x, score_label_pos.y + line_h));
+
+	// draw next tetromino piece
+	Vec2 next_label_pos = draw_label(w, "Next", 
+		Vec2(bar_x, score_value_pos.y + line_h + section_pad));
+	Vec2 next_pos = Vec2(bar_x, next_label_pos.y + line_h);
+	board.next.draw(window, next_pos);
+
+	Vec2 hold_label_pos = draw_label(w, "Hold", 
+		Vec2(bar_x, next_pos.y + tetromino_h + section_pad));
 	if (board.hold)
-		board.hold->draw(window, Vec2(400, 470));
+		board.hold->draw(window, Vec2(bar_x, hold_label_pos.y + line_h));
 
 	window.display();
 }
@@ -138,6 +176,7 @@ void update(Board &board, Input &input, State &state) {
 
 	if (input.hard_drop) {
 		board.hard_drop();
+		state.score += TETROMINO_POINTS;
 	} else {
 		board.falling.origin.y += dy;
 
@@ -163,6 +202,7 @@ void update(Board &board, Input &input, State &state) {
 	if (!board.can_move_down(board.falling) 
 			&& (state.freeze.timeout() || input.soft_drop 
 				|| (!SONIC_DROP && input.hard_drop))) {
+		state.score += TETROMINO_POINTS;
 		board.freeze();
 		board.spawn();
 	}
@@ -182,7 +222,7 @@ int main() {
 	State state;
 	state.update_gravity();
 
-	sf::RenderWindow window(sf::VideoMode(960, 960), "sfml-devel");
+	sf::RenderWindow window(sf::VideoMode(WINDOW_W, WINDOW_H), "sfml-devel");
 	window.setVerticalSyncEnabled(true);
 	sf::Clock clock;
 

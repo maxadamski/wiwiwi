@@ -4,6 +4,7 @@
 #include <cstring>
 #include <chrono>
 #include <random>
+#include <algorithm>
 
 std::mt19937 generator;
 
@@ -15,6 +16,11 @@ int random(int min, int max) {
 void random_seed() {
 	generator.seed(std::random_device()());
 }
+
+void shuffle(std::vector<int> vector) {
+	std::shuffle(std::begin(vector), std::end(vector), generator);
+}
+
 
 long int benchmark(int passes, bool print_passes,
 	std::function<void()> before,

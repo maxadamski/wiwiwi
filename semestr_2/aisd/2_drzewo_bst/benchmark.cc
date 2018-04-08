@@ -53,7 +53,7 @@ auto read_names(std::string path, int rows) {
 ///////////////////////////////////////////////////////////////////////////////
 
 enum ComparatorResult { 
-	EQ = 0, LT, GT 
+	EQ = 0, LT = -1, GT = 1
 };
 
 typedef ComparatorResult (*Comparator)(void*, void*);
@@ -75,7 +75,6 @@ ComparatorResult cmp_pointer(void *a, void *b) {
 // GENERIC LIST
 ///////////////////////////////////////////////////////////////////////////////
 
-typedef struct ListNode ListNode;
 struct ListNode {
 	void *item;
 	ListNode *next;
@@ -109,7 +108,6 @@ ListNode *remove(ListNode *node, void *item, Comparator cmp = cmp_pointer) {
 	}
 	return nullptr;
 }
-
 
 // returns: pointer to the first matching element, null if not found
 ListNode *find(ListNode *node, void *item, Comparator cmp = cmp_pointer) {
@@ -154,13 +152,17 @@ ListNode *find_student(ListNode *students, long int index) {
 // GENERIC BST
 ///////////////////////////////////////////////////////////////////////////////
 
-typedef struct TreeNode TreeNode;
 struct TreeNode {
 	void *item;
 	TreeNode *left, *right;
 
 	TreeNode(void *item = nullptr, TreeNode *left = nullptr, TreeNode *right = nullptr): 
 		item(item), left(left), right(right) {}
+
+	~TreeNode() {
+		delete left;
+		delete right;
+	}
 };
 
 TreeNode *append(TreeNode *node, void *item, Comparator cmp) {
@@ -175,13 +177,28 @@ TreeNode *append(TreeNode *node, void *item, Comparator cmp) {
 	return node;
 }
 
-TreeNode *append_avl(TreeNode *node, void *item, Comparator cmp) {
+void *min(TreeNode *node) {
+	return node->left ? min(node->left) : node->item;
 }
 
-TreeNode *remove(TreeNode *node, void *item, Comparator cmp) {
-}
-
-TreeNode *remove_avl(TreeNode *node, void *item, Comparator cmp) {
+TreeNode *remove(TreeNode *node, TreeNode *parent, void *item, Comparator cmp) {
+	ComparatorResult res = cmp(item, node->item);
+	if (res == LT) {
+		return node->left ? remove(node->left, node, item, cmp) : NULL;
+	} else if (res == GT) {
+		return node->right ? remove(node->right, node, item, cmp) : NULL;
+	} else {
+		if (node->left && node->right) {
+			node->item = min(node->right);
+			return remove(node->right, node, item, cmp);
+		} else if (parent->left == node) {
+			parent->left = node->left ? node->left : node->right;
+			return node;
+		} else if (parent->right == node) {
+			parent->right = node->left ? node->left : node->right;
+			return node;
+		}
+	}
 }
 
 TreeNode *find(TreeNode *node, void *item, Comparator cmp) {
@@ -194,9 +211,57 @@ TreeNode *find(TreeNode *node, void *item, Comparator cmp) {
 		return find(node->right, item, cmp);
 }
 
+int max(int a, int b) {
+	return a > b ? a : b;
+}
+
+int abs(int a) {
+	return a < 0 ? -a : a;
+}
+
+int element_count(TreeNode *node) {
+	if (!node) return 0;
+	return 1 + element_count(node->left) + element_count(node->right);
+}
+
+int height(TreeNode *node) {
+	if (!node) return 0;
+	return 1 + max(height(node->left), height(node->right));
+}
+
+bool is_full(TreeNode *node) {
+	if (!node) return true;
+	return is_full(node->left) && is_full(node->right);
+}
+
+bool is_balanced(TreeNode *node) {
+	return abs(element_count(node->left) - element_count(node->right)) <= 1;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // STUDENT BST
 ///////////////////////////////////////////////////////////////////////////////
+
+TreeNode *insert_students_avl(std::vector<Student*> s) {
+	int L = s.size();
+	int M = L / 2;
+
+	if (L == 1) {
+		return new TreeNode(s[0]);
+	} else if (L == 2) {
+		return new TreeNode(s[1], new TreeNode(s[0]));
+	} else {
+		TreeNode *n = new TreeNode(s[M]);
+
+		std::vector<Student*> s_left(s.begin(), s.begin() + M);
+		n->left = insert_students_avl(s_left);
+
+		std::vector<Student*> s_right(s.begin() + M + 1, s.end());
+		n->right = insert_students_avl(s_right);
+
+		return n;
+	}
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // BENCHMARK
@@ -206,87 +271,177 @@ int main() {
 	using namespace std;
 	random_seed();
 
-	//auto students = new ListNode(student_data[0]);
+	std::vector<int> ns;
+	int max = 4000;
+	for (int i = 200; i <= max; i += 200)
+		ns.push_back(i);
 
-	//append(students, student_data[1]);
-	//append(students, student_data[0]);
-	//append(students, student_data[2]);
-	//append(students, student_data[99]);
-	//students = prepend(students, student_data[9]);
-	//students = prepend(students, student_data[8]);
+	auto student_data = read_names("data/names.csv", max);
 
-	//cout << "students:\n";
-	//print(students, print_student);
 
-	//cout << "find 0:\n";
-	//if (auto node = find_student(students, 0))
-	//	print_student(node->item);
+	cout << "n,list-append,list-find,list-remove,bst-append,bst-find,bst-remove,bbst-append,bbst-find,bbst-remove\n"; // naglowek csv
 
-	//cout << "remove 2:\n";
-	//if (auto node = remove_student(students, 2))
-	//	print_student(node->item);
-
-	//cout << "students:\n";
-	//print(students, print_student);
-
-	//return 0;
-
-	int n_min = 1e4, n_max = 1e5, n_step = n_min;
-	auto student_data = read_names("data/names.csv", n_max);
-
-	cout << "n,list-append,list-find,list-remove\n"; // naglowek csv
-
-	for (int n = n_min; n <= n_max; n += n_step) {
-		cerr << 100 * n / n_max << "% ";
+	for (int n : ns) {
+		cerr << ".";
 		cout << n << "," << flush;
+
+		vector<int> indices;
+		for (int i = 0; i < n; i++) indices.push_back(i);
+
+		// zapisywanie do listy
+		//
 
 		ListNode *node = new ListNode(student_data[0]);
 
-		// zapisywanie do listy
-
 		{
 			cout << fixed << benchmark_simple([&node, n, student_data]{ 
-				for (int i = 1; i < n; i++) {
+				for (int i = 0; i < n; i++) {
+
 					append(node, student_data[i]);
+
 				}
 			}) * 1e-9 << "," << flush;
 		}
 
+		cerr << "_";
+
 		// wyszukiwanie z posortowanej listy
+		//
 		
 		{
 			long int sum = 0;
-			for (int i = 0; i < n; i++) {
-				sum += benchmark_simple([&node, n, student_data]{ 
-					find(node, student_data[random(0, n-1)]);
-				});
-			}
-			cout << fixed << sum * 1e-6 / n << "," << flush;
-		}
-
-		// usuwanie z listy
-
-		{
-			long int sum = 0;
-			for (int i = n; i > 0; i--) {
+			for (int i : indices) {
 				sum += benchmark_simple([&node, i, student_data]{ 
-					remove(node, student_data[i]);
+
+					find(node, student_data[i]);
+
 				});
 			}
 			cout << fixed << sum * 1e-9 << "," << flush;
 		}
 
+		cerr << "_";
+
+		// usuwanie z listy
+		//
+
+		{
+			long int sum = 0;
+			for (int i = n - 1; i >= 0; i--) {
+				sum += benchmark_simple([&node, i, student_data]{ 
+
+					remove(node, student_data[i]);
+
+				});
+			}
+			cout << fixed << sum * 1e-9 << "," << flush;
+		}
+
+		cerr << "_";
+
 		// zapisywanie do bst
-		// usuwanie z bst
-		// wyszukiwanie z bst
-		// wyszukiwanie z bbst
+		//
 		
-		//auto elapsed = benchmark(1, false, before, measure, after);
-		//cout << "," << fixed << elapsed * 1e-9 << flush;
+		TreeNode *bst = nullptr;
+
+		{
+			cout << fixed << benchmark_simple([&bst, student_data, n]{
+				for (int i = 0; i < n; i++) {
+
+					bst = append(bst, student_data[i], cmp_student);
+
+				}
+			}) * 1e-9 << "," << flush;
+		}
+
+		cerr << "_";
+
+		// wyszukiwanie z bst
+		//
+
+		{
+			long int sum = 0;
+			for (int i : indices) {
+				sum += benchmark_simple([&bst, i, student_data]{ 
+
+					find(bst, student_data[i], cmp_student);
+
+				});
+			}
+			cout << fixed << sum * 1e-9 << "," << flush;
+		}
+
+		cerr << "_";
+
+		// usuwanie z bst
+		//
+
+		{
+			long int sum = 0;
+			for (int i = n - 1; i >= 0; i--) {
+				sum += benchmark_simple([&bst, i, student_data]{ 
+
+					remove(bst, new TreeNode(0, bst), student_data[i], cmp_student);
+
+				});
+			}
+			cout << fixed << sum * 1e-9 << "," << flush;
+		}
+
+		cerr << "_";
+
+		// zapisywanie do bbst
+		//
+		
+		TreeNode *bbst;
+
+		{
+			vector<Student*> students(student_data.begin(), student_data.begin() + n);
+			cout << fixed << benchmark_simple([&bbst, students]{
+
+				bbst = insert_students_avl(students);
+
+			}) * 1e-9 << "," << flush;
+			
+		}
+
+		cerr << "_";
+
+		// wyszukiwanie z bbst
+		//
+
+		{
+			long int sum = 0;
+			for (int i : indices) {
+				sum += benchmark_simple([&bbst, i, student_data]{ 
+
+					find(bbst, student_data[i], cmp_student);
+
+				});
+			}
+			cout << fixed << sum * 1e-9 << "," << flush;
+		}
+		
+		cerr << "_";
+
+		// usuwanie z bbst
+		//
+
+		{
+			long int sum = 0;
+			for (int i = n - 1; i >= 0; i--) {
+				sum += benchmark_simple([&bbst, i, student_data]{ 
+
+					remove(bbst, new TreeNode(0, bbst), student_data[i], cmp_student);
+
+				});
+			}
+			cout << fixed << sum * 1e-9 << "" << flush;
+		}
+
 		cout << "\n";
 	}
 	cerr << "\n";
-	cin.ignore();
 
 	for (auto student : student_data)
 		delete student;

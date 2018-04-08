@@ -1,13 +1,22 @@
 .PHONY: plot run build
 
+all: data run plot
+
+clean:
+	rm -rf build
+	rm -rf data
+
+data:
+	mkdir -p data
+	python3 script/make_data.py > data/names.csv
+
 plot:
-	rm -rf plots
-	mkdir -p plots
+	mkdir -p data/plots
+	python3 script/make_plots.py
 
 run: build
-	build/benchmark > 1_sortowanie.csv
+	build/benchmark > data/bench.csv
 
 build:
-	rm -rf build
 	mkdir -p build
 	g++ -g -O0 --std=c++17 -o build/benchmark benchmark.cc testkit.cc

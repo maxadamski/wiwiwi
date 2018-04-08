@@ -2,11 +2,14 @@
 #define TESTKIT_H
 
 #include <functional>
+#include <vector>
 
 // Zwraca losowa licze z zakresu ['min','max']
 // Przed uzyciem zawolaj 'random_seed'
 int random(int min, int max);
 void random_seed();
+
+void shuffle(std::vector<int> vector);
 
 // Zwraca uśredniony czas wykonywania f-i 'lambda' w nanosekundach
 // 'passes': ilosc powtorzen

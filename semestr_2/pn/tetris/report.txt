@@ -1,0 +1,10 @@
+---
+score 96
+time 3
+level 0
+lines 0
+---
+score 96
+time 2
+level 0
+lines 0

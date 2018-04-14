@@ -49,7 +49,7 @@ class World:
         for i in range(N):
             r = np.array([0, i * height / N])
             p = np.array([uniform(-P, P), uniform(-P, P)])
-            self.atoms.append(Atom(r, p, 0))
+            self.atoms += [Atom(r, p, 0)]
 
     ################
     # Computations
@@ -70,26 +70,28 @@ class World:
 
         self.groups = {}
         for a in self.atoms:
-            if a.hash not in self.groups:
-                self.groups[a.hash] = 0
-            self.groups[a.hash] += 1
+            hash = a.hash
+            if hash not in self.groups:
+                self.groups[hash] = 0
+            self.groups[hash] += 1
 
-    def prob(self):
+    def gas_probability(self):
         #return factorial(len(self.atoms)) / prod(map(factorial, self.groups.values()))
         return len(self.atoms) / product(self.groups.values())
 
-    def entr(self):
-        return log(self.prob())
+    def gas_entropy(self):
+        return log(self.gas_probability())
 
     ###########
     # Drawing
 
     def draw(self, screen, origin, scale=10, draw_momentum=False):
-        size, offset, radius = self.size, origin, 0.5
-        pg.draw.rect(screen, 0xFFFFFF, (*offset, *size*scale))
+        size, offset, radius = self.size, origin, 4
+        pg.draw.rect(screen, 0xFFFFFF, [*offset, *size*scale])
         for atom in self.atoms:
             atom_origin = atom.r * scale + offset
-            atom_radius = radius * scale / 2
+            atom_radius = radius
+            #atom_radius = radius * scale / 2
             pg.draw.circle(screen, atom.color,
                            atom_origin.astype(int), int(atom_radius))
             if draw_momentum:
@@ -97,7 +99,7 @@ class World:
 
 
 class LinePlot:
-    def __init__(self, size, dpi=96, xlabel='', ylabel='', color='k'):
+    def __init__(self, size, dpi=80, xlabel='', ylabel='', color='k'):
         self.color, self.size, self.dpi = color, size, dpi
         self.fig = pylab.figure(figsize=size, dpi=dpi)
         self.cav = agg.FigureCanvasAgg(self.fig)
@@ -105,18 +107,14 @@ class LinePlot:
         self.ax.set_xlabel(xlabel)
         self.ax.set_ylabel(ylabel)
 
-    def update(self, data):
-        self.max_x = len(data)
-        self.data = data
-
-    def draw(self, screen, origin):
-        self.ax.set_xlim(0, self.max_x)
-        self.ax.plot(self.data, color=self.color)
+    def plot(self, screen, origin, data):
+        self.ax.set_xlim(0, len(data))
+        self.ax.plot(data, color=self.color)
         self.cav.draw()
         raw_data = self.cav.get_renderer().tostring_rgb()
         surface = pg.image.fromstring(raw_data, self.size * self.dpi, "RGB")
         screen.blit(surface, origin)
-        
+
 
 ###############################################################################
 # Simulation
@@ -128,10 +126,12 @@ def main():
     P = r + (1 - r % 2)
     R = 2*r + 1
     dt = 1 / (2*P)
+    W, H = 800, 1000
 
-    screen = pg.display.set_mode([1080, 1000], pg.DOUBLEBUF)
+    screen = pg.display.set_mode([W, H], pg.DOUBLEBUF)
     plot = LinePlot(np.array([10, 4]), xlabel='time', ylabel='entr')
     world = World(N, P, R)
+    scale = 10
     entropy = []
     finish = False
 
@@ -140,13 +140,12 @@ def main():
             if event.type == pg.QUIT:
                 finish = True
 
-        screen.fill(0xCCCCCC)
         world.update(dt)
-        entropy += [world.entr()]
-        plot.update(entropy)
+        entropy += [world.gas_entropy()]
 
-        world.draw(screen, np.array([0, 400]))
-        plot.draw(screen, np.array([0, 0]))
+        screen.fill(0)
+        world.draw(screen, np.array([40, 360]), scale=scale, draw_momentum=False)
+        plot.plot(screen, np.array([0, 0]), entropy)
         pg.display.flip()
 
     pg.quit()

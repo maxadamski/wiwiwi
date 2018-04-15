@@ -9,7 +9,7 @@
 int random(int min, int max);
 void random_seed();
 
-void shuffle(std::vector<int> vector);
+std::vector<int> shuffle(std::vector<int> vector);
 
 // Zwraca uśredniony czas wykonywania f-i 'lambda' w nanosekundach
 // 'passes': ilosc powtorzen

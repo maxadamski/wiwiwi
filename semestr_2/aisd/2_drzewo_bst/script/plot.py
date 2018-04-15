@@ -2,11 +2,11 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
+plt.style.use('seaborn-whitegrid')
 WATERMARK = False
 
 def plot(df, title, ylabel="czas [s]", log=False, style=None):
     df.plot(figsize=(6, 5), style=style)
-    plt.style.use('seaborn-whitegrid')
     plt.xlim(min(df.index), max(df.index))
     plt.xlabel("liczba elementów")
     plt.ylabel(ylabel)
@@ -17,10 +17,10 @@ def plot(df, title, ylabel="czas [s]", log=False, style=None):
     plt.savefig(f'data/{title}.png')
 
 def plot_all(df):
-    plot(df[['list-append', 'bst-append']], 'append', style='-+')
-    plot(df[['list-remove', 'bst-remove']], 'remove', style='-+')
-    plot(df[['list-find', 'bst-find', 'bbst-find']], 'find',
-         ylabel="czas [ms]", style='-+')
+    plot(df[['list-append', 'bst-append', 'bst-rand-append']], 'append', style='-+')
+    plot(df[['list-remove', 'bst-remove', 'bst-rand-remove']], 'remove', style='-+')
+    plot(df[['list-find', 'bst-find', 'bst-rand-find', 'bbst-find']], 'find',
+         ylabel="czas [ms]", style=['-+']*3 + ['.:'])
 
 df = pd.read_csv('data/results.csv', index_col='n')
 plot_all(df)

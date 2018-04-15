@@ -17,10 +17,10 @@ void random_seed() {
 	generator.seed(std::random_device()());
 }
 
-void shuffle(std::vector<int> vector) {
+std::vector<int> shuffle(std::vector<int> vector) {
 	std::shuffle(std::begin(vector), std::end(vector), generator);
+	return vector;
 }
-
 
 long int benchmark(int passes, bool print_passes,
 	std::function<void()> before,

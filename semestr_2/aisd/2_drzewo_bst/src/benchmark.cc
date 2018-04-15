@@ -272,8 +272,8 @@ int main() {
 	random_seed();
 
 	std::vector<int> ns;
-	int max = 4000;
-	for (int i = 200; i <= max; i += 200)
+	int max = 20000;
+	for (int i = 1000; i <= max; i += 1000)
 		ns.push_back(i);
 
 	auto student_data = read_names("data/names.csv", max);

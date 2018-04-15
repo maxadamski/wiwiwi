@@ -1,22 +1,24 @@
-.PHONY: plot run build
+.PHONY: all clean build results run
 
-all: data run plot
+all: clean data run results
 
 clean:
 	rm -rf build
 	rm -rf data
 
-data:
-	mkdir -p data
-	python3 script/make_data.py > data/names.csv
-
-plot:
-	mkdir -p data/plots
-	python3 script/make_plots.py
-
-run: build
-	build/benchmark > data/bench.csv
-
 build:
 	mkdir -p build
-	g++ -g -O0 --std=c++17 -o build/benchmark benchmark.cc testkit.cc
+	g++ -g -O0 --std=c++17 -o build/benchmark src/benchmark.cc src/testkit.cc
+
+data:
+	mkdir -p data
+	python3 script/generate.py > data/names.csv
+	cp -f reference.csv data/
+
+run: build
+	build/benchmark > data/benchmark.csv
+
+results:
+	python3 script/massage.py
+	python3 script/plot.py
+

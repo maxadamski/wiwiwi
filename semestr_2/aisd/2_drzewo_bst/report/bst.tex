@@ -1,0 +1,121 @@
+\documentclass[11pt,twocolumn]{article}
+\usepackage{lmodern,setspace,amsmath,amssymb,amsfonts,amsthm,graphicx,multicol,grffile,float,csvsimple}
+\usepackage[a4paper, top=0.9in, bottom=1.05in, left=1.05in, right=1.05in]{geometry}
+\usepackage[polish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\title{Algorytmy i struktury danych - Złożone struktury danych}
+\author{Dariusz Max Adamski}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+
+
+\section*{Wstęp}
+
+W tym sprawozdaniu porównywane będą czasy wykonywania czynności dodawania, wyszukiwania oraz usuwania elementów, w liście jednokierunkowej, drzewie poszukiwań binarnych BST i w dokładnie wyważonym BST.
+
+
+
+\section*{Metodologia}
+
+Pomiary wykonywane były na tablicach o wielkości $n$ od $1\ 000$ elementów do $20\ 000$ elementów, z krokiem $1\ 000$ (20 punktów pomiarowych).
+
+Uprzednio wygenerowano losowo listę $50\ 000$ studentów (elementy uporządkowane rosnąco według indeksu). Przed rozpoczęciem pomiarów lista została załadowana do pamięci, i zapisana jako tablica $S$ wskaźników $Student*$. W każdej iteracji wykonywane są poniższe kroki:
+
+\begin{enumerate}
+	\item Tworzone jest $P := permutacja(0..n-1)$.
+	\item Tworzona jest struktura danych $D$.
+	\item Dla każdego $i$ w $[0,n)$ student $S_i$ jest dodawany do $D$.
+	\item Dla każdego $i$ w $P$ student $S_i$ jest wyszukiwany w $D$.
+	\item Dla każdego $i$ w $[0,n)$ student $S_i$ jest usuwany z $D$.
+	\item Kroki 2 do 5 są powtarzane dla każdej testowanej struktury danych.
+\end{enumerate}
+
+Czasy wykonywania kroku dodawania (append) i usuwania (remove) są przedstawione w sekundach, a czasy wykonywania kroku znajdywania (find) zostały podzielone przez $n$, i są przedstawione w milisekundach.
+
+Aby utworzyć drzewo BBST w kroku 3 dodawana jest najpierw mediana $D_{0..n-1}$, a później rekurencyjnie mediany lewej i prawej podlist $D$, wydzielonych przez medianę.
+
+Optymalizacja kompilatora została wyłączona flagą ,,-O0''. Czas wykonywania był mierzony w nanosekundach.
+
+
+
+\section{Dodawanie}
+
+\begin{figure}[h]
+	\includegraphics[width=\linewidth]{../data/append.png}
+	\caption{Czas dodawania $n$ elementów \label{append}}
+\end{figure}
+
+\begin{table}[h]
+	\centering
+	\csvautotabular{../data/append.csv}
+	\caption{Czas dodawania $n$ elementów (s)}
+\end{table}
+
+Czynność dodawania $n$ elementów ma złożoność $O(n^2)$ dla obu struktur.
+
+Operacja dodawania elementu do BST ma złożoności $O(n)$, ponieważ elementy dodawane są według indeksów rosnąco (przypadek zdegenerowany). Gdyby dodawać elementy losowo, w średnim przypadku operacja ma złożoność $O(\log n)$.
+
+Dla listy dodawanie (na koniec) także ma złożoność $O(n)$ ponieważ jest przechowywany wskaźnik do ostatniego elementu listy, więc trzeba przejść przez elementy w liście. Przy zachowanym wskaźniku dodawanie na koniec ma złożoność $O(1)$
+
+BST w każdym kroku wykonuje dwa porównania, więc czas dodawania jest około 2 razy większy od dodawania do listy.
+
+
+
+\section{Usuwanie}
+
+\begin{table}[h!]
+	\centering
+	\csvautotabular{../data/remove.csv}
+	\caption{Czas usuwania $n$ elementów (s)}
+\end{table}
+
+Usuwanie $n$ elementów ma złożoność $O(n^2)$ dla obu struktur.
+
+Ponieważ drzewo BST nie jest zbalansowane, usuwanie elementu ma złożoność $O(n)$, w średnim przypadku ta operacja ma złożoność $O(\log n)$.
+
+Usuwanie z listy także ma złożoność $O(n)$. Tym razem nie musimy jednak przechodzić całej listy (zazwyczaj).
+
+Czasy usuwania są większe od dodawania prawdopodobnie przez potrzebę uwalniania pamięci.
+
+
+
+\section{Znajdywanie}
+
+\begin{figure}[h]
+	\includegraphics[width=\linewidth]{../data/find.png}
+	\caption{Średni czas znajdywania elementu \label{find}}
+\end{figure}
+
+\begin{table}[h]
+	\centering
+	\csvautotabular{../data/find.csv}
+	\caption{Średni czas znajdywania elementu (ms)}
+\end{table}
+
+Znajdywanie elementu ma złożoność $O(n)$ w liście i zdegenerowanym BST, a w BBST $O(\log n)$. BST musi wykonywać więcej operacji porównań, więc jest wolniejsze od listy.
+
+BBST bardzo szybko znajduje studentów. Dla $20\ 000$ elementów w drzewie potrzebne jest maksymalnie 15 kroków aby dotrzeć do jakiegokolwiek z elementów, potrzeba do tego tylo paru mikrosekund. 
+
+Nawet dla $10\ 000\ 000$ studentów, czyli największej ilości dozwolonej przez format indesku, wystarczą 24 kroki na znalezienie dowolnego studenta!
+
+
+
+\section{Wnioski}
+
+Podsumowując, opłaca się używać drzewa BST, jeżeli możemy sobie pozwolić na balansowanie drzewa, oraz bardziej skomplikowany algorytm. 
+
+W przypadku danych posortowanych, niezbalansowane drzewo BST jest wolniejsze w każdej kategorii od listy jednokierunkowej. 
+
+Ponadto gdy wiemy jaki jest ostatni element listy, dodanie kolejnego elementu do listy jest mniej kosztowne niż dodanie go do BST, nawet gdy jest ono zbalansowane (ale $\log n$ to nie jest tak dużo).
+
+Alternatywnie, lista jednokierunkowa stanowi bardzo prosty zamiennik, który jest wystarczający dla większości zastosowań.
+
+
+
+\end{document}
+

@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
-STRUCTS = ['list', 'bst', 'bbst']
 PROCS = ['find', 'append', 'remove']
 
 def struct_cols(struct):
@@ -10,14 +9,18 @@ def struct_cols(struct):
 
 def scale_find(df):
     # scales *-find to miliseconds
-    for col in ['list-find', 'bbst-find', 'bst-find']:
+    for col in ['list-find', 'bbst-find', 'bst-find', 'bst-rand-find']:
         df[col] /= df.index
         df[col] *= 10**3
 
 def dspeed(fast, slow):
     n = max(slow.index)
-    return {c: (slow[c][:n] / fast[c][:n]).mean()
-            for c in slow}
+    d = {c: (slow[c][:n] / fast[c][:n]).mean()
+         for c in slow}
+    for key in PROCS:
+        d['bst-rand-'+key] = d['bst-'+key]
+    return d
+
 
 slow = pd.read_csv('data/reference.csv', index_col='n')
 fast = pd.read_csv('data/benchmark.csv', index_col='n')
@@ -31,7 +34,7 @@ scale_find(df)
 df.to_csv('data/results.csv', float_format='%.6f')
 # save separate csv for each proc
 for proc in PROCS:
-    structs = ['list', 'bst']
+    structs = ['list', 'bst', 'bst-rand']
     if proc == 'find': structs += ['bbst']
     cols = [s+'-'+proc for s in structs]
     df[cols].to_csv(f'data/{proc}.csv',

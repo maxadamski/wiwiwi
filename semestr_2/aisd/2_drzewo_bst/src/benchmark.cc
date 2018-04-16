@@ -279,7 +279,7 @@ int main() {
 	auto student_data = read_names("data/names.csv", max);
 
 
-	cout << "n,list-append,list-find,list-remove,bst-append,bst-find,bst-remove,bbst-append,bbst-find,bbst-remove\n"; // naglowek csv
+	cout << "n,list-append,list-find,list-remove,bst-rand-append,bst-rand-find,bst-rand-remove,bst-append,bst-find,bst-remove,bbst-append,bbst-find,bbst-remove\n"; // naglowek csv
 
 	for (int n : ns) {
 		cerr << ".";
@@ -287,13 +287,16 @@ int main() {
 
 		vector<int> indices;
 		for (int i = 0; i < n; i++) indices.push_back(i);
+		vector<int> irandom = shuffle(indices);
 
-		// zapisywanie do listy
-		//
+		///////////////////////////////////////////////////////////////////////
+		// Lista
+		///////////////////////////////////////////////////////////////////////
 
 		ListNode *node = new ListNode(student_data[0]);
 
 		{
+			// zapisywanie do listy
 			cout << fixed << benchmark_simple([&node, n, student_data]{ 
 				for (int i = 0; i < n; i++) {
 
@@ -301,142 +304,151 @@ int main() {
 
 				}
 			}) * 1e-9 << "," << flush;
+			cerr << "_";
 		}
 
-		cerr << "_";
-
-		// wyszukiwanie z posortowanej listy
-		//
-		
 		{
+			// wyszukiwanie z posortowanej listy
 			long int sum = 0;
-			for (int i : indices) {
+			for (int i : irandom) {
 				sum += benchmark_simple([&node, i, student_data]{ 
-
 					find(node, student_data[i]);
-
 				});
 			}
 			cout << fixed << sum * 1e-9 << "," << flush;
+			cerr << "_";
 		}
 
-		cerr << "_";
-
-		// usuwanie z listy
-		//
-
 		{
+			// usuwanie z listy
 			long int sum = 0;
 			for (int i = n - 1; i >= 0; i--) {
 				sum += benchmark_simple([&node, i, student_data]{ 
-
 					remove(node, student_data[i]);
-
 				});
 			}
 			cout << fixed << sum * 1e-9 << "," << flush;
+			cerr << "_";
 		}
 
-		cerr << "_";
+		///////////////////////////////////////////////////////////////////////
+		// BST losowe
+		///////////////////////////////////////////////////////////////////////
 
-		// zapisywanie do bst
-		//
-		
+		TreeNode *rbst = nullptr;
+
+		{
+			// zapisywanie do losowego bst
+			cout << fixed << benchmark_simple([&rbst, student_data, irandom]{
+				for (int i : irandom) {
+					rbst = append(rbst, student_data[i], cmp_student);
+				}
+			}) * 1e-9 << "," << flush;
+			cerr << "_";
+		}
+
+		{
+			// wyszukiwanie z losowego bst
+			long int sum = 0;
+			for (int i : irandom) {
+				sum += benchmark_simple([&rbst, i, student_data]{ 
+					find(rbst, student_data[i], cmp_student);
+				});
+			}
+			cout << fixed << sum * 1e-9 << "," << flush;
+			cerr << "_";
+		}
+
+		{
+			// usuwanie z losowego bst
+			long int sum = 0;
+			for (int i = n - 1; i >= 0; i--) {
+				sum += benchmark_simple([&rbst, i, student_data]{ 
+					remove(rbst, new TreeNode(0, rbst), student_data[i], cmp_student);
+				});
+			}
+			cout << fixed << sum * 1e-9 << "," << flush;
+			cerr << "_";
+		}
+
+		///////////////////////////////////////////////////////////////////////
+		// BST posortowane
+		///////////////////////////////////////////////////////////////////////
+
 		TreeNode *bst = nullptr;
 
 		{
+			// zapisywanie
 			cout << fixed << benchmark_simple([&bst, student_data, n]{
 				for (int i = 0; i < n; i++) {
-
 					bst = append(bst, student_data[i], cmp_student);
-
 				}
 			}) * 1e-9 << "," << flush;
+			cerr << "_";
 		}
 
-		cerr << "_";
-
-		// wyszukiwanie z bst
-		//
-
 		{
+			// wyszukiwanie
 			long int sum = 0;
-			for (int i : indices) {
+			for (int i : irandom) {
 				sum += benchmark_simple([&bst, i, student_data]{ 
-
 					find(bst, student_data[i], cmp_student);
-
 				});
 			}
 			cout << fixed << sum * 1e-9 << "," << flush;
+			cerr << "_";
 		}
 
-		cerr << "_";
-
-		// usuwanie z bst
-		//
-
 		{
+			// usuwanie
 			long int sum = 0;
 			for (int i = n - 1; i >= 0; i--) {
 				sum += benchmark_simple([&bst, i, student_data]{ 
-
 					remove(bst, new TreeNode(0, bst), student_data[i], cmp_student);
-
 				});
 			}
 			cout << fixed << sum * 1e-9 << "," << flush;
+			cerr << "_";
 		}
 
-		cerr << "_";
 
-		// zapisywanie do bbst
-		//
+		///////////////////////////////////////////////////////////////////////
+		// BBST
+		///////////////////////////////////////////////////////////////////////
 		
 		TreeNode *bbst;
 
 		{
+			// zapisywanie
 			vector<Student*> students(student_data.begin(), student_data.begin() + n);
 			cout << fixed << benchmark_simple([&bbst, students]{
-
 				bbst = insert_students_avl(students);
-
 			}) * 1e-9 << "," << flush;
-			
+			cerr << "_";
 		}
 
-		cerr << "_";
-
-		// wyszukiwanie z bbst
-		//
-
 		{
+			// wyszukiwanie z bbst
 			long int sum = 0;
-			for (int i : indices) {
+			for (int i : irandom) {
 				sum += benchmark_simple([&bbst, i, student_data]{ 
-
 					find(bbst, student_data[i], cmp_student);
-
 				});
 			}
 			cout << fixed << sum * 1e-9 << "," << flush;
+			cerr << "_";
 		}
-		
-		cerr << "_";
-
-		// usuwanie z bbst
-		//
 
 		{
+			// usuwanie z bbst
 			long int sum = 0;
 			for (int i = n - 1; i >= 0; i--) {
 				sum += benchmark_simple([&bbst, i, student_data]{ 
-
 					remove(bbst, new TreeNode(0, bbst), student_data[i], cmp_student);
-
 				});
 			}
 			cout << fixed << sum * 1e-9 << "" << flush;
+			cerr << "_";
 		}
 
 		cout << "\n";

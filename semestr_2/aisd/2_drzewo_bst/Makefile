@@ -1,6 +1,6 @@
-.PHONY: all clean build results run
+.PHONY: all clean build results run report
 
-all: clean data run results
+all: clean data run results report
 
 clean:
 	rm -rf build
@@ -21,4 +21,3 @@ run: build
 results:
 	python3 script/massage.py
 	python3 script/plot.py
-

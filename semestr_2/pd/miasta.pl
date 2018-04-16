@@ -49,4 +49,24 @@ zjazd(A, B, P) :- next(A, C, _), zjazd(C, B, P).
 trasa(A, B, con(A, B)) :- next(A, B, _).
 trasa(A, B, con(A, T)) :- next(A, C, _), trasa(C, B, T).
 
+droga(A, B, [A,B]) :- next(A, B, _).
+droga(A, B, [A|T]) :- next(A, C, _), droga(C, B, T).
+
+convert([A,B], con(A, B)).
+convert([A|B], con(A, U)) :- convert(B, U).
+
+copy([], []).
+copy([H|T], [H|Z]) :- copy(T, Z).
+
+rev([],[]).
+rev([H|T], [Z|H]) :- rev(T, Z).
+
+odd([], []).
+odd([A], [A]).
+odd([H|[_|T]], [H|X]) :- odd(T, X).
+
+even([], []).
+even([_], []).
+even([_|[H|T]], [H|X]) :- even(T, X).
+
 % Pytanie: Jakie są połączenia miedzy Świnoujściem a Rzeszowem?

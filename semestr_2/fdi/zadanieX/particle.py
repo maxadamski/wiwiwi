@@ -1,3 +1,6 @@
+# Błażej Huminiecki, Dariusz Max Adamski, Hubert Kamieniarz, Konrad Socha, Aleksander Hauziński
+# albumy = [136674, 136800, 136716, 136731, 136717]
+
 from random import uniform, randint
 from math import log
 from scipy.special import factorial

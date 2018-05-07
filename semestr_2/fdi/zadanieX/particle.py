@@ -46,6 +46,14 @@ class World:
             c = randint(0, 0xFFFFFF) if color else 0
             self.atoms += [Atom(r, p, c)]
 
+        # stan zerowy
+        self.groups = {}
+        for a in self.atoms:
+            hash = a.hash
+            if hash not in self.groups:
+                self.groups[hash] = 0
+            self.groups[hash] += 1
+
     ################
     # Computations
 
@@ -65,7 +73,7 @@ class World:
 
         self.groups = {}
         for a in self.atoms:
-            hash = a.hash[0]
+            hash = a.hash
             if hash not in self.groups:
                 self.groups[hash] = 0
             self.groups[hash] += 1
@@ -132,25 +140,25 @@ class MatLinePlot:
 ###############################################################################
 
 def main():
-    r = 6
+    r = 7
     N = 2**r
     P = r + (1 - r % 2)
     R = 2*r + 1
     dt = 1 / (2*P)
     W, H = 800, 1000
+    # skala interfejsu
     scale = 10
+    # czyszczenie wykresu po n pomiarach (False or Integer)
     clear = False
 
     screen = pg.display.set_mode([W, H], pg.DOUBLEBUF)
     plot = MatLinePlot(np.array([10, 4]), xlabel='t - czas', ylabel='S - entropia')
     world = World(N, P, R, color=True)
-    clock = pg.time.Clock()
     entropy = []
     finish = False
-
+    # stan zerowy
+    entropy += [world.gas_entropy()]
     while not finish:
-        clock.tick(30)
-
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 finish = True
@@ -161,11 +169,12 @@ def main():
             entropy = entropy[clear:]
             plot.clear()
 
-
         screen.fill(0xDDDDDD)
+        # rysowanie swiata
         world.draw(screen, np.array([40, 360]), scale=scale,
-                   squares=False, discretize=False)
-        plot.plot(screen, np.array([0, 0]), entropy)
+                   squares=False, discretize=False, draw_momentum=False)
+        # rysowanie wykresu
+        #plot.plot(screen, np.array([0, 0]), entropy)
         pg.display.flip()
 
     pg.quit()

@@ -47,10 +47,9 @@ struct AdjacencyMatrix {
 
 	// procedura mutuje macierz!
 	void eulerian_cycle_dfs(int v, list<int> &cycle) {
-		for (int u = 0; u < data.size(); u++) {
+		for (size_t u = 0; u < data.size(); u++) {
 			while (data[v][u]) {
-				data[v][u] = false;
-				data[u][v] = false;
+				data[v][u] = data[u][v] = false;
 				eulerian_cycle_dfs(u, cycle);
 			}
 			cycle.push_front(v);
@@ -99,6 +98,28 @@ struct AdjacencyMatrix {
 	}
 };
 
+//Witold Lipski - Kombinatoryka dla Programistów
+//hamilton: stop po 300s (liczone do średniej)
+
+//problem plecakowy pomyłka ~50% dla heurystyki wartość/waga
+// greedy nie wyjmujemy z plecaka
+// ilość rozwiązań 2^n
+// pomiary TYLKO jakości, a nie czasu
+
+//void random_graph(V) {
+//	Va = V, Vb = {}
+//	connect random in Va to random in Va
+//		move them to Vb
+//	while Va
+//		connect random in Va to random in Vb
+//			move it to Vb
+//}
+
+//void eulerize(V, E) {
+// for vertex (u) of odd degree:
+//   add edge to another random vectex of odd degree (v)
+//   remove edge from another random vertex (w, w!=v)
+//}
 
 ///////////////////////////////////////////////////////////////////////////////
 // BENCHMARK

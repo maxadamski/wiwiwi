@@ -20,5 +20,4 @@ run: build
 	build/benchmark --hamilton > output/hamilton.csv
 
 results:
-	#python3 script/massage.py
 	python3 script/plot.py

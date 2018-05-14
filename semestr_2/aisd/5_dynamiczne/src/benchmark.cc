@@ -16,41 +16,23 @@
 
 using namespace std;
 
+// wygoda ponad wszystko :D
+typedef struct Item Item;
+typedef vector< vector<int> > Matrix;
+typedef vector< Item > Items;
+
 struct Item {
 	int v, w;
-
-	void print(ostream &out) const {
-		out << "(v:" << v << ", w:" << w << ")";
-	}
 };
 
 struct Bag {
 	int b, y, v = 0, w = 0;
-	vector<Item> items;
 
-	Bag(int b, int y):
-		b(b), y(y) {};
+	Bag(int b, int y): b(b), y(y) {};
 
 	void add(Item item) {
-		items.push_back(item);
-		w += item.w;
 		v += item.v;
-	}
-
-	void clear() {
-		if (!items.empty()) items.clear();
-		w = 0;
-		v = 0;
-	}
-
-	void print(ostream &out) const {
-		out << "{ b: " << b << ", y: " << y << ", v: "
-			<< v << ", w: " << w << ", items:\n  [ ";
-		for (Item item : items) {
-			item.print(out);
-			out << " ";
-		}
-		out << "] }\n";
+		w += item.w;
 	}
 };
 
@@ -60,7 +42,7 @@ struct Bag {
 // priority queue Q by v / w
 // greedily take from Q
 
-void solve_greedy(Bag &bag, vector<Item> &items) {
+Bag solve_greedy(Bag bag, Items &items) {
 	// TODO: replace with a real sorting algorithm
 	// create queue
 	auto cmp = [](Item l, Item r) { return (double) l.v / l.w < (double) r.v / r.w;};
@@ -71,10 +53,10 @@ void solve_greedy(Bag &bag, vector<Item> &items) {
 	while (!queue.empty()) {
 		Item item = queue.top();
 		queue.pop();
-		if (bag.w + item.w <= bag.b) {
+		if (bag.w + item.w <= bag.b)
 			bag.add(item);
-		}
 	}
+	return bag;
 }
 
 // 2. Brute force (BF)
@@ -82,7 +64,7 @@ void solve_greedy(Bag &bag, vector<Item> &items) {
 // złożoność: O(2^n)
 // sum_{i=1}^n (n choose i) = 2^n
 
-void solve_brute_r(int n, Bag bag, Bag &best, vector<Item> &items) {
+void solve_brute_r(int n, Bag bag, Bag &best, Items &items) {
 	// my bag is better than your's!
 	if (n == 0 && bag.w <= bag.b && bag.v > best.v)
 		best = bag;
@@ -95,8 +77,10 @@ void solve_brute_r(int n, Bag bag, Bag &best, vector<Item> &items) {
 	solve_brute_r(n - 1, bag, best, items);
 }
 
-void solve_brute(Bag &bag, vector<Item> &items) {
-	solve_brute_r(items.size(), bag, bag, items);
+Bag solve_brute(Bag bag, Items &items) {
+	Bag best = bag;
+	solve_brute_r(items.size(), bag, best, items);
+	return best;
 }
 
 // 3. Dynamic programming (DP)
@@ -129,10 +113,6 @@ void solve_brute(Bag &bag, vector<Item> &items) {
 // możemy porównywać BF i DP czasowo 
 // dla problemu optymalizacyjnego plecak jest NP-trudny
 
-// wygoda ponad wszystko
-typedef vector< vector<int> > Matrix;
-typedef vector< Item > Items;
-
 void p(Matrix matrix, ostream &out = cout) {
 	for (auto row : matrix) {
 		for (auto item : row) cout << item << " ";
@@ -140,7 +120,7 @@ void p(Matrix matrix, ostream &out = cout) {
 	}
 }
 
-int partial(int i, int l, Items &items, Matrix &m) {
+int solve_dynamic_r(int i, int l, Items &items, Matrix &m) {
 	if (i == 0 || l == 0) return 0;
 
 	Item a = items[i - 1];
@@ -148,7 +128,7 @@ int partial(int i, int l, Items &items, Matrix &m) {
 		int y = i - 1, x = l;
 
 		if (m[y][x] == -1)
-			m[y][x] = partial(y, x, items, m);
+			m[y][x] = solve_dynamic_r(y, x, items, m);
 
 		return m[y][x];
 	} else {
@@ -156,57 +136,71 @@ int partial(int i, int l, Items &items, Matrix &m) {
 			y2 = i - 1, x2 = l;
 
 		if (m[y1][x1] == -1)
-			m[y1][x1] = partial(y1, x1, items, m);
+			m[y1][x1] = solve_dynamic_r(y1, x1, items, m);
 
 		if (m[y2][x2] == -1)
-			m[y2][x2] = partial(y2, x2, items, m);
+			m[y2][x2] = solve_dynamic_r(y2, x2, items, m);
 
 		return max(m[y1][x1] + a.v, m[y2][x2]);
 	}
 }
 
-void solve_dynamic(Bag &bag, Items &items) {
+Bag solve_dynamic(Bag bag, Items &items) {
 	size_t Y = items.size() + 1, X = bag.b + 1;
 	Matrix m(Y);
+
+	// initialize matrix
 	for (size_t y = 0; y < Y; y++) {
 		m[y].resize(X);
 		for (size_t x = 0; x < X; x++) m[y][x] = -1;
 	}
 
+	// compute entries
 	for (size_t y = 0; y < Y; y++) {
 		for (size_t x = 0; x < X; x++) {
-			m[y][x] = partial(y, x, items, m);
+			m[y][x] = solve_dynamic_r(y, x, items, m);
 		}
 	}
 
-	bag.w = bag.b;
 	bag.v = m[Y-1][X-1];
+	bag.w = bag.b;
+	return bag;
 }
 
-int main(int argc, char **argv) {
+int main() {
 	random_seed();
 
-	//vector<Item> items = { {3,4}, {0,1}, {10,5}, {2,3}, {3,1}, {1,4}, {1,1}, {8,5} };
-	vector<Item> items = { {2,3}, {3,1}, {1,4}, {1,1}, {8,5} };
+	cout << "n,b,ga,bf,dp\n";
 
-	Bag bag(10, 12);
-	cout << "greedy: " << benchmark(1, [&bag, &items]{
-		solve_greedy(bag, items);
-	}) * 1e-9 << " s\n";
-	bag.print(cerr);
-	cout << "\n";
+	{
+		Items items = { {2,3}, {3,1}, {1,4}, {1,1}, {8,5} };
+		Bag bag(10, 12);
 
-	bag.clear();
-	cout << "brute: " << benchmark(1, [&bag, &items]{
-		solve_brute(bag, items);
-	}) * 1e-9 << " s\n";
-	bag.print(cerr);
-	cout << "\n";
+		cout << items.size() << "," << bag.b << ",";
 
-	bag.clear();
-	cout << "dynamic: " << benchmark(1, [&bag, &items]{
-		solve_dynamic(bag, items);
-	}) * 1e-9 << " s\n";
-	bag.print(cerr);
+		cout << benchmark(1, [bag, &items]{
+			solve_brute(bag, items);
+		}) * 1e-9;
+
+		cout << ",";
+		cerr << ".";
+
+		cout << benchmark(1, [bag, &items]{
+			solve_greedy(bag, items);
+		}) * 1e-9;
+
+		cout << ",";
+		cerr << ".";
+
+		cout << benchmark(1, [bag, &items]{
+			solve_dynamic(bag, items);
+		}) * 1e-9;
+
+		cout << "\n";
+		cerr << ".";
+	}
+
+	cerr << "\n";
+	return 0;
 }
 

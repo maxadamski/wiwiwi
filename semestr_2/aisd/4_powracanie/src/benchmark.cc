@@ -198,16 +198,16 @@ struct AdjacencyMatrix {
 	//
 
 	chrono::steady_clock::time_point t0;
-	bool timeout = false;
-	bool limit = false;
-	int t_max = 5;
+	bool did_timeout = false;
+	bool did_limit = false;
+	int t_max = 600;
 	int h_max = 1;
 
 	void hamiltonian_cycle_dfs(int v, vector<int> &visited, list<int> &cycle, vector< list<int> > &cycles) {
 		auto t1 = chrono::steady_clock::now();
 		auto dt = chrono::duration_cast<std::chrono::seconds>(t1 - t0).count();
 		if (dt >= t_max) {
-			timeout = true;
+			did_timeout = true;
 			return;
 		}
 		if (h_max && cycles.size() >= h_max) {
@@ -278,12 +278,12 @@ struct AdjacencyMatrix {
 
 #include <algorithm>
 
-int main(int argc, char **argv) {
+int main() {
 	random_seed();
 
 	bool opt_generate = true, opt_benchmark = true;
 	int phi_list[] = {10,20,30,40,60,80,95};
-	int V = 500;
+	int V = 1000;
 //	auto g = AdjacencyMatrix("input/200_30");
 //	auto hs = g.hamiltonian_cycle();
 //	cout << "n = " << hs.size() << "\n";
@@ -323,13 +323,13 @@ int main(int argc, char **argv) {
 			cerr << ".";
 
 			for (int i = 0; i < hc; i++) {
-				if (!g.timeout && !g.limit) {
+				if (!g.timeout && !g.did_limit) {
 					cout << "," << benchmark_simple([&g]{
 						g.hamiltonian_cycle();
 					}) * 1e-9;
-				} else if (g.limit) {
+				} else if (g.did_limit) {
 					cout << ",0";
-				} else if (g.timeout) {
+				} else if (g.did_timeout) {
 					cout << ",0";
 				}
 				cerr << ".";

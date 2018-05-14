@@ -11,10 +11,14 @@
 #include <list>
 #include <string>
 #include <cstring>
+#include <queue>
 
 using namespace std;
 
-typedef array< int, 2 > Item;
+struct Item {
+	int v, w;
+};
+
 typedef vector< Item > Bag;
 
 int max(int a, int b) {
@@ -50,6 +54,40 @@ vector<int> solve(vector<int> v, vector<int> w, int b, int y) {
 // BENCHMARK
 ///////////////////////////////////////////////////////////////////////////////
 
+// 1. Greedy algorithm (GA)
+// "nie rozwiązuje"
+// złożoność: O(n log n)
+// priority queue Q by v / w
+// greedily take from Q
+//
+// 2. Brute force (BF)
+// "rozwiązuje"
+// złożoność: O(2^n)
+// sum_{i=1}^n (n choose i) = 2^n
+//
+// 3. Dynamic programming (DP)
+// "rozwiązuje"
+// wykorzystanie procesu Markova
+// złożoność: O(n*b)
+// i = 0..n
+// L = 0..b
+// f(0,L) = 0
+// f(i,0) = 0
+// f(i,L) = f(i-1,L), where s(a_i) < L
+// f(i,L) = max(
+//	f(i-1, L-s(a_i)) + w(a_i),
+//	f(i-1,L)
+// ), where L >= S(a_i)
+// 
+// jakościowo możemy porównywać wszystkie
+// możemy porównywać BF i DP czasowo 
+// dla problemu optymalizacyjnego plecak jest NP-trudny
+
+// cykl hamiltona
+// O(n*m)
+//
+// random b 
+
 int main(int argc, char **argv) {
 	random_seed();
 
@@ -60,29 +98,17 @@ int main(int argc, char **argv) {
 	vector<int> x = solve(v, w, b, y);
 	print(x);
 
-	//cout << "n";
-	//for (auto c : cs)
-	//	for (auto k : ks)
-	//		cout << "," << c << "-" << k;
-	//cout << "\n";
-	//for (int n = n_min; n <= n_max; n += n_step) {
-	//	cout << n;
-	//	for (int k : ks) {
-	//		AdjacencyMatrix g("input/" + to_string(n) + "_" + to_string(k));
-	//		AdjacencyMatrix g_copy = g;
-	//		cout << "," << benchmark_simple([&g_copy]{
-	//			g_copy.eulerian_cycle();
-	//		}) * 1e-9;
-	//		cerr << ".";
-	//		cout << "," << benchmark_simple([&g]{
-	//			g.hamiltonian_cycle();
-	//		}) * 1e-9;
-	//		cerr << ".";
-	//	}
-	//	cout << "\n";
-	//	cerr << "\n";
-	//}
-	//cerr << "\n";
-	//return 0;
+	vector<Item> items = { {2,3}, {3,1}, {1,4}, {1,1}, {8,5} };
+	// i\l| 0 1 2 3 4 5 6  7  8  9  10
+	// ---+---------------------------
+	//  0 | 0 0 0 0 0 0 0  0  0  0  0 
+	//  1 | 0 0 0 2 2 2 2  2  2  2  2 
+	//  2 | 0 3 3 3 5 5 5  5  5  5  5 
+	//  3 | 0 3 3 3 5 5 5  5  6  6  6 
+	//  4 | 0 3 4 4 5 6 6  6  6  7  7 
+	//  5 | 0 3 4 4 5 8 11 12 12 13 14
+
+	auto cmp = [](Item l, Item r) { return (double) l.v / l.w < (double) r.v / r.w;};
+	priority_queue< Item, vector<Item>, decltype(cmp) > q(cmp);
 }
 

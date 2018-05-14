@@ -3,6 +3,21 @@
 
 #include <functional>
 #include <vector>
+#include <list>
+
+struct Timer {
+	// time in nanoseconds
+	int duration, remaining;
+	bool flag = false;
+
+	Timer(int duration):
+		duration(duration),
+		remaining(duration) {};
+
+	bool timeout();
+	void tick(int elapsed);
+	void reset();
+};
 
 // Zwraca losowa licze z zakresu ['min','max']
 // Przed uzyciem zawolaj 'random_seed'
@@ -14,10 +29,14 @@ void shuffle(std::vector<int> vector);
 // Zwraca uśredniony czas wykonywania f-i 'lambda' w nanosekundach
 // 'passes': ilosc powtorzen
 // 'print_passes': dla kazdego powtorzenia wypisz czas ktory uplynal
-long int benchmark(int passes, bool print_passes,
-	std::function<void()> before,
+long int benchmark(int passes,
 	std::function<void()> measure,
-	std::function<void()> after);
+	std::function<void()> before,
+	std::function<void()> after,
+	bool print_passes);
+
+long int benchmark(int passes,
+	std::function<void()> measure);
 
 long int benchmark_simple(std::function<void()> measure);
 
@@ -26,5 +45,9 @@ long int benchmark_simple(std::function<void()> measure);
 int *copy_array(int* array, int length);
 
 void print_array(int* array, int length);
+
+void print(std::vector<int> v);
+
+void print(std::list<int> v);
 
 #endif

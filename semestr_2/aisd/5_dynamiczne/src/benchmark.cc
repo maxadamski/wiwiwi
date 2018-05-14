@@ -64,7 +64,19 @@ Bag solve_greedy(Bag bag, Items &items) {
 // złożoność: O(2^n)
 // sum_{i=1}^n (n choose i) = 2^n
 
+#include <chrono>
+bool bf_did_timeout = false;
+chrono::steady_clock::time_point bf_t0;
+int bf_t_max = 60;
+
 void solve_brute_r(int n, Bag bag, Bag &best, Items &items) {
+	auto t1 = chrono::steady_clock::now();
+	auto dt = chrono::duration_cast<std::chrono::seconds>(t1 - bf_t0).count();
+	if (dt >= bf_t_max) {
+		bf_did_timeout = true;
+		return;
+	}
+
 	// my bag is better than your's!
 	if (n == 0 && bag.w <= bag.b && bag.v > best.v)
 		best = bag;
@@ -78,6 +90,7 @@ void solve_brute_r(int n, Bag bag, Bag &best, Items &items) {
 }
 
 Bag solve_brute(Bag bag, Items &items) {
+	bf_t0 = chrono::steady_clock::now();
 	Bag best = bag;
 	solve_brute_r(items.size(), bag, best, items);
 	return best;

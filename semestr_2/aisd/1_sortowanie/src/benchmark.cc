@@ -1,16 +1,19 @@
 #include "testkit.hh"
-#include <functional>
-#include <vector>
-#include <utility>
-#include <string>
-#include <iostream>
-#include <fstream>
-#include <cstdlib>
-#include <cstring>
-#include <algorithm>
+
+using namespace std;
 
 typedef std::function<void(int*, int)> algorithm;
 typedef std::function<int*(int)> generator;
+
+// sort inplace  best  avg   worst
+// QS x nlogn nlogn n2
+// HS x nlogn nlogn nlogn
+// MS   nlogn nlogn nlogn
+// SS x n1.25 n1.25 n1.25
+// CS   n+k
+// 
+// quicksort z środkowym elementem
+// ciąg v-kształtny 1 3 5-7-6 4 2
 
 //
 // generowanie danych
@@ -74,16 +77,6 @@ int *generate_v_shape_array(int length) {
 //
 // implementacja algorytmow
 //
-
-void swap(int *a, int *b) {
-	int temp = *a;
-	*a = *b;
-	*b = temp;
-}
-
-int max(int a, int b) {
-	return a > b ? a : b;
-}
 
 //
 // shit sort
@@ -278,45 +271,7 @@ auto get_generators() {
 	return generators;
 }
 
-int main() {
-	using namespace std;
-	random_seed();
-
-	cout << "V";
-	for (int i = 99999; i <= 100001; i++) {
-		int *a;
-		auto before = [&a,i]() {
-			a = generate_v_shape_array(i);	
-		};
-		auto after = [&a]() {
-			free(a);
-		};
-		auto measure = [&a, i]() {
-			quick_sort(a, i);
-		};
-		auto nanoseconds = benchmark(10, false, before, measure, after);
-		cout << "," << fixed << nanoseconds*1e-9 << flush; // dostajemy sekundy
-	}
-	cout << "\n";
-
-	cout << "A";
-	for (int i = 99999; i <= 100001; i++) {
-		int *a;
-		auto before = [&a,i]() {
-			a = generate_a_shape_array(i);	
-		};
-		auto after = [&a]() {
-			free(a);
-		};
-		auto measure = [&a, i]() {
-			quick_sort(a, i);
-		};
-		auto nanoseconds = benchmark(1, false, before, measure, after);
-		cout << "," << fixed << nanoseconds*1e-9 << flush; // dostajemy sekundy
-	}
-	cout << "\n";
-	return 0;
-
+void bench() {
 	int len_min = 1000, len_max = 2000000, len_step = 1000;
 	auto algorithms = get_algorithms();
 	auto generators = get_generators();
@@ -329,7 +284,6 @@ int main() {
 	cout << "\n";
 
 	for (int len = len_min; len <= len_max; len += len_step) {
-		cerr << 100 * len / len_max << "% ";
 		cout << len;
 		for (auto generator : generators) {
 			int *array_orig = generator.second(len);
@@ -352,12 +306,14 @@ int main() {
 				auto measure = [algorithm, &array_copy, len]() {
 					algorithm.second(array_copy, len);
 				};
-				auto nanoseconds = benchmark(1, false, before, measure, after);
+				auto nanoseconds = benchmark(1, before, measure, after);
 				cout << "," << fixed << nanoseconds*10e-9 << flush; // dostajemy sekundy
+				cerr << ".";
 			}
 			free(array_orig);
 		}
 		cout << "\n";
+		cerr << "\n";
 
 		if (len == 15000) {
 			len_step = 50000;
@@ -365,6 +321,60 @@ int main() {
 		}
 	}
 	cerr << "\n";
+}
+
+void test() {
+	cout << "V";
+	for (int i = 99999; i <= 100001; i++) {
+		int *a;
+		auto before = [&a,i]() {
+			a = generate_v_shape_array(i);	
+		};
+		auto after = [&a]() {
+			free(a);
+		};
+		auto measure = [&a, i]() {
+			quick_sort(a, i);
+		};
+		auto nanoseconds = benchmark(10, before, measure, after);
+		cout << "," << fixed << nanoseconds*1e-9 << flush; // dostajemy sekundy
+	}
+	cout << "\n";
+
+	cout << "A";
+	for (int i = 99999; i <= 100001; i++) {
+		int *a;
+		auto before = [&a,i]() {
+			a = generate_a_shape_array(i);	
+		};
+		auto after = [&a]() {
+			free(a);
+		};
+		auto measure = [&a, i]() {
+			quick_sort(a, i);
+		};
+		auto nanoseconds = benchmark(1, before, measure, after);
+		cout << "," << fixed << nanoseconds*1e-9 << flush; // dostajemy sekundy
+	}
+	cout << "\n";
+}
+
+void usage(bool abort = true) {
+	cerr << "usage: benchmark [--bench|--test]\n";
+	if (abort) exit(1);
+}
+
+int main(int argc, char **argv) {
+	random_seed();
+
+	if (argc != 2)
+		usage();
+
+	if (!strcmp(argv[1], "--bench"))
+		bench();
+
+	if (!strcmp(argv[1], "--test"))
+		test();
 
 	return 0;
 }

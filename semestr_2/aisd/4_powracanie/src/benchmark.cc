@@ -1,28 +1,6 @@
 #include "testkit.hh"
 
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <iomanip>
-
-#include <functional>
-#include <vector>
-#include <array>
-#include <list>
-#include <string>
-#include <cstring>
-#include <chrono>
-#include <algorithm>
-
 using namespace std;
-
-int max(int a, int b) {
-	return a > b ? a : b;
-}
-
-int abs(int a) {
-	return a < 0 ? -a : a;
-}
 
 int edges(int V, double phi, bool undirected = true) {
 	double divisor = undirected ? 2 : 1;
@@ -276,75 +254,89 @@ struct AdjacencyMatrix {
 // BENCHMARK
 ///////////////////////////////////////////////////////////////////////////////
 
-int main() {
-	random_seed();
+int Phi[] = {10,20,30,40,60,80,95};
+int V_min = 200, V_max = 1000, V_step = 200;
 
-	int Phi[] = {10,20,30,40,60,80,95};
-
-	int V_min = 200, V_max = 1000, V_step = 200;
-
-	if (false) {
-		cerr << "[info] generating\n";
-		for (int V = V_min; V <= V_max; V += V_step) {
-			for (auto phi : Phi) {
-				auto m = AdjacencyMatrix(V, edges(V, phi / 100.0));
-				m.save("input/" + to_string(V) + "_" + to_string(phi)); 
-				cerr << ".";
-			}
+void input() {
+	for (int V = V_min; V <= V_max; V += V_step) {
+		for (auto phi : Phi) {
+			auto m = AdjacencyMatrix(V, edges(V, phi / 100.0));
+			m.save("input/" + to_string(V) + "_" + to_string(phi)); 
+			cerr << ".";
 		}
-		cerr << "\n";
 	}
+	cerr << "\n";
+}
 
-	if (true) {
-		cerr << "[info] benchmarking\n";
-		cout << "v,phi,ec";
-		int hc = 25;
-		for (int i = 0; i < hc; i++)
-			cout << ",hc-" << i+1;
-		cout << "\n";
+void bench() {
 
-		for (int V = V_min; V <= V_max; V += V_step) {
-			for (int phi : Phi) {
+	cerr << "[info] benchmarking\n";
+	cout << "v,phi,ec";
+	int hc = 25;
+	for (int i = 0; i < hc; i++)
+		cout << ",hc-" << i+1;
+	cout << "\n";
 
-				cerr << "phi: " << phi << ", v: " << V;
-				cout << V << "," << phi;
+	for (int V = V_min; V <= V_max; V += V_step) {
+		for (int phi : Phi) {
 
-				AdjacencyMatrix g(V, edges(V, phi / 100.0));
+			cerr << "phi: " << phi << ", v: " << V;
+			cout << V << "," << phi;
 
-				cout << "," << benchmark_simple([&g]{
-					g.eulerian_cycle();
+			AdjacencyMatrix g(V, edges(V, phi / 100.0));
+
+			cout << "," << benchmark_simple([&g]{
+				g.eulerian_cycle();
+			}) * 1e-9;
+			cerr << ".";
+
+			for (int i = 0; i < hc; i++) {
+				int phi2 = phi == 95 ? 94 : phi;
+				AdjacencyMatrix h(V, edges(V, phi2 / 100.0));
+				if (phi == 10) h.t_max = 0;
+				else if (phi == 20) h.t_max = 600;
+				else h.t_max = 10*600;
+
+				auto elapsed = benchmark_simple([&h]{
+					h.hamiltonian_cycle();
 				}) * 1e-9;
-				cerr << ".";
 
-				for (int i = 0; i < hc; i++) {
-					int phi2 = phi == 95 ? 94 : phi;
-					AdjacencyMatrix h(V, edges(V, phi2 / 100.0));
-					if (phi == 10) h.t_max = 0;
-					else if (phi == 20) h.t_max = 600;
-					else h.t_max = 10*600;
-
-					auto elapsed = benchmark_simple([&h]{
-						h.hamiltonian_cycle();
-					}) * 1e-9;
-
-					if (h.did_timeout) {
-						h.did_timeout = false;
-						elapsed = 300;
-					}
-
-					cout << "," << elapsed;
-					cerr << ".";
+				if (h.did_timeout) {
+					h.did_timeout = false;
+					elapsed = 300;
 				}
-				
-				cout << "\n";
-				cerr << "\n";
-			}
 
+				cout << "," << elapsed;
+				cerr << ".";
+			}
+			
+			cout << "\n";
 			cerr << "\n";
 		}
-	}
 
-	cerr << "\n";
+		cerr << "\n";
+	}
+}
+
+void test() {
+
+}
+
+void usage(bool abort = true) {
+	cout << "usage: benchmark [--input|--bench|--test]\n";
+	if (abort) exit(1);
+}
+
+int main(int argc, char **argv) {
+	random_seed();
+	if (argc != 2)
+		usage();
+	if (!strcmp(argv[1], "--input"))
+		input();
+	if (!strcmp(argv[1], "--bench"))
+		bench();
+	if (!strcmp(argv[1], "--test"))
+		test();
 	return 0;
 }
 

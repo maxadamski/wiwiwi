@@ -1,9 +1,26 @@
 #ifndef TESTKIT_H
 #define TESTKIT_H
 
-#include <functional>
+// standard
+#include <cstdlib>
+#include <cstring>
+#include <string>
+
+// io
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <iomanip>
+
+// containers
 #include <vector>
 #include <list>
+
+// magic
+#include <algorithm>
+#include <functional>
+#include <random>
+#include <chrono>
 
 struct Timer {
 	// time in nanoseconds
@@ -24,7 +41,7 @@ struct Timer {
 int random(int min, int max);
 void random_seed();
 
-void shuffle(std::vector<int> vector);
+void shuffle(std::vector<int> &vector);
 
 // Zwraca uśredniony czas wykonywania f-i 'lambda' w nanosekundach
 // 'passes': ilosc powtorzen
@@ -33,7 +50,7 @@ long int benchmark(int passes,
 	std::function<void()> measure,
 	std::function<void()> before,
 	std::function<void()> after,
-	bool print_passes);
+	bool print_passes = false);
 
 long int benchmark(int passes,
 	std::function<void()> measure);
@@ -49,5 +66,11 @@ void print_array(int* array, int length);
 void print(std::vector<int> v);
 
 void print(std::list<int> v);
+
+int min(int a, int b);
+int max(int a, int b);
+int abs(int a);
+
+void swap(int *a, int *b);
 
 #endif

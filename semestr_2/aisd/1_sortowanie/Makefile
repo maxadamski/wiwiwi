@@ -1,14 +1,20 @@
-.PHONY: plot run build
+.PHONY: clean build bench test plot
 
-plot:
-	rm -rf plots
-	mkdir -p plots
-	python3 1_sortowanie.py
-
-run: build
-	build/1_sortowanie > 1_sortowanie.csv
+clean:
+	rm -rf build output
 
 build:
-	rm -rf build
-	mkdir -p build
-	g++ -O0 --std=c++14 -o build/1_sortowanie 1_sortowanie.cc testkit.cc
+	rm -rf build; mkdir -p build
+	mkdir -p output
+	g++ -O0 --std=c++14 \
+		-o build/benchmark -I ../testkit \
+		src/benchmark.cc ../testkit/testkit.cc
+
+bench: build
+	build/benchmark --bench > output/bench.csv
+
+test: build
+	build/benchmark --test
+
+plot:
+	python3 src/plot.py

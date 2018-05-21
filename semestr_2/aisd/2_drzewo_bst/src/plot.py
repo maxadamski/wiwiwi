@@ -14,7 +14,7 @@ def plot(df, title, ylabel="czas [s]", log=False, style=None):
         plt.yscale('log')
     if WATERMARK:
         plt.text(0, 0, 'dadamsky', fontsize=80, alpha=0.2)
-    plt.savefig(f'data/{title}.png')
+    plt.savefig(f'output/{title}.png')
 
 def plot_all(df):
     plot(df[['list-append', 'bst-append', 'bst-rand-append']], 'append', style='-+')
@@ -22,5 +22,5 @@ def plot_all(df):
     plot(df[['list-find', 'bst-find', 'bst-rand-find', 'bbst-find']], 'find',
          ylabel="czas [ms]", style=['-+']*3 + ['.:'])
 
-df = pd.read_csv('data/results.csv', index_col='n')
+df = pd.read_csv('output/results.csv', index_col='n')
 plot_all(df)

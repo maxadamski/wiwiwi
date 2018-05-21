@@ -1,13 +1,5 @@
 #include "testkit.hh"
 
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <iomanip>
-
-#include <vector>
-#include <queue>
-
 // NOTATKI:
 // cykl hamiltona
 // O(n*m)

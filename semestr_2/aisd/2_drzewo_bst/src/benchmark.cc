@@ -1,15 +1,30 @@
 #include "testkit.hh"
 
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <iomanip>
-
-#include <functional>
-#include <vector>
-#include <string>
+using namespace std;
 
 typedef void (*Printer)(void*, std::string);
+
+// BST:
+// 
+// remove(bst, obj):
+// 	replace obj with max(obj.left) or min(obj.right)
+// 
+// mktree(bst):
+// 		median
+// 	   /      \
+// 	median    median
+// 	/    \    /    \
+//    med  med  med  med
+//    ...  ...  ...  ...
+// 
+// wzdluzny/pre-order(bst):
+// 	root,left,right
+// 
+// poprzeczny/in-order(bst):
+// 	left,root,right
+// 
+// wsteczy/post-order(bst):
+// 	left,right,root
 
 struct Student {
 	// names: 2*8*12 bit * 10^7 = 240 MB
@@ -177,8 +192,8 @@ TreeNode *append(TreeNode *node, void *item, Comparator cmp) {
 	return node;
 }
 
-void *min(TreeNode *node) {
-	return node->left ? min(node->left) : node->item;
+void *min_tree(TreeNode *node) {
+	return node->left ? min_tree(node->left) : node->item;
 }
 
 TreeNode *remove(TreeNode *node, TreeNode *parent, void *item, Comparator cmp) {
@@ -189,7 +204,7 @@ TreeNode *remove(TreeNode *node, TreeNode *parent, void *item, Comparator cmp) {
 		return node->right ? remove(node->right, node, item, cmp) : NULL;
 	} else {
 		if (node->left && node->right) {
-			node->item = min(node->right);
+			node->item = min_tree(node->right);
 			return remove(node->right, node, item, cmp);
 		} else if (parent->left == node) {
 			parent->left = node->left ? node->left : node->right;
@@ -209,14 +224,6 @@ TreeNode *find(TreeNode *node, void *item, Comparator cmp) {
 		return find(node->left, item, cmp);
 	else
 		return find(node->right, item, cmp);
-}
-
-int max(int a, int b) {
-	return a > b ? a : b;
-}
-
-int abs(int a) {
-	return a < 0 ? -a : a;
 }
 
 int element_count(TreeNode *node) {
@@ -267,17 +274,13 @@ TreeNode *insert_students_avl(std::vector<Student*> s) {
 // BENCHMARK
 ///////////////////////////////////////////////////////////////////////////////
 
-int main() {
-	using namespace std;
-	random_seed();
-
+void bench() {
 	std::vector<int> ns;
 	int max = 20000;
 	for (int i = 1000; i <= max; i += 1000)
 		ns.push_back(i);
 
-	auto student_data = read_names("data/names.csv", max);
-
+	auto student_data = read_names("input/names.csv", max);
 
 	cout << "n,list-append,list-find,list-remove,bst-rand-append,bst-rand-find,bst-rand-remove,bst-append,bst-find,bst-remove,bbst-append,bbst-find,bbst-remove\n"; // naglowek csv
 
@@ -287,7 +290,7 @@ int main() {
 
 		vector<int> indices;
 		for (int i = 0; i < n; i++) indices.push_back(i);
-		vector<int> irandom = shuffle(indices);
+		shuffle(indices);
 
 		///////////////////////////////////////////////////////////////////////
 		// Lista
@@ -310,7 +313,7 @@ int main() {
 		{
 			// wyszukiwanie z posortowanej listy
 			long int sum = 0;
-			for (int i : irandom) {
+			for (int i : indices) {
 				sum += benchmark_simple([&node, i, student_data]{ 
 					find(node, student_data[i]);
 				});
@@ -339,8 +342,8 @@ int main() {
 
 		{
 			// zapisywanie do losowego bst
-			cout << fixed << benchmark_simple([&rbst, student_data, irandom]{
-				for (int i : irandom) {
+			cout << fixed << benchmark_simple([&rbst, student_data, indices]{
+				for (int i : indices) {
 					rbst = append(rbst, student_data[i], cmp_student);
 				}
 			}) * 1e-9 << "," << flush;
@@ -350,7 +353,7 @@ int main() {
 		{
 			// wyszukiwanie z losowego bst
 			long int sum = 0;
-			for (int i : irandom) {
+			for (int i : indices) {
 				sum += benchmark_simple([&rbst, i, student_data]{ 
 					find(rbst, student_data[i], cmp_student);
 				});
@@ -390,7 +393,7 @@ int main() {
 		{
 			// wyszukiwanie
 			long int sum = 0;
-			for (int i : irandom) {
+			for (int i : indices) {
 				sum += benchmark_simple([&bst, i, student_data]{ 
 					find(bst, student_data[i], cmp_student);
 				});
@@ -430,7 +433,7 @@ int main() {
 		{
 			// wyszukiwanie z bbst
 			long int sum = 0;
-			for (int i : irandom) {
+			for (int i : indices) {
 				sum += benchmark_simple([&bbst, i, student_data]{ 
 					find(bbst, student_data[i], cmp_student);
 				});
@@ -457,7 +460,25 @@ int main() {
 
 	for (auto student : student_data)
 		delete student;
+}
 
+void test() {
+
+}
+
+void usage(bool abort = true) {
+	cout << "usage: benchmark [--bench|--test]\n";
+	if (abort) exit(1);
+}
+
+int main(int argc, char **argv) {
+	random_seed();
+	if (argc != 2)
+		usage();
+	if (!strcmp(argv[1], "--bench"))
+		bench();
+	if (!strcmp(argv[1], "--test"))
+		test();
 	return 0;
 }
 

@@ -9,8 +9,7 @@ def plot(df, title, log=False, style=None, min=50000, max=1000000):
     plt.ylabel('czas (sekundy)')
     plt.xlim(min, max)
     if log: plt.yscale('log')
-    filename = 'plots/' + title + '.png'
-    plt.savefig(filename.replace(' ', '_'))
+    plt.savefig(f'output/{title}.png'.replace(' ', '_'))
 
 def plot_with_log(df, title, style=None):
     plot(df, title,                log=False, style=style, min=50000, max=1000000)
@@ -38,7 +37,7 @@ def plot_zad2():
 generators = ['losowe', 'stałe', 'rosnące', 'malejące', 'a-kształtne', 'v-kształtne' ]
 disabled =  ['quick sort - a-kształtne', 'quick sort - v-kształtne']
 disabled += [column('bubble sort', it) for it in generators]
-df = pd.read_csv('1_sortowanie.csv', index_col='length')
+df = pd.read_csv('output/bench.csv', index_col='length')
 df = df.replace(0, np.nan)
 #df[df.index > 15000][disabled] = np.nan
 

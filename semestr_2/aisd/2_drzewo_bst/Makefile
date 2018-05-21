@@ -1,23 +1,25 @@
-.PHONY: all clean build results run report
-
-all: clean data run results report
+.PHONY: clean input build bench test plot
 
 clean:
-	rm -rf build
-	rm -rf data
+	rm -rf build input output
+
+input:
+	mkdir -p input
+	python3 src/generate.py > input/names.csv
 
 build:
-	mkdir -p build
-	g++ -g -O0 --std=c++17 -o build/benchmark src/benchmark.cc src/testkit.cc
+	rm -rf build; mkdir -p build
+	mkdir -p output
+	g++ -g -O0 --std=c++17 \
+		-o build/benchmark -I ../testkit \
+		src/benchmark.cc ../testkit/testkit.cc
 
-data:
-	mkdir -p data
-	python3 script/generate.py > data/names.csv
-	cp -f reference.csv data/
+bench: build
+	build/benchmark --bench > output/benchmark.csv
 
-run: build
-	build/benchmark > data/benchmark.csv
+test: build
+	build/benchmark --test > output/benchmark.csv
 
-results:
-	python3 script/massage.py
-	python3 script/plot.py
+plot:
+	python3 src/massage.py
+	python3 src/plot.py

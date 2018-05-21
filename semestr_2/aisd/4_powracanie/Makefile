@@ -1,16 +1,24 @@
-.PHONY: all build run plot
+.PHONY: clean build bench test plot
 
-all: build run plot
+clean:
+	rm -rf build input output
 
 build:
-	@rm -rf build
-	@mkdir -p build
-	@mkdir -p input
-	g++ -g -O0 --std=c++17 -o build/benchmark src/benchmark.cc src/testkit.cc
+	rm -rf build; mkdir -p build
+	mkdir -p input
+	mkdir -p output
+	g++ -O0 --std=c++17 \
+		-o build/benchmark -I ../testkit \
+		src/benchmark.cc ../testkit/testkit.cc
 
-run: build
-	@mkdir -p output
-	build/benchmark > output/bench.csv
+input: build
+	build/benchmark --input
+
+bench: build
+	build/benchmark --bench > output/bench.csv
+
+test: build
+	build/benchmark --test
 
 plot:
-	python3 script/plot.py
+	python3 src/plot.py

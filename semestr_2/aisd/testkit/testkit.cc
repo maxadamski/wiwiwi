@@ -1,12 +1,24 @@
 #include "testkit.hh"
-#include <iostream>
-#include <cstdlib>
-#include <cstring>
-#include <chrono>
-#include <random>
-#include <algorithm>
 
 std::mt19937 generator;
+
+int min(int a, int b) {
+	return a < b ? a : b;
+}
+
+int max(int a, int b) {
+	return a > b ? a : b;
+}
+
+int abs(int a) {
+	return a < 0 ? -a : a;
+}
+
+void swap(int *a, int *b) {
+	int temp = *a;
+	*a = *b;
+	*b = temp;
+}
 
 int random(int min, int max) {
 	std::uniform_int_distribution<std::mt19937::result_type> dist(min, max);
@@ -17,15 +29,28 @@ void random_seed() {
 	generator.seed(std::random_device()());
 }
 
-std::vector<int> shuffle(std::vector<int> vector) {
-	std::shuffle(std::begin(vector), std::end(vector), generator);
-	return vector;
+void shuffle(std::vector<int> &vector) {
+	std::shuffle(vector.begin(), vector.end(), generator);
 }
 
-long int benchmark(int passes, bool print_passes,
-	std::function<void()> before,
+bool Timer::timeout() {
+	return remaining <= 0;
+}
+
+void Timer::tick(int elapsed) {
+	remaining -= elapsed;
+}
+
+void Timer::reset() {
+	remaining = duration;
+	flag = false;
+}
+
+long int benchmark(int passes,
 	std::function<void()> measure,
-	std::function<void()> after) {
+	std::function<void()> before,
+	std::function<void()> after,
+	bool print_passes) {
 
 	long int average = 0;
 	for (int i = 0; i < passes; i += 1) {
@@ -43,8 +68,13 @@ long int benchmark(int passes, bool print_passes,
 	return average;
 }
 
+long int benchmark(int passes,
+	std::function<void()> measure) {
+	return benchmark(passes, measure, []{}, []{}, false);
+}
+
 long int benchmark_simple(std::function<void()> measure) {
-	return benchmark(1, false, []{}, measure, []{});
+	return benchmark(1, measure, []{}, []{}, false);
 }
 
 int *copy_array(int* array, int length) {
@@ -67,5 +97,19 @@ void print_array(int *array, int length) {
 	for (int i = 0; i < length; i += 1) 
 		std::cerr << array[i] << " ";
 	std::cerr << "\n";
+}
+
+void print(std::vector<int> v) {
+	std::cout << "[ ";
+	for (int e : v)
+		std::cout << e << " ";
+	std::cout << "]\n";
+}
+
+void print(std::list<int> v) {
+	std::cout << "[ ";
+	for (int e : v)
+		std::cout << e << " ";
+	std::cout << "]\n";
 }
 

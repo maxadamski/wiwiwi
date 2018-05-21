@@ -22,8 +22,8 @@ def dspeed(fast, slow):
     return d
 
 
-slow = pd.read_csv('data/reference.csv', index_col='n')
-fast = pd.read_csv('data/benchmark.csv', index_col='n')
+slow = pd.read_csv('input/reference.csv', index_col='n')
+fast = pd.read_csv('output/benchmark.csv', index_col='n')
 # compute how much slower are put's PCs
 delta = dspeed(fast, slow)
 # scale faster results down
@@ -31,11 +31,11 @@ df = fast.copy()
 for c in df: df[c] *= delta[c]
 scale_find(df)
 # save scaled results to csv
-df.to_csv('data/results.csv', float_format='%.6f')
+df.to_csv('output/results.csv', float_format='%.6f')
 # save separate csv for each proc
 for proc in PROCS:
     structs = ['list', 'bst', 'bst-rand']
     if proc == 'find': structs += ['bbst']
     cols = [s+'-'+proc for s in structs]
-    df[cols].to_csv(f'data/{proc}.csv',
+    df[cols].to_csv(f'output/{proc}.csv',
         header=structs, float_format='%.6f')

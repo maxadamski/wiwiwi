@@ -1,26 +1,6 @@
 #include "testkit.hh"
 
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <iomanip>
-
-#include <functional>
-#include <vector>
-#include <array>
-#include <list>
-#include <string>
-#include <cstring>
-
 using namespace std;
-
-int max(int a, int b) {
-	return a > b ? a : b;
-}
-
-int abs(int a) {
-	return a < 0 ? -a : a;
-}
 
 // """NOTATKI"""
 //
@@ -266,88 +246,92 @@ struct AdjacencyList {
 // BENCHMARK
 ///////////////////////////////////////////////////////////////////////////////
 
+void tsort() {
+	cerr << "sorting topologically...\n";
+	cout << "n,topsort\n";
+
+	for (int n = 100; n <= 1500; n += 100) {
+		cout << n << ",";
+
+		AdjacencyList adjacency_list("input/" + to_string(n) + "_DAG");
+		cerr << ".";
+
+		cout << benchmark_simple([&adjacency_list]{
+			adjacency_list.topsort();
+		}) * 1e-9 << "\n";
+		cerr << ".";
+	}
+
+	cerr << "\n";
+}
+
+void edges() {
+	cerr << "finding connections...\n";
+	cout << "n,ms,mi,lk,li\n";
+
+	for (int n = 100; n <= 1500; n += 100) {
+		cout << n << ",";
+
+		AdjacencyMatrix adjacency_matrix("input/" + to_string(n) + "_MS");
+		IncidenceMatrix incidence_matrix(adjacency_matrix);
+		AdjacencyList adjacency_list(adjacency_matrix);
+		EdgeList edge_list(adjacency_matrix);
+		cerr << ".";
+
+		vector<int> searches;
+		for (int i = 0; i < n; i++) {
+			int r = i;
+			while (r == i)
+				r = random(0, n - 1);
+			searches.push_back(r);
+		}
+		cerr << ".";
+
+		// ms
+		cout << benchmark_simple([&adjacency_matrix, searches, n]{
+			for (int i = 0; i < n; i++)
+				adjacency_matrix.is_edge(i, searches[i]);
+		}) * 1e-9 << ",";
+		cerr << ".";
+
+		// mi
+		cout << benchmark_simple([&incidence_matrix, searches, n]{
+			for (int i = 0; i < n; i++)
+				incidence_matrix.is_edge(i, searches[i]);
+		}) * 1e-9 << ",";
+		cerr << ".";
+
+		// lk
+		cout << benchmark_simple([&edge_list, searches, n]{
+			for (int i = 0; i < n; i++)
+				edge_list.is_edge(i, searches[i]);
+		}) * 1e-9 << ",";
+		cerr << ".";
+
+		// li
+		cout << benchmark_simple([&adjacency_list, searches, n]{
+			for (int i = 0; i < n; i++)
+				adjacency_list.is_edge(i, searches[i]);
+		}) * 1e-9 << "\n";
+		cerr << ".\n";
+	}
+
+	cerr << "\n";
+}
+
+void usage(bool abort = true) {
+	cout << "usage: benchmark [--tsort|--edges]\n";
+	if (abort) exit(1);
+}
 
 int main(int argc, char **argv) {
 	random_seed();
-
-	if (argc < 2) {
-		cout << "usage: benchmark [--tsort|--edges]\n";
-		return 1;
-	}
-
-	if (!strcmp(argv[1], "--tsort")) {
-		cerr << "sorting topologically...\n";
-		cout << "n,topsort\n";
-
-		for (int n = 100; n <= 1500; n += 100) {
-			cout << n << ",";
-
-			AdjacencyList adjacency_list("input/" + to_string(n) + "_DAG");
-			cerr << ".";
-
-			cout << benchmark_simple([&adjacency_list]{
-				adjacency_list.topsort();
-			}) * 1e-9 << "\n";
-			cerr << ".";
-		}
-
-		cerr << "\n";
-	}
-
-	if (!strcmp(argv[1], "--edges")) {
-		cerr << "finding connections...\n";
-		cout << "n,ms,mi,lk,li\n";
-
-		for (int n = 100; n <= 1500; n += 100) {
-			cout << n << ",";
-
-			AdjacencyMatrix adjacency_matrix("input/" + to_string(n) + "_MS");
-			IncidenceMatrix incidence_matrix(adjacency_matrix);
-			AdjacencyList adjacency_list(adjacency_matrix);
-			EdgeList edge_list(adjacency_matrix);
-			cerr << ".";
-
-			vector<int> searches;
-			for (int i = 0; i < n; i++) {
-				int r = i;
-				while (r == i)
-					r = random(0, n - 1);
-				searches.push_back(r);
-			}
-			cerr << ".";
-
-			// ms
-			cout << benchmark_simple([&adjacency_matrix, searches, n]{
-				for (int i = 0; i < n; i++)
-					adjacency_matrix.is_edge(i, searches[i]);
-			}) * 1e-9 << ",";
-			cerr << ".";
-
-			// mi
-			cout << benchmark_simple([&incidence_matrix, searches, n]{
-				for (int i = 0; i < n; i++)
-					incidence_matrix.is_edge(i, searches[i]);
-			}) * 1e-9 << ",";
-			cerr << ".";
-
-			// lk
-			cout << benchmark_simple([&edge_list, searches, n]{
-				for (int i = 0; i < n; i++)
-					edge_list.is_edge(i, searches[i]);
-			}) * 1e-9 << ",";
-			cerr << ".";
-
-			// li
-			cout << benchmark_simple([&adjacency_list, searches, n]{
-				for (int i = 0; i < n; i++)
-					adjacency_list.is_edge(i, searches[i]);
-			}) * 1e-9 << "\n";
-			cerr << ".\n";
-		}
-
-		cerr << "\n";
-	}
-
+	if (argc != 2)
+		usage();
+	if (!strcmp(argv[1], "--tsort"))
+		tsort();
+	if (!strcmp(argv[1], "--edges"))
+		edges();
 	return 0;
 }
 

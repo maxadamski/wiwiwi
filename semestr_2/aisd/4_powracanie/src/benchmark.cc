@@ -52,26 +52,22 @@ struct AdjacencyMatrix {
 		int nodeA, nodeB, nodeC;
 		for (int i = 0; i < V; i++)
 			nodes.push_back(i);
-		for (int i = 0; i < V; i++)
-		{
-			tmp = rand() % nodes.size();
+		for (int i = 0; i < V; i++) {
+			tmp = random(0, nodes.size()-1);
 			cycle.push_back(nodes[tmp]);
 			nodes.erase(nodes.begin() + tmp);
 		}
 
-		for (int i = 0; i < V - 1; i++)
-		{
+		for (int i = 0; i < V - 1; i++) {
 			data[cycle[i]][cycle[i + 1]] = data[cycle[i + 1]][cycle[i]] = true;
 		}
 
 		data[cycle[0]][cycle[cycle.size() - 1]] = data[cycle[cycle.size() - 1]][cycle[0]] = true;
-		for (int i = 0; i < E - V; i += 3)
-		{
-			do
-			{
-				nodeA = rand() % V;
-				nodeB = rand() % V;
-				nodeC = rand() % V;
+		for (int i = 0; i < E - V; i += 3) {
+			do {
+				nodeA = random(0, V-1);
+				nodeB = random(0, V-1);
+				nodeC = random(0, V-1);
 			} while (nodeA == nodeB || nodeA == nodeC || nodeB == nodeC ||
 					data[nodeA][nodeB] == true ||
 					data[nodeA][nodeC] == true ||

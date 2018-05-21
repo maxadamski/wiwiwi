@@ -12,6 +12,7 @@
 #include <string>
 #include <cstring>
 #include <chrono>
+#include <algorithm>
 
 using namespace std;
 
@@ -199,53 +200,56 @@ struct AdjacencyMatrix {
 
 	chrono::steady_clock::time_point t0;
 	bool did_timeout = false;
-	bool did_limit = false;
-	int t_max = 600;
-	int h_max = 1;
+	int t_max = 300;
 
-	void hamiltonian_cycle_dfs(int v, vector<int> &visited, list<int> &cycle, vector< list<int> > &cycles) {
-		auto t1 = chrono::steady_clock::now();
-		auto dt = chrono::duration_cast<std::chrono::seconds>(t1 - t0).count();
-		if (dt >= t_max) {
-			did_timeout = true;
-			return;
-		}
-		if (h_max && cycles.size() >= h_max) {
-			return;
-		}
-
-		cycle.push_front(v);
-		if (cycle.size() < data.size()) {
-			visited[v] = true;
-			for (size_t u = 0; u < data.size(); u++) {
-				if (data[v][u] && !visited[u]) {
-					hamiltonian_cycle_dfs(u, visited, cycle, cycles);
-				}
-			}
-			visited[v] = false;
-		} else {
-			bool is_cycle = false;
-			for (size_t u = 0; u < data.size(); u++) {
-				if (data[v][u] && u == 0) {
-					is_cycle = true;
-					break;
-				}
-			}
-
-			if (is_cycle) {
-				cycles.push_back(cycle);
-			}
-		}
-		cycle.pop_front();
+	bool contains(vector<int> &collection, int element) {
+		for (auto test : collection)
+			if (test == element)
+				return true;
+		return false;
 	}
 
-	vector< list<int> > hamiltonian_cycle() {
+	bool hamiltonian_cycle_dfs(int v, vector<int> &visited) {
+		// stop computing after time exceeds t_max
+		auto t1 = chrono::steady_clock::now();
+		auto dt = chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
+		if (dt >= t_max) {
+			did_timeout = true;
+			return false;
+		}
+
+		if (contains(visited, v)) {
+			// if all vertices visited, and is at the start, report success
+			if (visited.size() == data.size() && v == 0)  {
+				visited.push_back(v);
+				return true;
+			}
+			return false;
+		}
+
+		visited.push_back(v);
+		for (size_t u = 0; u < data.size(); u++) {
+			// if recursion yields cycle, report success
+			if (data[v][u] && hamiltonian_cycle_dfs(u, visited)) {
+				return true;
+			}
+		}
+
+		// backtrack
+		visited.pop_back();
+		return false;
+	}
+
+	vector<int> hamiltonian_cycle() {
 		t0 = chrono::steady_clock::now();
-		vector<int> visited(data.size());
-		vector< list<int> > cycles;
-		list<int> cycle;
-		hamiltonian_cycle_dfs(0, visited, cycle, cycles);
-		return cycles;
+
+		vector<int> visited;
+		if (hamiltonian_cycle_dfs(0, visited)) {
+			return visited;
+		} else {
+			// no cycle :(
+			return vector<int>();
+		}
 	}
 };
 
@@ -276,70 +280,72 @@ struct AdjacencyMatrix {
 // BENCHMARK
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <algorithm>
-
 int main() {
 	random_seed();
 
-	bool opt_generate = true, opt_benchmark = true;
-	int phi_list[] = {10,20,30,40,60,80,95};
-	int V = 1000;
-//	auto g = AdjacencyMatrix("input/200_30");
-//	auto hs = g.hamiltonian_cycle();
-//	cout << "n = " << hs.size() << "\n";
-//	print(hs[0]);
-//	for (auto h : hs) {
-//			cout << h.size();
-//			cout << "\n";
-//	}
+	int Phi[] = {10,20,30,40,60,80,95};
 
-	if (opt_generate) {
-		cerr << "generating...\n";
-		for (auto phi : phi_list) {
-			auto m = AdjacencyMatrix(V, edges(V, phi / 100.0));
-			m.save("input/" + to_string(V) + "_" + to_string(phi)); 
-			cerr << ".";
+	int V_min = 200, V_max = 1000, V_step = 200;
+
+	if (false) {
+		cerr << "[info] generating\n";
+		for (int V = V_min; V <= V_max; V += V_step) {
+			for (auto phi : Phi) {
+				auto m = AdjacencyMatrix(V, edges(V, phi / 100.0));
+				m.save("input/" + to_string(V) + "_" + to_string(phi)); 
+				cerr << ".";
+			}
 		}
 		cerr << "\n";
 	}
 
-	if (opt_benchmark) {
-		cerr << "benchmarking...\n";
-		cout << "phi,ec";
+	if (true) {
+		cerr << "[info] benchmarking\n";
+		cout << "v,phi,ec";
 		int hc = 25;
 		for (int i = 0; i < hc; i++)
 			cout << ",hc-" << i+1;
 		cout << "\n";
 
-		for (int phi : phi_list) {
-			cout << phi;
+		for (int V = V_min; V <= V_max; V += V_step) {
+			for (int phi : Phi) {
 
-			AdjacencyMatrix g("input/" + to_string(V) + "_" + to_string(phi));
-			AdjacencyMatrix g_copy = g;
+				cerr << "phi: " << phi << ", v: " << V;
+				cout << V << "," << phi;
 
-			cout << "," << benchmark_simple([&g_copy]{
-				g_copy.eulerian_cycle();
-			}) * 1e-9;
-			cerr << ".";
+				AdjacencyMatrix g(V, edges(V, phi / 100.0));
 
-			for (int i = 0; i < hc; i++) {
-				if (!g.timeout && !g.did_limit) {
-					cout << "," << benchmark_simple([&g]{
-						g.hamiltonian_cycle();
-					}) * 1e-9;
-				} else if (g.did_limit) {
-					cout << ",0";
-				} else if (g.did_timeout) {
-					cout << ",0";
-				}
+				cout << "," << benchmark_simple([&g]{
+					g.eulerian_cycle();
+				}) * 1e-9;
 				cerr << ".";
+
+				for (int i = 0; i < hc; i++) {
+					int phi2 = phi == 95 ? 94 : phi;
+					AdjacencyMatrix h(V, edges(V, phi2 / 100.0));
+					if (phi == 10) h.t_max = 0;
+					else if (phi == 20) h.t_max = 600;
+					else h.t_max = 10*600;
+
+					auto elapsed = benchmark_simple([&h]{
+						h.hamiltonian_cycle();
+					}) * 1e-9;
+
+					if (h.did_timeout) {
+						h.did_timeout = false;
+						elapsed = 300;
+					}
+
+					cout << "," << elapsed;
+					cerr << ".";
+				}
+				
+				cout << "\n";
+				cerr << "\n";
 			}
-			
-			cout << "\n";
+
 			cerr << "\n";
 		}
-
-		cerr << "\n";
 	}
 
 	cerr << "\n";

@@ -28,7 +28,7 @@ struct Item {
 struct Bag {
 	int b, y, v = 0, w = 0;
 
-	Bag(int b, int y): b(b), y(y) {};
+	Bag(int b = 0, int y = 0): b(b), y(y) {};
 
 	void add(Item item) {
 		v += item.v;
@@ -180,37 +180,69 @@ Bag solve_dynamic(Bag bag, Items &items) {
 	return bag;
 }
 
+void generate(int n, int b, double V, Bag &bag, Items &items) {
+	bag.b = b;
+
+	int w_sum = 0;
+	int v_sum = 0;
+
+	for (int i = 0; i < n; i++) {
+		int w = random(1, b-1);
+		int v = random(1, V*b);
+		w_sum += w;
+		v_sum += v;
+		items.push_back({w,v});
+	}
+
+	bag.y = v_sum * 6 / 10;
+}
+
 int main() {
 	random_seed();
 
-	cout << "n,b,ga,bf,dp\n";
+	// "Suita testowa":
+	//Items items = { {2,3}, {3,1}, {1,4}, {1,1}, {8,5} };
+	//Bag bag(10, 12);
+	
+	cout << "n,b,v,bf,ga,dp\n";
 
-	{
-		Items items = { {2,3}, {3,1}, {1,4}, {1,1}, {8,5} };
-		Bag bag(10, 12);
+	for (int n = 1; n <= 20; n += 1) {
+		for (int b = 100; b <= 100; b += 100) {
+			for (double v = 0.25; v <= 2; v += 0.25) {
+			Items items; Bag bag;
+			generate(n, b, v, bag, items);
 
-		cout << items.size() << "," << bag.b << ",";
+			cout << items.size() << ","
+				 << bag.b << ","
+				 << v*100 << ",";
 
-		cout << benchmark(1, [bag, &items]{
-			solve_brute(bag, items);
-		}) * 1e-9;
+			if (n <= 20) {
+				cout << benchmark(1, [bag, &items]{
+					solve_brute(bag, items);
+				}) * 1e-9;
+			} else {
+				cout << "-1";
+			}
 
-		cout << ",";
-		cerr << ".";
+			cout << ",";
+			cerr << ".";
 
-		cout << benchmark(1, [bag, &items]{
-			solve_greedy(bag, items);
-		}) * 1e-9;
+			cout << benchmark(1, [bag, &items]{
+				solve_greedy(bag, items);
+			}) * 1e-9;
 
-		cout << ",";
-		cerr << ".";
+			cout << ",";
+			cerr << ".";
 
-		cout << benchmark(1, [bag, &items]{
-			solve_dynamic(bag, items);
-		}) * 1e-9;
+			cout << benchmark(1, [bag, &items]{
+				solve_dynamic(bag, items);
+			}) * 1e-9;
 
-		cout << "\n";
-		cerr << ".";
+			cout << "\n";
+			cerr << ".";
+		}
+		cerr << "\n";
+		}
 	}
 
 	cerr << "\n";

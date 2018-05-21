@@ -68,3 +68,69 @@ splits([SplitH|SplitT], List, [HeadSplit|Split]) :-
 	append(HeadSplit, RemainingList, List),
 	splits(SplitT, RemainingList, Split).
 
+% liczby pierwsze
+
+divisors(N, [Test|Tail]) :-
+	N > 0,
+	divisors(N, Tail),
+	append(_, [Last], Tail),
+	Test is Last + 1,
+	N mod Test =:= 0.
+
+divisors(N, Tail) :-
+	N > 0,
+	divisors(N, Tail),
+	append(_, [Last], Tail),
+	Test is Last + 1,
+	N mod Test =\= 0.
+
+divisors(N, [1]) :- N > 0.
+
+prime(N) :- divisors(N, [N, 1]).
+
+%anyfactor(X, 2) :- factor(X, Root).
+%anyfactor(X, Root) :- Dec is Root - 1, anyfactor(X, Root), anyfactor(X, Dec).
+
+%prime(X) :- sqrt(X, Root), anyfactor(X, Root).
+
+
+% selection sort
+
+min(A, B, B) :- A >= B.
+min(A, B, A) :- A < B.
+
+min([X], X).
+min([A|T], X) :- min(A, B, X), min(T, B).
+
+%ssort([], []).
+%ssort([H|T], [M|Sorted]) :- min([, M), ssort(L, Sorted).
+
+halves([A, B], [A], [B]).
+halves([A, B, C], [A, B], [C]).
+halves([LeftHead|Tail], [LeftHead|LeftTail], Right) :-
+	append(TailInit, [RightLast], Tail),
+	append(RightInit, [RightLast], Right),
+	halves(TailInit, LeftTail, RightInit).
+
+%halves(List, Left, Pivot, Right) :- append(Left, [Pivot|Right], List).
+
+
+msort([A], [A]).
+msort([A, B], [A, B]) :- A < B.
+msort([A, B], [B, A]) :- A >= B.
+
+msort(X, Y) :-
+	halves(X, Left, Right),
+	msort(Left, SortedLeft),
+	msort(Right, SortedRight),
+	merge(SortedLeft, SortedRight, Y).
+
+head([H|_], H).
+tail([_|T], T).
+init(L, X) :- append(X, [_], L).
+last(L, X) :- append(_, [X], L).
+
+unique([], []).
+unique([H|T], Unique) :- member(H, T), unique(T, Unique).
+unique([H|T], [H|Unique]) :- unique(T, Unique).
+

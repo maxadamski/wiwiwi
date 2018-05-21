@@ -1,20 +1,14 @@
-.PHONY: all clean build results run report
+.PHONY: all build run plot
 
-all: clean data run results report
+all: build run plot
 
-clean:
-	rm -rf build
-	rm -rf output
-
-setup:
-	mkdir -p build
-	mkdir -p output
-
-build: clean setup
+build:
+	@rm -rf build; mkdir -p build
 	g++ -g -O0 --std=c++17 -o build/benchmark src/benchmark.cc src/testkit.cc
 
-run: build
-	build/benchmark > output/benchmark.csv
+run:
+	@mkdir -p output
+	build/benchmark > output/bench.csv
 
-results:
+plot:
 	python3 script/plot.py

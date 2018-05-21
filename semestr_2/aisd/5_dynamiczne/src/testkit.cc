@@ -8,6 +8,14 @@
 
 std::mt19937 generator;
 
+int max(int a, int b) {
+	return a > b ? a : b;
+}
+
+int abs(int a) {
+	return a < 0 ? -a : a;
+}
+
 int random(int min, int max) {
 	std::uniform_int_distribution<std::mt19937::result_type> dist(min, max);
 	return dist(generator);
@@ -21,11 +29,24 @@ void shuffle(std::vector<int> vector) {
 	std::shuffle(std::begin(vector), std::end(vector), generator);
 }
 
+bool Timer::timeout() {
+	return remaining <= 0;
+}
 
-long int benchmark(int passes, bool print_passes,
-	std::function<void()> before,
+void Timer::tick(int elapsed) {
+	remaining -= elapsed;
+}
+
+void Timer::reset() {
+	remaining = duration;
+	flag = false;
+}
+
+long int benchmark(int passes,
 	std::function<void()> measure,
-	std::function<void()> after) {
+	std::function<void()> before,
+	std::function<void()> after,
+	bool print_passes) {
 
 	long int average = 0;
 	for (int i = 0; i < passes; i += 1) {
@@ -43,8 +64,13 @@ long int benchmark(int passes, bool print_passes,
 	return average;
 }
 
+long int benchmark(int passes,
+	std::function<void()> measure) {
+	return benchmark(passes, measure, []{}, []{}, false);
+}
+
 long int benchmark_simple(std::function<void()> measure) {
-	return benchmark(1, false, []{}, measure, []{});
+	return benchmark(1, measure, []{}, []{}, false);
 }
 
 int *copy_array(int* array, int length) {
@@ -67,5 +93,19 @@ void print_array(int *array, int length) {
 	for (int i = 0; i < length; i += 1) 
 		std::cerr << array[i] << " ";
 	std::cerr << "\n";
+}
+
+void print(std::vector<int> v) {
+	std::cout << "[ ";
+	for (int e : v)
+		std::cout << e << " ";
+	std::cout << "]\n";
+}
+
+void print(std::list<int> v) {
+	std::cout << "[ ";
+	for (int e : v)
+		std::cout << e << " ";
+	std::cout << "]\n";
 }
 

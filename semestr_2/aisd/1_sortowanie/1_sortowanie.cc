@@ -282,6 +282,41 @@ int main() {
 	using namespace std;
 	random_seed();
 
+	cout << "V";
+	for (int i = 99999; i <= 100001; i++) {
+		int *a;
+		auto before = [&a,i]() {
+			a = generate_v_shape_array(i);	
+		};
+		auto after = [&a]() {
+			free(a);
+		};
+		auto measure = [&a, i]() {
+			quick_sort(a, i);
+		};
+		auto nanoseconds = benchmark(10, false, before, measure, after);
+		cout << "," << fixed << nanoseconds*1e-9 << flush; // dostajemy sekundy
+	}
+	cout << "\n";
+
+	cout << "A";
+	for (int i = 99999; i <= 100001; i++) {
+		int *a;
+		auto before = [&a,i]() {
+			a = generate_a_shape_array(i);	
+		};
+		auto after = [&a]() {
+			free(a);
+		};
+		auto measure = [&a, i]() {
+			quick_sort(a, i);
+		};
+		auto nanoseconds = benchmark(1, false, before, measure, after);
+		cout << "," << fixed << nanoseconds*1e-9 << flush; // dostajemy sekundy
+	}
+	cout << "\n";
+	return 0;
+
 	int len_min = 1000, len_max = 2000000, len_step = 1000;
 	auto algorithms = get_algorithms();
 	auto generators = get_generators();

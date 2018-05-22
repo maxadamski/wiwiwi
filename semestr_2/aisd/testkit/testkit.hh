@@ -4,7 +4,6 @@
 // standard
 #include <cstdlib>
 #include <cstring>
-#include <string>
 
 // io
 #include <iostream>
@@ -13,7 +12,9 @@
 #include <iomanip>
 
 // containers
+#include <string>
 #include <vector>
+#include <queue>
 #include <list>
 
 // magic
@@ -61,16 +62,10 @@ long int benchmark_simple(std::function<void()> measure);
 // Pamietaj o free!
 int *copy_array(int* array, int length);
 
-void print_array(int* array, int length);
+void print(int* array, int length);
 
 void print(std::vector<int> v);
 
 void print(std::list<int> v);
-
-int min(int a, int b);
-int max(int a, int b);
-int abs(int a);
-
-void swap(int *a, int *b);
 
 #endif

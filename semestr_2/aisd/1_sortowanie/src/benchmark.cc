@@ -1,9 +1,9 @@
 #include "testkit.hh"
 
-using namespace std;
-
 typedef std::function<void(int*, int)> algorithm;
 typedef std::function<int*(int)> generator;
+
+using std::cerr;
 
 // sort inplace  best  avg   worst
 // QS x nlogn nlogn n2
@@ -15,14 +15,20 @@ typedef std::function<int*(int)> generator;
 // quicksort z środkowym elementem
 // ciąg v-kształtny 1 3 5-7-6 4 2
 
+void swap(int *a, int *b) {
+	int temp = *a;
+	*a = *b;
+	*b = temp;
+}
+
 //
 // generowanie danych
 //
 
 int *new_array(int length) {
-	int *array = (int*) malloc(sizeof(int) * length);
+	int *array = (int*) calloc(length, sizeof(int));
 	if (!array) {
-		std::cerr << "[error] new_array: could allocate memory!\n";
+		cerr << "[error] new_array: could allocate memory!\n";
 		exit(1);
 	}
 	return array;
@@ -117,18 +123,19 @@ void insertion_sort(int *a, int len) {
 //
 
 // algorytm z ksiazki algorytmy + struktury danych = programy
-void quick_sort_asp(int *a, int l, int p) {
-	int x = a[(l+p)/2];
-	int i = l, j = p;
-	while (true) {
-		while (a[i] < x) i++;
-		while (a[j] > x) j--;
+// l: left, r: right, p: pivot
+void quick_sort_asp(int *a, int l, int r) {
+	int p = a[ (l + r) / 2 ];
+	int i = l, j = r;
+	while (i <= j) {
+		while (a[i] < p) i++;
+		while (a[j] > p) j--;
 		if (i > j) break;
 		swap(&a[i], &a[j]);
 		i++; j--;
 	}
 	if (l < j) quick_sort_asp(a, l, j);
-	if (i < p) quick_sort_asp(a, i, p);
+	if (i < r) quick_sort_asp(a, i, r);
 }
 
 void quick_sort(int *a, int len) {
@@ -243,38 +250,29 @@ void cpp_sort(int *a, int len) {
 // pomiary
 //
 
-auto get_algorithms() {
-	using namespace std;
-	vector<pair<string, algorithm>> algorithms;
-	//algorithms.push_back(make_pair("selection sort", &selection_sort));
-	//algorithms.push_back(make_pair("insertion sort", &insertion_sort));
-	algorithms.push_back(make_pair("bubble sort",    &bubble_sort));
-	algorithms.push_back(make_pair("quick sort",     &quick_sort));
-	algorithms.push_back(make_pair("merge sort",     &merge_sort));
-	algorithms.push_back(make_pair("heap sort",      &heap_sort));
-	algorithms.push_back(make_pair("shell sort",     &shell_sort));
-	algorithms.push_back(make_pair("counting sort",  &counting_sort));
-	algorithms.push_back(make_pair("c++ sort",       &cpp_sort));
-	return algorithms;
-}
-
-auto get_generators() {
-	using namespace std;
-	vector<pair<string, generator>> generators;
-	generators.push_back(make_pair("losowe",
-				[](int len) { return generate_random_array(1, 1000, len); }));
-	generators.push_back(make_pair("stałe", &generate_constant_array));
-	generators.push_back(make_pair("rosnące", &generate_increasing_array));
-	generators.push_back(make_pair("malejące", &generate_decreasing_array));
-	generators.push_back(make_pair("a-kształtne", &generate_a_shape_array));
-	generators.push_back(make_pair("v-kształtne", &generate_v_shape_array));
-	return generators;
-}
-
 void bench() {
+	using namespace std;
+
 	int len_min = 1000, len_max = 2000000, len_step = 1000;
-	auto algorithms = get_algorithms();
-	auto generators = get_generators();
+
+	vector<pair<string, generator>> generators({
+		make_pair("losowe", [](int len) { return generate_random_array(1, 1000, len); }),
+		make_pair("stałe",       &generate_constant_array),
+		make_pair("rosnące",     &generate_increasing_array),
+		make_pair("malejące",    &generate_decreasing_array),
+		make_pair("a-kształtne", &generate_a_shape_array),
+		make_pair("v-kształtne", &generate_v_shape_array)
+	});
+
+	vector<pair<string, algorithm>> algorithms({
+		make_pair("bubble sort",    &bubble_sort),
+		make_pair("quick sort",     &quick_sort),
+		make_pair("merge sort",     &merge_sort),
+		make_pair("heap sort",      &heap_sort),
+		make_pair("shell sort",     &shell_sort),
+		make_pair("counting sort",  &counting_sort),
+		make_pair("c++ sort",       &cpp_sort)
+	});
 
 	// wydrukuj naglowek
 	cout << "length";
@@ -306,8 +304,8 @@ void bench() {
 				auto measure = [algorithm, &array_copy, len]() {
 					algorithm.second(array_copy, len);
 				};
-				auto nanoseconds = benchmark(1, before, measure, after);
-				cout << "," << fixed << nanoseconds*10e-9 << flush; // dostajemy sekundy
+				auto t = benchmark(1, measure, before, after);
+				cout << "," << fixed << t * 1e-9 << flush;
 				cerr << ".";
 			}
 			free(array_orig);
@@ -324,39 +322,29 @@ void bench() {
 }
 
 void test() {
-	cout << "V";
-	for (int i = 99999; i <= 100001; i++) {
-		int *a;
-		auto before = [&a,i]() {
-			a = generate_v_shape_array(i);	
-		};
-		auto after = [&a]() {
-			free(a);
-		};
-		auto measure = [&a, i]() {
-			quick_sort(a, i);
-		};
-		auto nanoseconds = benchmark(10, before, measure, after);
-		cout << "," << fixed << nanoseconds*1e-9 << flush; // dostajemy sekundy
-	}
-	cout << "\n";
+	using namespace std;
 
-	cout << "A";
-	for (int i = 99999; i <= 100001; i++) {
-		int *a;
-		auto before = [&a,i]() {
-			a = generate_a_shape_array(i);	
-		};
-		auto after = [&a]() {
-			free(a);
-		};
-		auto measure = [&a, i]() {
-			quick_sort(a, i);
-		};
-		auto nanoseconds = benchmark(1, before, measure, after);
-		cout << "," << fixed << nanoseconds*1e-9 << flush; // dostajemy sekundy
+	for (string shape : {"v","a"}) {
+		cout << shape;
+		for (int i = 99999; i <= 100001; i++) {
+			int *a;
+			auto before = [&a, i, shape]() {
+				if (shape == "v")
+					a = generate_v_shape_array(i);	
+				if (shape == "a")
+					a = generate_a_shape_array(i);
+			};
+			auto after = [&a]() {
+				free(a);
+			};
+			auto measure = [&a, i]() {
+				quick_sort(a, i);
+			};
+			auto t = benchmark(25, measure, before, after);
+			cout << "," << fixed << t * 1e-9 << flush;
+		}
+		cout << "\n";
 	}
-	cout << "\n";
 }
 
 void usage(bool abort = true) {

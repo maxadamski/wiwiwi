@@ -285,7 +285,6 @@ void bench() {
 	cout << "n,list-append,list-find,list-remove,bst-rand-append,bst-rand-find,bst-rand-remove,bst-append,bst-find,bst-remove,bbst-append,bbst-find,bbst-remove\n"; // naglowek csv
 
 	for (int n : ns) {
-		cerr << ".";
 		cout << n << "," << flush;
 
 		vector<int> indices;
@@ -307,7 +306,7 @@ void bench() {
 
 				}
 			}) * 1e-9 << "," << flush;
-			cerr << "_";
+			cerr << ".";
 		}
 
 		{
@@ -319,7 +318,7 @@ void bench() {
 				});
 			}
 			cout << fixed << sum * 1e-9 << "," << flush;
-			cerr << "_";
+			cerr << ".";
 		}
 
 		{
@@ -331,7 +330,7 @@ void bench() {
 				});
 			}
 			cout << fixed << sum * 1e-9 << "," << flush;
-			cerr << "_";
+			cerr << ".";
 		}
 
 		///////////////////////////////////////////////////////////////////////
@@ -347,7 +346,7 @@ void bench() {
 					rbst = append(rbst, student_data[i], cmp_student);
 				}
 			}) * 1e-9 << "," << flush;
-			cerr << "_";
+			cerr << ".";
 		}
 
 		{
@@ -359,7 +358,7 @@ void bench() {
 				});
 			}
 			cout << fixed << sum * 1e-9 << "," << flush;
-			cerr << "_";
+			cerr << ".";
 		}
 
 		{
@@ -371,7 +370,7 @@ void bench() {
 				});
 			}
 			cout << fixed << sum * 1e-9 << "," << flush;
-			cerr << "_";
+			cerr << ".";
 		}
 
 		///////////////////////////////////////////////////////////////////////
@@ -387,7 +386,7 @@ void bench() {
 					bst = append(bst, student_data[i], cmp_student);
 				}
 			}) * 1e-9 << "," << flush;
-			cerr << "_";
+			cerr << ".";
 		}
 
 		{
@@ -399,7 +398,7 @@ void bench() {
 				});
 			}
 			cout << fixed << sum * 1e-9 << "," << flush;
-			cerr << "_";
+			cerr << ".";
 		}
 
 		{
@@ -411,7 +410,7 @@ void bench() {
 				});
 			}
 			cout << fixed << sum * 1e-9 << "," << flush;
-			cerr << "_";
+			cerr << ".";
 		}
 
 
@@ -427,7 +426,7 @@ void bench() {
 			cout << fixed << benchmark_simple([&bbst, students]{
 				bbst = insert_students_avl(students);
 			}) * 1e-9 << "," << flush;
-			cerr << "_";
+			cerr << ".";
 		}
 
 		{
@@ -439,7 +438,7 @@ void bench() {
 				});
 			}
 			cout << fixed << sum * 1e-9 << "," << flush;
-			cerr << "_";
+			cerr << ".";
 		}
 
 		{
@@ -451,12 +450,12 @@ void bench() {
 				});
 			}
 			cout << fixed << sum * 1e-9 << "" << flush;
-			cerr << "_";
+			cerr << ".";
 		}
 
 		cout << "\n";
+		cerr << "\n";
 	}
-	cerr << "\n";
 
 	for (auto student : student_data)
 		delete student;

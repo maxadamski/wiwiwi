@@ -22,7 +22,7 @@ def dspeed(fast, slow):
     return d
 
 
-slow = pd.read_csv('input/reference.csv', index_col='n')
+slow = pd.read_csv('reference.csv', index_col='n')
 fast = pd.read_csv('output/benchmark.csv', index_col='n')
 # compute how much slower are put's PCs
 delta = dspeed(fast, slow)

@@ -68,4 +68,6 @@ void print(std::vector<int> v);
 
 void print(std::list<int> v);
 
+std::vector<std::string> parse_args(int argc, char **argv);
+
 #endif

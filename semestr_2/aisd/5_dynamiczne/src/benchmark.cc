@@ -189,13 +189,7 @@ void generate(int n, int b, double V, Bag &bag, Items &items) {
 	bag.y = v_sum * 6 / 10;
 }
 
-int main() {
-	random_seed();
-
-	// "Suita testowa":
-	//Items items = { {2,3}, {3,1}, {1,4}, {1,1}, {8,5} };
-	//Bag bag(10, 12);
-	
+void bench() {
 	cout << "n,b,v,bf,ga,dp\n";
 
 	for (int n = 1; n <= 20; n += 1) {
@@ -238,6 +232,30 @@ int main() {
 	}
 
 	cerr << "\n";
+}
+
+void test() {
+	// "Suita testowa":
+	//Items items = { {2,3}, {3,1}, {1,4}, {1,1}, {8,5} };
+	//Bag bag(10, 12);
+}
+
+void usage(bool abort = true) {
+	cerr << "usage: benchmark [bench|test]";
+	if (abort) exit(1);
+}
+
+int main(int argc, char **argv) {
+	auto args = parse_args(argc, argv);
+	random_seed();
+
+	if (args.size() != 2)
+		usage();
+	if (args[1] == "--bench")
+		bench();
+	if (args[1] == "--test")
+		test();
+	
 	return 0;
 }
 

@@ -19,42 +19,72 @@ struct AdjacencyMatrix {
 			data.push_back(vector<bool>(v));
 	}
 
-	AdjacencyMatrix(int V, int E)
-	{
+	//void random_graph(V) {
+	//	Va = V, Vb = {}
+	//	connect random in Va to random in Va
+	//		move them to Vb
+	//	while Va
+	//		connect random in Va to random in Vb
+	//			move it to Vb
+	//}
+
+	//void eulerize(V, E) {
+	// for vertex (u) of odd degree:
+	//   add edge to another random vectex of odd degree (v)
+	//   remove edge from another random vertex (w, w!=v)
+	//}
+
+	AdjacencyMatrix(int V, int E, bool eulerian = true) {
+		vector <int> A, B;
+
 		for (int i = 0; i < V; i++)
 			data.push_back(vector<bool>(V));
 
-		vector <int> nodes;
-		vector <int> cycle;
-		int tmp;
-		int nodeA, nodeB, nodeC;
 		for (int i = 0; i < V; i++)
-			nodes.push_back(i);
-		for (int i = 0; i < V; i++) {
-			tmp = random(0, nodes.size()-1);
-			cycle.push_back(nodes[tmp]);
-			nodes.erase(nodes.begin() + tmp);
+			A.push_back(i);
+
+		// move random from A to B
+		{
+			int a = random(0, A.size() - 1);
+			B.push_back(A[a]);
+			A.erase(A.begin() + a);
 		}
 
-		for (int i = 0; i < V - 1; i++) {
-			data[cycle[i]][cycle[i + 1]] = data[cycle[i + 1]][cycle[i]] = true;
+		// connect random in A to random in B, and move it to B
+		while (!A.empty()) {
+			int a = random(0, A.size() - 1);
+			int b = random(0, B.size() - 1);
+			int u = A[a], v = B[b];
+			data[u][v] = data[v][u] = true;
+
+			B.push_back(u);
+			A.erase(A.begin() + a);
 		}
 
-		data[cycle[0]][cycle[cycle.size() - 1]] = data[cycle[cycle.size() - 1]][cycle[0]] = true;
-		for (int i = 0; i < E - V; i += 3) {
-			do {
-				nodeA = random(0, V-1);
-				nodeB = random(0, V-1);
-				nodeC = random(0, V-1);
-			} while (nodeA == nodeB || nodeA == nodeC || nodeB == nodeC ||
-					data[nodeA][nodeB] == true ||
-					data[nodeA][nodeC] == true ||
-					data[nodeB][nodeC] == true);
+		if (eulerian) {
+			for (int i = 0; i < E - V; i += 3) {
+				int a, b, c;
+				do {
+					a = random(0, V-1);
+					b = random(0, V-1);
+					c = random(0, V-1);
+				} while (a == b || a == c || b == c ||
+					data[a][b] || data[a][c] || data[b][c]);
 
-			data[nodeA][nodeB] = data[nodeB][nodeA] = true;
-			data[nodeA][nodeC] = data[nodeC][nodeA] = true;
-			data[nodeB][nodeC] = data[nodeC][nodeB] = true;
+				data[a][b] = data[b][a] = true;
+				data[a][c] = data[c][a] = true;
+				data[b][c] = data[c][b] = true;
+			}
+		} else {
+			for (int i = 0; i < E - V; i++) {
+				int u, v;
+				do {
+					u = random(0, V-1);
+					v = random(0, V-1);
+				} while (u == v || data[u][v]);
 
+				data[u][v] = data[v][u] = true;
+			}
 		}
 	}
 
@@ -269,7 +299,6 @@ void input() {
 }
 
 void bench() {
-
 	cerr << "[info] benchmarking\n";
 	cout << "v,phi,ec";
 	int hc = 25;
@@ -292,7 +321,7 @@ void bench() {
 
 			for (int i = 0; i < hc; i++) {
 				int phi2 = phi == 95 ? 94 : phi;
-				AdjacencyMatrix h(V, edges(V, phi2 / 100.0));
+				AdjacencyMatrix h(V, edges(V, phi2 / 100.0), false);
 				if (phi == 10) h.t_max = 0;
 				else if (phi == 20) h.t_max = 600;
 				else h.t_max = 10*600;

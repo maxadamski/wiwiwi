@@ -172,35 +172,53 @@ Bag solve_dynamic(Bag bag, Items &items) {
 	return bag;
 }
 
-void generate(int n, int b, double V, Bag &bag, Items &items) {
-	bag.b = b;
-
-	int w_sum = 0;
-	int v_sum = 0;
+void generate(int n, double b, double phi, Bag &bag, Items &items) {
+	int total_w = 0;
+	int total_v = 0;
 
 	for (int i = 0; i < n; i++) {
-		int w = random(1, b-1);
-		int v = random(1, V*b);
-		w_sum += w;
-		v_sum += v;
+		int w = random(1, b);
+		int v = random(1, w);
 		items.push_back({w,v});
+		total_w += w;
+		total_v += v;
 	}
 
-	bag.y = v_sum * 6 / 10;
+	//cerr << "total_v: " << total_v << "\n";
+	bag.y = max(1, (int) (phi * total_v));
+	bag.b = b;
+}
+
+void generate_greedy_worst(int n, double b, double phi, Bag &bag, Items &items) {
+	int w = b / (n - 1);
+	int v = w / 2;
+	int total_v = 0;
+
+	// czyste zło
+	items.push_back({w, v + 1});
+	total_v += v + 1;
+
+	for (int i = 1; i < n; i++) {
+		items.push_back({w,v});
+		total_v += v;
+	}
+
+	//cerr << "total_v: " << total_v << "\n";
+	bag.y = max(1, (int) (phi * total_v));
+	bag.b = b;
 }
 
 void bench() {
-	cout << "n,b,v,bf,ga,dp\n";
+	cout << "n,b,y,phi,brute,greedy,dynamic\n";
 
 	for (int n = 1; n <= 20; n += 1) {
-		for (int b = 100; b <= 100; b += 100) {
-			for (double v = 0.25; v <= 2; v += 0.25) {
+		for (double b = 1; b <= 10; b += 1) {
+		for (double phi = 0.1; phi <= 1; phi += 0.1) {
 			Items items; Bag bag;
-			generate(n, b, v, bag, items);
+			generate(n, b, phi, bag, items);
 
-			cout << items.size() << ","
-				 << bag.b << ","
-				 << v*100 << ",";
+			cout << items.size() << "," << bag.b << "," << bag.y << ","
+				 << b << "," << phi << ",";
 
 			if (n <= 20) {
 				cout << benchmark(1, [bag, &items]{
@@ -227,8 +245,8 @@ void bench() {
 			cout << "\n";
 			cerr << ".";
 		}
-		cerr << "\n";
 		}
+		cerr << "\n";
 	}
 
 	cerr << "\n";

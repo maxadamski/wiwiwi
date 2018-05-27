@@ -19,21 +19,6 @@ struct AdjacencyMatrix {
 			data.push_back(vector<bool>(v));
 	}
 
-	//void random_graph(V) {
-	//	Va = V, Vb = {}
-	//	connect random in Va to random in Va
-	//		move them to Vb
-	//	while Va
-	//		connect random in Va to random in Vb
-	//			move it to Vb
-	//}
-
-	//void eulerize(V, E) {
-	// for vertex (u) of odd degree:
-	//   add edge to another random vectex of odd degree (v)
-	//   remove edge from another random vertex (w, w!=v)
-	//}
-
 	AdjacencyMatrix(int V, int E, bool eulerian = true) {
 		vector <int> A, B;
 
@@ -204,7 +189,8 @@ struct AdjacencyMatrix {
 
 	chrono::steady_clock::time_point t0;
 	bool did_timeout = false;
-	int t_max = 300;
+	// 5 minute timeout
+	int t_max = 5*60*1000;
 
 	bool contains(vector<int> &collection, int element) {
 		for (auto test : collection)
@@ -228,6 +214,7 @@ struct AdjacencyMatrix {
 				visited.push_back(v);
 				return true;
 			}
+			// if already visited this vertex
 			return false;
 		}
 
@@ -244,6 +231,8 @@ struct AdjacencyMatrix {
 		return false;
 	}
 
+	// NP-complete
+	// O(n!)
 	vector<int> hamiltonian_cycle() {
 		t0 = chrono::steady_clock::now();
 
@@ -320,20 +309,11 @@ void bench() {
 			cerr << ".";
 
 			for (int i = 0; i < hc; i++) {
-				int phi2 = phi == 95 ? 94 : phi;
-				AdjacencyMatrix h(V, edges(V, phi2 / 100.0), false);
-				if (phi == 10) h.t_max = 0;
-				else if (phi == 20) h.t_max = 600;
-				else h.t_max = 10*600;
+				AdjacencyMatrix h(V, edges(V, phi / 100.0), false);
 
 				auto elapsed = benchmark_simple([&h]{
 					h.hamiltonian_cycle();
 				}) * 1e-9;
-
-				if (h.did_timeout) {
-					h.did_timeout = false;
-					elapsed = 300;
-				}
 
 				cout << "," << elapsed;
 				cerr << ".";

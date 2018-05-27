@@ -5,6 +5,8 @@ typedef std::function<int*(int)> generator;
 
 using std::cerr;
 
+// Pozwolisz, że wtrącę się na momencik. Rzecz do której się odnosisz jako Linux, to w gruncie rzeczy GNU/Linux lub jak ostatnio zacząłem to nazywać - GNU plus Linux. Sam Linux nie jest systemem operacyjnym, lecz kolejnym wolnym (od wolności) składnikiem w pełni funkcjonalnego systemu GNU, użytecznego dzięki głównym bibliotekom GNU, narzędziom powłoki oraz niezbędnym składnikom systemu, składającym się na kompletny system operacyjny, zdefiniowany przez POSIX (ang. Portable Operating System Interface for Unix – przenośny interfejs dla systemu operacyjnego Unix). Wielu użytkowników komputera, nie zdając sobie z tego sprawy, codziennie używa zmodyfikowanej wersji systemu GNU. Poprzez dziwny zbieg okoliczności, wersja GNU używana na szeroką skalę, nazywana jest "Linux" i wielu jego użytkowników nie jest świadomych, że w rzeczy samej jest to system GNU rozwinięty przez GNU Project. Linux naprawdę istnieje i ci ludzie go używają, ale to jest tylko jeden ze składników systemu operacyjnego. Linux to jądro - program w systemie operacyjnym, odpowiedzialny za przydzielanie zasobów sprzętowych do innych programów których używasz. Jądro jest niezbędną częścią systemu operacyjnego, ale samo jest bezużyteczne - może funkcjonować jedynie w odniesieniu do całego systemu operacyjnego. Linux jest zazwyczaj używany w połączeniu z systemem operacyjnym GNU - cały system to w zasadzie GNU z dodanym Linuxem, lub GNU/Linux. Wszystkie tak zwane dystrybucje "Linuxa" to w rzeczy samej dystrybucje GNU/Linux.
+
 // sort inplace  best  avg   worst
 // QS x nlogn nlogn n2
 // HS x nlogn nlogn nlogn
@@ -64,7 +66,7 @@ int *generate_constant_array(int length) {
 
 int *generate_a_shape_array(int length) {
 	int *array = new_array(length);
-	for (int i = 0; i <= length / 2; i += 1) 
+	for (int i = 0; i < length / 2; i += 1) 
 		array[i] = 2*i + 1;
 	for (int i = length / 2; i < length; i += 1) 
 		array[i] = 2*(length - i);
@@ -73,10 +75,10 @@ int *generate_a_shape_array(int length) {
 
 int *generate_v_shape_array(int length) {
 	int *array = new_array(length);
-	for (int i = 0; i <= length / 2; i += 1) 
-		array[i] = 2*(length - i) + 1;
-	for (int i = length / 2; i < length; i += 1) 
-		array[i] = 2*i;
+	for (int i = 0; i < length / 2; i++) 
+		array[i] = 2*(length / 2 - i) + 1;
+	for (int i = length / 2; i < length; i++) 
+		array[i] = 2*(i - length / 2);
 	return array;
 }
 
@@ -89,8 +91,8 @@ int *generate_v_shape_array(int length) {
 //
 
 void bubble_sort(int *a, int len) {
-	for (int i = 0; i < len; i += 1) {
-		for (int j = i + 1; j < len; j += 1) {
+	for (int i = 1; i < len; i += 1) {
+		for (int j = 0; j < len - 1; j += 1) {
 			if(a[j] > a[j+1]) {
 				swap(&a[j], &a[j+1]);
 			}
@@ -111,8 +113,8 @@ void selection_sort(int *a, int len) {
 }
 
 void insertion_sort(int *a, int len) {
-	for (int i = 0; i < len; i += 1) {
-		for (int j = i; i > 0 && a[j] < a[j-1]; j -= 1) {
+	for (int i = 1; i < len; i++) {
+		for (int j = i; j > 0 && a[j-1] > a[j]; j--) {
 			swap(&a[j], &a[j-1]);
 		}
 	}
@@ -124,22 +126,22 @@ void insertion_sort(int *a, int len) {
 
 // algorytm z ksiazki algorytmy + struktury danych = programy
 // l: left, r: right, p: pivot
-void quick_sort_asp(int *a, int l, int r) {
-	int p = a[ (l + r) / 2 ];
-	int i = l, j = r;
-	while (i <= j) {
-		while (a[i] < p) i++;
-		while (a[j] > p) j--;
-		if (i > j) break;
-		swap(&a[i], &a[j]);
-		i++; j--;
+void quick_sort_asp(int *a, int L, int R) {
+	int p = a[ (L + R) / 2 ];
+	int l = L, r = R;
+	while (l <= r) {
+		while (a[l] < p) l++;
+		while (a[r] > p) r--;
+		if (l > r) break;
+		swap(&a[l], &a[r]);
+		l++; r--;
 	}
-	if (l < j) quick_sort_asp(a, l, j);
-	if (i < r) quick_sort_asp(a, i, r);
+	if (L < r) quick_sort_asp(a, L, r);
+	if (l < R) quick_sort_asp(a, l, R);
 }
 
 void quick_sort(int *a, int len) {
-	quick_sort_asp(a, 0, len);
+	quick_sort_asp(a, 0, len-1);
 }
 
 
@@ -182,9 +184,9 @@ void insertion_sort_gap(int *a, int len, int gap) {
 }
 
 void shell_sort(int *a, int len) {
-	for (int k = len / 2; k > 0; k /= 2) {
-		for (int i = 0; i < k; i += 1) {
-			insertion_sort_gap(a + i, len - i, k);
+	for (int gap = len / 2; gap > 0; gap /= 2) {
+		for (int i = 0; i < gap; i += 1) {
+			insertion_sort_gap(a + i, len - i, gap);
 		}
 	}
 }
@@ -210,6 +212,7 @@ void merge_sort(int *a, int n) {
 	if (n <= 1) { 
 		return;
 	} else if (n == 2) {
+		// to samo co swap
 		merge(a, n, 1);
 	} else {
 		int q = n % 2 == 0 ? 0 : 1;
@@ -225,17 +228,32 @@ void merge_sort(int *a, int n) {
 //
 
 void counting_sort(int *a, int len) {
-	int *b = (int*) calloc(len, sizeof(int));
-	for (int i = 0; i < len; i += 1) {
-		b[i] += 1;
+	// already sorted
+	if (len <= 1) return;
+
+	// find smallest and biggest elements
+	int MIN = a[0], MAX = a[0];
+	for (int i = 0; i < len; i++) {
+		if (a[i] > MAX) MAX = a[i];
+		if (a[i] < MIN) MIN = a[i];
 	}
 
-	for (int i = 0, p = 0; i < len; i += 1) {
-		for (int j = b[i]; j > 0; j -= 1) {
-			a[p++] = i;
+	int range = MAX - MIN + 1;
+	int *count = (int*) calloc(range, sizeof(int));
+
+	// create element histogram
+	for (int i = 0; i < len; i++) {
+		count[a[i] - MIN] += 1;
+	}
+
+	// e: element, i: count index
+	for (int e = MIN, a_i = 0; e <= MAX; e++) {
+		for (int i = e - MIN; count[i] > 0; count[i]--) {
+			a[a_i++] = e;
 		}
 	}
-	free(b);
+
+	free(count);
 }
 
 //
@@ -324,6 +342,11 @@ void bench() {
 void test() {
 	using namespace std;
 
+	int len = 10;
+	int *a = generate_random_array(0, 9, len);
+	print(a, len);
+	return;
+
 	for (string shape : {"v","a"}) {
 		cout << shape;
 		for (int i = 99999; i <= 100001; i++) {
@@ -340,7 +363,7 @@ void test() {
 			auto measure = [&a, i]() {
 				quick_sort(a, i);
 			};
-			auto t = benchmark(25, measure, before, after);
+			auto t = benchmark(1, measure, before, after);
 			cout << "," << fixed << t * 1e-9 << flush;
 		}
 		cout << "\n";

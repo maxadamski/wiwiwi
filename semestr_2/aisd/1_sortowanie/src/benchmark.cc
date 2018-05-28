@@ -342,11 +342,49 @@ void bench() {
 void test() {
 	using namespace std;
 
-	int len = 10;
-	int *a = generate_random_array(0, 9, len);
-	print(a, len);
-	return;
+	//int *V = generate_v_shape_array(10);
+	//int *V1 = generate_v_shape_array(11);
+	//int *A = generate_a_shape_array(10);
+	//int *A1 = generate_a_shape_array(11);
+	//print(V, 10);
+	//print(V1, 11);
+	//print(A, 10);
+	//print(A1, 11);
+	//return;
 
+	vector<pair<string, generator>> generators({
+		make_pair("losowe", [](int len) { return generate_random_array(1, 1000, len); }),
+		make_pair("a-kształtne", &generate_a_shape_array),
+		make_pair("v-kształtne", &generate_v_shape_array)
+	});
+
+	vector<pair<string, algorithm>> algorithms({
+		make_pair("bubble sort",    &bubble_sort),
+		make_pair("quick sort",     &quick_sort),
+		make_pair("merge sort",     &merge_sort),
+		make_pair("heap sort",      &heap_sort),
+		make_pair("shell sort",     &shell_sort),
+		make_pair("counting sort",  &counting_sort),
+	});
+
+	for (auto generator : generators) {
+		cout << "+++++++++++++++++++++++\n";
+		cout << generator.first << "\n";
+		int len = 100;
+
+		for (auto algorithm : algorithms) {
+			cout << "-----------------------\n";
+			cout << algorithm.first << ":\n";
+
+			int *a = generator.second(len);
+			print(a, len);
+			algorithm.second(a, len);
+			print(a, len);
+			free(a);
+		}
+	}
+
+	cout << "+++++++++++++++++++++++\n";
 	for (string shape : {"v","a"}) {
 		cout << shape;
 		for (int i = 99999; i <= 100001; i++) {

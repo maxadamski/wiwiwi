@@ -25,7 +25,8 @@ Pomiary czasu znajdywania cyklu Eulera ,,EC'' i Hamiltona ,,HC'' wykonywane był
 o ilości wierzchołków $|V|$ od $200$ do $1\ 000$ wierzchołków, z krokiem $200$ (5 grup pomiarów).
 W każdej grupie wykonywane były pomiary na grafach o nasyceniu krawędziami
 $\varphi \in \{0.1, 0.2, 0.3, 0.4, 0.6, 0.8, 0.95\}$.
-Czas poszukiwania HC był mierzony 25 razy dla każdej pary $<|V|, \varphi>$.
+Czas poszukiwania HC był mierzony 25 razy dla każdej pary $\langle |V|, \varphi \rangle$.
+Każdy pomiar wykonywany był na nowym losowo wygenerowanym grafie.
 
 Przed mierzeniem czasu wczytywany jest, z pliku tekstowego,
 losowo wygenerowany, nieskierowany, spójny graf eulerowski,
@@ -71,13 +72,10 @@ lub złożoność operacji sprawdzania istnienia krawędzi.
 Czas znajdywania HC ma złożoność $O(|V|!)$.
 Wyniki są przedstawione w zależności od $\varphi$ na rysunku 2,
 oraz od $|V|$ na rysunku 3.
-
 Grafy o małym nasyceniu krawędziami stanowią najgorsze przypadki.
 Wtedy czas znajdywania HC przekracza ustalony limit $300$ sekund.
-
 Ze wzrostem ilości krawędzi, spada czas wymagany do znalezienia cyklu.
 Przy $\varphi = 0.95$, znalezienie HC zajmuje średnio jedną sekundę.
-
 Ewentualne odchylenia są spowodowane losowością wygenerowanych grafów.
 
 \end{document}

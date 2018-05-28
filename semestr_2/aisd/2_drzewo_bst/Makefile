@@ -18,7 +18,7 @@ bench: build
 	build/benchmark --bench > output/benchmark.csv
 
 test: build
-	build/benchmark --test > output/benchmark.csv
+	build/benchmark --test
 
 plot:
 	python3 src/massage.py

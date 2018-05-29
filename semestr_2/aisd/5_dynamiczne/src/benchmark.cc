@@ -17,12 +17,22 @@ struct Item {
 	int v, w;
 };
 
+bool cmp(Item l, Item r) {
+	return (double) l.v / l.w > (double) r.v / r.w;
+}
+
+void p(Item i, ostream &out) {
+	out << "{v: " << i.v << ", w: " << i.w << "}\n";
+}
+
 struct Bag {
 	int b, y, v = 0, w = 0;
+	Items items = {};
 
 	Bag(int b = 0, int y = 0): b(b), y(y) {};
 
 	void add(Item item) {
+		items.push_back(item);
 		v += item.v;
 		w += item.w;
 	}
@@ -34,19 +44,13 @@ struct Bag {
 // priority queue Q by v / w
 // greedily take from Q
 
-Bag solve_greedy(Bag bag, Items &items) {
-	// TODO: replace with a real sorting algorithm
-	// create queue
-	auto cmp = [](Item l, Item r) { return (double) l.v / l.w < (double) r.v / r.w;};
-	priority_queue< Item, vector<Item>, decltype(cmp) > queue(cmp);
-	// add items to the priority queue
-	for (Item item : items) queue.push(item);
+Bag solve_greedy(Bag bag, Items items) {
+	sort(items.begin(), items.end(), cmp);
 	// greedily add items to the bag
-	while (!queue.empty()) {
-		Item item = queue.top();
-		queue.pop();
-		if (bag.w + item.w <= bag.b)
+	for (auto item : items) {
+		if (bag.w + item.w <= bag.b) {
 			bag.add(item);
+		}
 	}
 	return bag;
 }
@@ -172,23 +176,24 @@ Bag solve_dynamic(Bag bag, Items &items) {
 	return bag;
 }
 
-void generate(int n, double b, double phi, Bag &bag, Items &items) {
+void generate(int n, double beta, double nu, Bag &bag, Items &items
+		, int W = 1000, int V = 10000) {
 	int total_w = 0;
 	int total_v = 0;
 
 	for (int i = 0; i < n; i++) {
-		int w = random(1, b);
-		int v = random(1, w);
+		int w = random(10, W);
+		int v = random(100, V);
 		items.push_back({w,v});
 		total_w += w;
 		total_v += v;
 	}
 
-	//cerr << "total_v: " << total_v << "\n";
-	bag.y = max(1, (int) (phi * total_v));
-	bag.b = b;
+	bag.y = nu * total_v;
+	bag.b = beta * total_w;
 }
 
+/**
 void generate_greedy_worst(int n, double b, double phi, Bag &bag, Items &items) {
 	int w = b / (n - 1);
 	int v = w / 2;
@@ -207,32 +212,56 @@ void generate_greedy_worst(int n, double b, double phi, Bag &bag, Items &items) 
 	bag.y = max(1, (int) (phi * total_v));
 	bag.b = b;
 }
+*/
 
-void bench() {
-	cout << "n,b,y,phi,brute,greedy,dynamic\n";
-
-	for (int n = 1; n <= 20; n += 1) {
-		for (double b = 1; b <= 10; b += 1) {
-		for (double phi = 0.1; phi <= 1; phi += 0.1) {
+void quality() {
+	cout << "n,b,y,beta,nu,W,V,greedy,dynamic\n";
+	for (int W = 1000; W <= 10000; W += 2000) {
+	for (int V = 1000; V <= 10000; V += 2000) {
+	for (int n = 100; n <= 100; n += 100) {
+		for (double beta = 0.20; beta <= 1; beta += 0.20) {
+		for (double nu = 0.20; nu <= 1; nu += 0.20) {
 			Items items; Bag bag;
-			generate(n, b, phi, bag, items);
+			generate(n, beta, nu, bag, items, W, V);
 
 			cout << items.size() << "," << bag.b << "," << bag.y << ","
-				 << b << "," << phi << ",";
+				 << beta << "," << nu << "," << W << "," << V << ",";
 
-			if (n <= 20) {
-				cout << benchmark(1, [bag, &items]{
-					solve_brute(bag, items);
-				}) * 1e-9;
-			} else {
-				cout << "-1";
-			}
+			Bag gr = solve_greedy(bag, items);
+			cout << (double) gr.v / gr.y;
 
 			cout << ",";
 			cerr << ".";
 
+			Bag dp = solve_dynamic(bag, items);
+			cout << (double) dp.v / dp.y;
+
+			cout << "\n";
+			cerr << ".";
+		}
+		}
+		cerr << "\n";
+	}
+	}
+	}
+
+	cerr << "\n";
+}
+
+void speed() {
+	cout << "n,b,y,beta,nu,brute,dynamic\n";
+
+	for (int n = 2; n <= 22; n += 1) {
+		for (double beta = 0.20; beta <= 1; beta += 0.20) {
+		for (double nu = 0.20; nu <= 1; nu += 0.20) {
+			Items items; Bag bag;
+			generate(n, beta, nu, bag, items);
+
+			cout << items.size() << "," << bag.b << "," << bag.y << ","
+				 << beta << "," << nu << ",";
+
 			cout << benchmark(1, [bag, &items]{
-				solve_greedy(bag, items);
+				solve_brute(bag, items);
 			}) * 1e-9;
 
 			cout << ",";
@@ -255,11 +284,19 @@ void bench() {
 void test() {
 	// "Suita testowa":
 	//Items items = { {2,3}, {3,1}, {1,4}, {1,1}, {8,5} };
-	//Bag bag(10, 12);
+	Items items = { {7, 11}, {5, 10}, {5, 10} };
+	Bag bag(20, 10);
+	Bag gr = solve_greedy(bag, items);
+	for (auto item : gr.items)
+		p(item, cerr);
+
+	Bag dp = solve_dynamic(bag, items);
+	cout << (double) gr.v / gr.y << endl;
+	cout << (double) dp.v / dp.y << endl;
 }
 
 void usage(bool abort = true) {
-	cerr << "usage: benchmark [bench|test]";
+	cerr << "usage: benchmark --[quality|speed|test]";
 	if (abort) exit(1);
 }
 
@@ -269,8 +306,10 @@ int main(int argc, char **argv) {
 
 	if (args.size() != 2)
 		usage();
-	if (args[1] == "--bench")
-		bench();
+	if (args[1] == "--quality")
+		quality();
+	if (args[1] == "--speed")
+		speed();
 	if (args[1] == "--test")
 		test();
 	

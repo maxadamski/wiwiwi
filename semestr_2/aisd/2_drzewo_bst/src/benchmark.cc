@@ -34,7 +34,12 @@ struct Student {
 	char last_name[12];
 
 	Student(long int index = -1) :
-		index(index) {};
+		index(index), first_name(""), last_name("") {};
+
+	void print() {
+		string first_name_(first_name), last_name_(last_name);
+		cerr << index << " " << last_name_ << " " << first_name_ << "\n";
+	}
 };
 
 void print_student(void *item, std::string terminator = "\n") {
@@ -188,6 +193,64 @@ struct TreeNode {
 		return left ? left->min_value() : item;
 	}
 
+	TreeNode(vector<Student*> students, bool bbst = true):
+			left(nullptr), right(nullptr) {
+
+		Student *dummy = new Student(-1);
+		item = dummy;
+		if (bbst) {
+			append_median(students, this);
+		} else {
+			for (auto student : students)
+				append(student);
+		}
+		item = right->item;
+		left = right->left;
+		right = right->right;
+		delete dummy;
+	}
+
+	void append(Student *target) {
+		if (!item) {	
+			item = target;
+		} else if (target->index > item->index) {
+			if (!right)
+				right = new TreeNode(target);
+			else
+				right->append(target);
+		} else {
+			if (!left)
+				left = new TreeNode(target);
+			else
+				left->append(target);
+		}
+	}
+
+	void append_median(std::vector<Student*> s, TreeNode *t) {
+		int L = s.size();
+		int M = L / 2;
+
+		if (L == 1) {
+			t->append(s[0]);
+		} else if (L == 2) {
+			t->append(s[0]);
+			t->append(s[1]);
+		} else {
+			t->append(s[M]);
+			append_median(vector<Student*>(s.begin(), s.begin() + M), t);
+			append_median(vector<Student*>(s.begin() + M+1, s.end()), t);
+		}
+	}
+
+	TreeNode *find(Student *target) {
+		if (target->index > item->index)
+			return right->find(target);
+		else if (target->index < item->index)
+			return left->find(target);
+		else
+			return this;
+	}
+
 	TreeNode *remove_deep(TreeNode *parent, Student *target) {
 		if (target->index < item->index) {
 			return left ? left->remove_deep(this, target) : nullptr;
@@ -223,33 +286,22 @@ struct TreeNode {
 		return false;
 	}
 
-	void append(Student *target) {
-		if (target->index > item->index) {
-			if (!right)
-				right = new TreeNode(target);
-			else
-				right->append(target);
-		} else {
-			if (!left)
-				left = new TreeNode(target);
-			else
-				left->append(target);
-		}
+	void print_nlr() {
+		item->print();
+		if (left) left->print_nlr();
+		if (right) right->print_nlr();
 	}
 
-	TreeNode *find(Student *target) {
-		if (target->index > item->index)
-			return right->find(target);
-		else if (target->index < item->index)
-			return left->find(target);
-		else
-			return this;
+	void print_lnr() {
+		if (left) left->print_lnr();
+		item->print();
+		if (right) right->print_lnr();
 	}
 
-	void print(int level = 0) {
-		if (left) left->print(level + 1);
-		if (item) cerr << " " << level << ":" << item->index << " ";
-		if (right) right->print(level + 1);
+	void print_lrn() {
+		if (left) left->print_lrn();
+		if (right) right->print_lrn();
+		item->print();
 	}
 };
 
@@ -273,31 +325,6 @@ struct TreeNode {
 //	return abs(element_count(node->left) - element_count(node->right)) <= 1;
 //}
 //
-
-///////////////////////////////////////////////////////////////////////////////
-// STUDENT BST
-///////////////////////////////////////////////////////////////////////////////
-
-TreeNode *avl_from_students(std::vector<Student*> s) {
-	int L = s.size();
-	int M = L / 2;
-
-	if (L == 1) {
-		return new TreeNode(s[0]);
-	} else if (L == 2) {
-		return new TreeNode(s[1], new TreeNode(s[0]));
-	} else {
-		TreeNode *n = new TreeNode(s[M]);
-
-		std::vector<Student*> s_left(s.begin(), s.begin() + M);
-		n->left = avl_from_students(s_left);
-
-		std::vector<Student*> s_right(s.begin() + M + 1, s.end());
-		n->right = avl_from_students(s_right);
-
-		return n;
-	}
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 // BENCHMARK
@@ -366,7 +393,7 @@ void bench() {
 		// BST losowe
 		///////////////////////////////////////////////////////////////////////
 
-		Student *dummy = new Student();
+		Student *dummy = new Student(-1);
 		TreeNode rbst(dummy);
 
 		{
@@ -448,13 +475,13 @@ void bench() {
 		// BBST
 		///////////////////////////////////////////////////////////////////////
 		
-		TreeNode *bbst = nullptr;
+		TreeNode bbst(dummy);
 
 		{
 			// zapisywanie
 			vector<Student*> students(student_data.begin(), student_data.begin() + n);
 			cout << fixed << benchmark_simple([&bbst, students]{
-				bbst = avl_from_students(students);
+				bbst = TreeNode(students);
 			}) * 1e-9 << "," << flush;
 			cerr << ".";
 		}
@@ -464,7 +491,7 @@ void bench() {
 			long int sum = 0;
 			for (int i : indices) {
 				sum += benchmark_simple([&bbst, i, student_data]{ 
-					bbst->find(student_data[i]);
+					bbst.find(student_data[i]);
 				});
 			}
 			cout << fixed << sum * 1e-9 << "," << flush;
@@ -476,7 +503,7 @@ void bench() {
 			long int sum = 0;
 			for (int i = n - 1; i >= 0; i--) {
 				sum += benchmark_simple([&bbst, i, student_data]{ 
-					bbst->remove(student_data[i]);
+					bbst.remove(student_data[i]);
 				});
 			}
 			cout << fixed << sum * 1e-9 << "" << flush;
@@ -492,13 +519,23 @@ void bench() {
 }
 
 void test() {
-	vector<Student*> students;
-	for (int i = 0; i < 7; i++)
-		students.push_back(new Student(i));
-	TreeNode *t = avl_from_students(students);
-	t->print(); cerr << "\n";
-	t->remove(students[1]);
-	t->print(); cerr << "\n";
+	auto students = read_names("input/test.csv", 12);
+	TreeNode bbst(students, true);
+	TreeNode bst(students, false);
+	cerr << "++++++++++++ nlr\n";
+	bbst.print_nlr();
+	cerr << "++++++++++++ lnr\n";
+	bbst.print_lnr();
+	cerr << "++++++++++++ lrn\n";
+	bbst.print_lrn();
+
+	cerr << "\n";
+	cerr << "++++++++++++ nlr\n";
+	bst.print_nlr();
+	cerr << "++++++++++++ lnr\n";
+	bst.print_lnr();
+	cerr << "++++++++++++ lrn\n";
+	bst.print_lrn();
 }
 
 void usage(bool abort = true) {

@@ -51,6 +51,21 @@ long int benchmark(int passes,
 	return average;
 }
 
+long int benchmark_ms(int passes,
+	std::function<void()> measure) {
+
+	using namespace std::chrono;
+	long int average = 0;
+	for (int i = 0; i < passes; i += 1) {
+		auto t0 = steady_clock::now();
+		measure();
+		auto t1 = steady_clock::now();
+		auto dt = duration_cast<milliseconds>(t1 - t0).count();
+		average += dt / passes;
+	}
+	return average;
+}
+
 long int benchmark(int passes,
 	std::function<void()> measure) {
 	return benchmark(passes, measure, []{}, []{}, false);

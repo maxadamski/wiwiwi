@@ -12,7 +12,8 @@ build:
 
 
 bench: build
-	build/benchmark --bench > output/bench.csv
+	build/benchmark --quality > output/quality.csv
+	build/benchmark --speed > output/speed.csv
 
 test: build
 	build/benchmark --test

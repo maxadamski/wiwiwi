@@ -56,6 +56,9 @@ long int benchmark(int passes,
 long int benchmark(int passes,
 	std::function<void()> measure);
 
+long int benchmark_ms(int passes,
+	std::function<void()> measure);
+
 long int benchmark_simple(std::function<void()> measure);
 
 // Kopiuje tablice array i zwraca wskaznik.

@@ -342,15 +342,17 @@ void bench() {
 void test() {
 	using namespace std;
 
-	//int *V = generate_v_shape_array(10);
-	//int *V1 = generate_v_shape_array(11);
-	//int *A = generate_a_shape_array(10);
-	//int *A1 = generate_a_shape_array(11);
-	//print(V, 10);
-	//print(V1, 11);
-	//print(A, 10);
-	//print(A1, 11);
-	//return;
+	/**
+	int *V = generate_v_shape_array(10);
+	int *V1 = generate_v_shape_array(11);
+	int *A = generate_a_shape_array(10);
+	int *A1 = generate_a_shape_array(11);
+	print(V, 10);
+	print(V1, 11);
+	print(A, 10);
+	print(A1, 11);
+	return;
+	*/
 
 	vector<pair<string, generator>> generators({
 		make_pair("losowe", [](int len) { return generate_random_array(1, 1000, len); }),
@@ -389,20 +391,17 @@ void test() {
 		cout << shape;
 		for (int i = 99999; i <= 100001; i++) {
 			int *a;
-			auto before = [&a, i, shape]() {
-				if (shape == "v")
-					a = generate_v_shape_array(i);	
-				if (shape == "a")
-					a = generate_a_shape_array(i);
-			};
-			auto after = [&a]() {
-				free(a);
-			};
+			if (shape == "v")
+				a = generate_v_shape_array(i);	
+			if (shape == "a")
+				a = generate_a_shape_array(i);
 			auto measure = [&a, i]() {
 				quick_sort(a, i);
 			};
-			auto t = benchmark(1, measure, before, after);
-			cout << "," << fixed << t * 1e-9 << flush;
+			auto t = benchmark_ms(1,
+				[&a, i]{ quick_sort(a, i); });
+			cout << "," << fixed << t * 1e-3 << flush;
+			free (a);
 		}
 		cout << "\n";
 	}

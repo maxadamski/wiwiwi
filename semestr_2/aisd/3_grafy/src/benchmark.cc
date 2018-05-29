@@ -206,10 +206,15 @@ struct AdjacencyList {
 		return false;
 	}
 
+	bool dag = true;
+
 	void visit(int v, vector<int> &marked, list<int> &sorted) {
-		// Not a DAG reeeeeeee!!!
-		if (marked[v] == 1) exit(1);
+		if (!dag) return;
 		if (marked[v] == 2) return;
+		if (marked[v] == 1) {
+			cerr << "Not a DAG reeeeeeee!!!\n";
+			dag = false;
+		}
 		marked[v] = 1;
 		for (int u : data[v])
 			visit(u, marked, sorted);
@@ -225,18 +230,20 @@ struct AdjacencyList {
 		// 2 -> permanent mark
 		vector<int> marked(data.size());
 		list<int> sorted;
+		dag = true;
 
 		bool unmarked = true;
 		while (unmarked) {
 			unmarked = false;
 			for (size_t v = 0; v < data.size(); v++) {
-				if (marked[v] == 0) {
+				if (!marked[v]) {
 					unmarked = true;
 					visit(v, marked, sorted);
 				}
 			}
 		}
 
+		if (!dag) return {};
 		return sorted;
 	}
 };
@@ -319,19 +326,36 @@ void edges() {
 	cerr << "\n";
 }
 
+void test() {
+	vector<string> testy({"test1", "test2", "test3"});
+	for (string test : testy) {
+		cerr << "+++++++++++++++++++\n";
+		cerr << test << "\n";
+		AdjacencyList m("input/" + test);
+		m.print();
+		list<int> s = m.topsort();
+		for (int i : s)
+			cerr << i << " ";
+		cerr << "\n";
+	}
+}
+
 void usage(bool abort = true) {
 	cout << "usage: benchmark [--tsort|--edges]\n";
 	if (abort) exit(1);
 }
 
 int main(int argc, char **argv) {
+	auto args = parse_args(argc, argv);
 	random_seed();
-	if (argc != 2)
+	if (args.size() != 2)
 		usage();
-	if (!strcmp(argv[1], "--tsort"))
+	if (args[1] == "--tsort")
 		tsort();
-	if (!strcmp(argv[1], "--edges"))
+	if (args[1] == "--edges")
 		edges();
+	if (args[1] == "--test")
+		test();
 	return 0;
 }
 

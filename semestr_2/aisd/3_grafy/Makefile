@@ -10,7 +10,7 @@ input:
 build:
 	rm -rf build; mkdir -p build
 	mkdir -p output
-	g++ -O0 --std=c++14 \
+	g++ -g -O0 --std=c++14 \
 		-o build/benchmark -I ../testkit \
 		src/benchmark.cc ../testkit/testkit.cc
 

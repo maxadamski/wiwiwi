@@ -63,7 +63,7 @@ Bag solve_greedy(Bag bag, Items items) {
 #include <chrono>
 bool bf_did_timeout = false;
 chrono::steady_clock::time_point bf_t0;
-int bf_t_max = 60;
+int bf_t_max = 60*60;
 
 void solve_brute_r(int n, Bag bag, Bag &best, Items &items) {
 	auto t1 = chrono::steady_clock::now();
@@ -251,9 +251,9 @@ void quality() {
 void speed() {
 	cout << "n,b,y,beta,nu,brute,dynamic\n";
 
-	for (int n = 2; n <= 22; n += 1) {
-		for (double beta = 0.20; beta <= 1; beta += 0.20) {
-		for (double nu = 0.20; nu <= 1; nu += 0.20) {
+	for (int n = 2; n <= 28; n += 1) {
+		for (double beta = 1; beta <= 1; beta += 0.20) {
+		for (double nu = 1; nu <= 1; nu += 0.20) {
 			Items items; Bag bag;
 			generate(n, beta, nu, bag, items);
 
@@ -284,15 +284,29 @@ void speed() {
 void test() {
 	// "Suita testowa":
 	//Items items = { {2,3}, {3,1}, {1,4}, {1,1}, {8,5} };
-	Items items = { {7, 11}, {5, 10}, {5, 10} };
-	Bag bag(20, 10);
-	Bag gr = solve_greedy(bag, items);
-	for (auto item : gr.items)
-		p(item, cerr);
+	//Items items = { {7, 11}, {5, 10}, {5, 10} };
+	//Bag bag(20, 10);
+	//Bag gr = solve_greedy(bag, items);
+	//for (auto item : gr.items)
+	//	p(item, cerr);
 
-	Bag dp = solve_dynamic(bag, items);
-	cout << (double) gr.v / gr.y << endl;
-	cout << (double) dp.v / dp.y << endl;
+	Bag bag; Items items;
+	generate(28, 1, 1, bag, items);
+
+	cout << benchmark(1, [bag, &items]{
+		Bag dp = solve_dynamic(bag, items);
+		cout << (double) dp.v / dp.y << endl;
+	}) * 1e-9 << "s\n";
+
+	cout << benchmark(1, [bag, &items]{
+		Bag gr = solve_greedy(bag, items);
+		cout << (double) gr.v / gr.y << endl;
+	}) * 1e-9 << "s\n";
+
+	cout << benchmark(1, [bag, &items]{
+		Bag bf = solve_brute(bag, items);
+		cout << (double) bf.v / bf.y << endl;
+	}) * 1e-9 << "s\n";
 }
 
 void usage(bool abort = true) {

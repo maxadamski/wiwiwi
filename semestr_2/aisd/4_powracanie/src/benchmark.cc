@@ -190,7 +190,7 @@ struct AdjacencyMatrix {
 	chrono::steady_clock::time_point t0;
 	bool did_timeout = false;
 	// 5 minute timeout
-	int t_max = 30*1000;
+	int t_max = 5*60*1000;
 
 	bool contains(vector<int> &collection, int element) {
 		for (auto test : collection)
@@ -273,8 +273,8 @@ struct AdjacencyMatrix {
 // BENCHMARK
 ///////////////////////////////////////////////////////////////////////////////
 
-int Phi[] = {10,20,30,40,60,80,95};
-int V_min = 600, V_max = 1000, V_step = 200;
+int Phi[] = {20,30,40,60,80,95};
+int V_min = 200, V_max = 1000, V_step = 200;
 
 void input() {
 	for (int V = V_min; V <= V_max; V += V_step) {
@@ -310,7 +310,7 @@ void bench() {
 
 			for (int i = 0; i < hc; i++) {
 				AdjacencyMatrix h(V, edges(V, phi / 100.0), false);
-				if (phi == 10) h.t_max = 0;
+				//if (phi == 10) h.t_max = 0;
 
 				auto elapsed = benchmark_simple([&h]{
 					h.hamiltonian_cycle();

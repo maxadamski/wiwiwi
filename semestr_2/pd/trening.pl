@@ -58,10 +58,10 @@ very_unique(L, [Set | Sets], Unique) :- setdiff(L, Set, Z), very_unique(Z, Sets,
 
 % obsluga kluczy (jak ktos lubi)
 
-coder(K, K).
+code(K, K).
 
 encode([], []).
-encode([V | T], [K/V | Encoded]) :- coder(V, K), encode(T, Encoded).
+encode([V | T], [K/V | Encoded]) :- code(V, K), encode(T, Encoded).
 
 decode([], []).
 decode([_/V | T], [V | Decoded]) :- decode(T, Decoded).
@@ -75,15 +75,20 @@ kinsert(AK/AV, [BK/BV | T], [BK/BV | Insert]) :- AK > BK, kinsert(AK/AV, T, Inse
 key(_, K, K).
 
 insert(_, A, [], [A]).
-insert(L, A, [B | T], [A, B | T]) :-
-	key(L, A, X), key(L, B, Y), X =< Y.
-insert(L, A, [B | T], [B | Insert]) :-
-	key(L, A, X), key(L, B, Y), X > Y, insert(L, A, T, Insert).
+insert(L, A, [B | T], [A, B | T]) :- key(L, A, X), key(L, B, Y), X =< Y.
+insert(L, A, [B | T], [B | Insert]) :- key(L, A, X), key(L, B, Y), X > Y, insert(L, A, T, Insert).
 
 isort(_, [], []).
 isort(L, [H | T], Sorted) :- isort(L, T, Z), insert(L, H, Z, Sorted).
 isort(L, Sorted) :- isort(L, L, Sorted).
 
-% rozwiazanie
+% quicksort
+ 
+split(_, [], [], []).
+split(P, [H | T], [H | L], R) :- H < P, split(P, T, L, R).
+split(P, [H | T], L, [H | R]) :- H >= P, split(P, T, L, R).
 
+qsort([], []).
+qsort([H | T], Sorted) :- split(H, T, A, B), qsort(A, U), qsort(B, V),
+	append(U, [H], Z), append(Z, V, Sorted).
 

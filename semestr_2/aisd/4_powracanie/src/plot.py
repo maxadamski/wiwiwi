@@ -64,7 +64,7 @@ for key, group in bench.groupby(['v']):
     ax = group.plot(ax=ax, kind='line', x='phi', y='hc', label=f'|V| = {key}', style='-+')
     plt.xlabel('nasycenie krawędziami (procent)')
     plt.ylabel('czas (sekundy)')
-    plt.xlim(10, 95)
+    plt.xlim(min(group['phi']), max(group['phi']))
 
 plt.legend(loc='best')
 plt.savefig(f'output/hamil_by_v.png')

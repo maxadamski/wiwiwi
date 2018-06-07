@@ -10,13 +10,19 @@ build:
 		-o build/benchmark -I ../testkit \
 		src/benchmark.cc ../testkit/testkit.cc
 
-
-bench: build
+quality: build
 	build/benchmark --quality > output/quality.csv
+
+speed: build
 	build/benchmark --speed > output/speed.csv
+
+spread: build
+	build/benchmark --spread > output/3d.csv
+
+bench: quality speed
 
 test: build
 	build/benchmark --test
 
 plot:
-	python3 script/plot.py
+	python3 src/plot.py

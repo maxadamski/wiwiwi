@@ -176,8 +176,8 @@ Bag solve_dynamic(Bag bag, Items &items) {
 	return bag;
 }
 
-void generate(int n, double beta, double nu, Bag &bag, Items &items
-		, int W = 1000, int V = 10000) {
+void generate(int n, double beta, double nu, Bag &bag, Items &items, int b = -1,
+		int W = 1000, int V = 10000) {
 	int total_w = 0;
 	int total_v = 0;
 
@@ -190,11 +190,12 @@ void generate(int n, double beta, double nu, Bag &bag, Items &items
 	}
 
 	bag.y = nu * total_v;
-	bag.b = beta * total_w;
+	bag.b = b == -1 ? random(10000, 1000000) : b;
+	//bag.b = beta * total_w;
 }
 
-/**
-void generate_greedy_worst(int n, double b, double phi, Bag &bag, Items &items) {
+
+void generate_greedy_worst(int n, double b, double nu, Bag &bag, Items &items) {
 	int w = b / (n - 1);
 	int v = w / 2;
 	int total_v = 0;
@@ -209,23 +210,21 @@ void generate_greedy_worst(int n, double b, double phi, Bag &bag, Items &items) 
 	}
 
 	//cerr << "total_v: " << total_v << "\n";
-	bag.y = max(1, (int) (phi * total_v));
+	bag.y = nu * total_v;
 	bag.b = b;
 }
-*/
+
 
 void quality() {
-	cout << "n,b,y,beta,nu,W,V,greedy,dynamic\n";
-	for (int W = 1000; W <= 10000; W += 2000) {
-	for (int V = 1000; V <= 10000; V += 2000) {
+	cout << "n,b,y,beta,nu,greedy,dynamic\n";
+	double beta = 1;
 	for (int n = 100; n <= 100; n += 100) {
-		for (double beta = 0.20; beta <= 1; beta += 0.20) {
-		for (double nu = 0.20; nu <= 1; nu += 0.20) {
+		for (double nu = 1; nu <= 10; nu += 1) {
 			Items items; Bag bag;
-			generate(n, beta, nu, bag, items, W, V);
+			generate_greedy_worst(n, beta * n, nu, bag, items);
 
 			cout << items.size() << "," << bag.b << "," << bag.y << ","
-				 << beta << "," << nu << "," << W << "," << V << ",";
+				 << beta << "," << nu << ",";
 
 			Bag gr = solve_greedy(bag, items);
 			cout << (double) gr.v / gr.y;
@@ -239,59 +238,90 @@ void quality() {
 			cout << "\n";
 			cerr << ".";
 		}
-		}
 		cerr << "\n";
-	}
-	}
 	}
 
 	cerr << "\n";
 }
 
 void speed() {
-	cout << "n,b,y,beta,nu,brute,dynamic\n";
+	cout << "n,b,y,beta,nu,brute,greedy,dynamic\n";
 
-	for (int n = 2; n <= 28; n += 1) {
-		for (double beta = 1; beta <= 1; beta += 0.20) {
-		for (double nu = 1; nu <= 1; nu += 0.20) {
-			Items items; Bag bag;
-			generate(n, beta, nu, bag, items);
+	double beta = 1, nu = 1;
+	int stop = 28, step = 1;
+	for (int n = 12; n <= stop; n += step) {
+		Items items; Bag bag;
+		generate(n, beta, nu, bag, items);
 
-			cout << items.size() << "," << bag.b << "," << bag.y << ","
-				 << beta << "," << nu << ",";
+		cout << items.size() << "," << bag.b << "," << bag.y << ","
+			 << beta << "," << nu << ",";
 
+		if (n <= 28) {
 			cout << benchmark(1, [bag, &items]{
 				solve_brute(bag, items);
 			}) * 1e-9;
-
-			cout << ",";
-			cerr << ".";
-
-			cout << benchmark(1, [bag, &items]{
-				solve_dynamic(bag, items);
-			}) * 1e-9;
-
-			cout << "\n";
-			cerr << ".";
+		} else {
+			cout << 0;
 		}
-		}
+		cout << ",";
+		cerr << ".";
+
+		cout << benchmark(1, [bag, &items]{
+			solve_greedy(bag, items);
+		}) * 1e-9;
+		cout << ",";
+		cerr << ".";
+
+		cout << benchmark(1, [bag, &items]{
+			solve_dynamic(bag, items);
+		}) * 1e-9;
+		cout << "\n";
+		cerr << ".";
 		cerr << "\n";
+
+		if (n == 28) {
+			n = 100, stop = 2000, step = 50;
+		}
 	}
 
 	cerr << "\n";
 }
 
+void surf() {
+	cout << "b\\n";
+	int nmin = 1000, nmax = 10000, nstep = 1000;
+	for (int n = nmin; n <= nmax; n += nstep) {
+		cout << "," << n ;
+	}
+	cout << "\n";
+
+
+	for (int b = nmin; b <= nmax; b += nstep) {
+		cout << b;
+		for (int n = nmin; n <= nmax; n += nstep) {
+			Items items; Bag bag;
+			generate(n, 1, 1, bag, items, b);
+			cout << "," << benchmark(1, [bag, &items]{
+				solve_dynamic(bag, items);
+			}) * 1e-9;
+			cerr << ".";
+		}
+		cout << "\n";
+		cerr << "\n";
+	}
+}
+
 void test() {
 	// "Suita testowa":
 	//Items items = { {2,3}, {3,1}, {1,4}, {1,1}, {8,5} };
-	//Items items = { {7, 11}, {5, 10}, {5, 10} };
-	//Bag bag(20, 10);
-	//Bag gr = solve_greedy(bag, items);
-	//for (auto item : gr.items)
-	//	p(item, cerr);
+	Items items = { {7, 11}, {5, 10}, {5, 10} };
+	Bag bag(20, 10);
+	Bag gr = solve_greedy(bag, items);
+	for (auto item : gr.items)
+		p(item, cerr);
 
-	Bag bag; Items items;
-	generate(28, 1, 1, bag, items);
+	//Bag bag; Items items;
+	//generate(28, 1, 1, bag, items);
 
 	cout << benchmark(1, [bag, &items]{
 		Bag dp = solve_dynamic(bag, items);
@@ -322,6 +352,8 @@ int main(int argc, char **argv) {
 		usage();
 	if (args[1] == "--quality")
 		quality();
+	if (args[1] == "--spread")
+		surf();
 	if (args[1] == "--speed")
 		speed();
 	if (args[1] == "--test")

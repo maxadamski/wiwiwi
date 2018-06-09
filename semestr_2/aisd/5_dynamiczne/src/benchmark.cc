@@ -45,6 +45,7 @@ struct Bag {
 // greedily take from Q
 
 Bag solve_greedy(Bag bag, Items items) {
+	// standard C++>03 wymaga, aby sortowanie było zawsze O(n log n)
 	sort(items.begin(), items.end(), cmp);
 	// greedily add items to the bag
 	for (auto item : items) {
@@ -289,16 +290,14 @@ void speed() {
 
 void surf() {
 	cout << "b\\n";
-	int nmin = 1000, nmax = 10000, nstep = 1000;
-	for (int n = nmin; n <= nmax; n += nstep) {
-		cout << "," << n ;
-	}
+	vector<int> ns = {10, 50, 100, 500, 1000, 2000, 5000, 10000, 15000, 20000, 25000, 30000};
+	for (int n : ns) cout << "," << n ;
 	cout << "\n";
 
 
-	for (int b = nmin; b <= nmax; b += nstep) {
+	for (int b : ns) {
 		cout << b;
-		for (int n = nmin; n <= nmax; n += nstep) {
+		for (int n : ns) {
 			Items items; Bag bag;
 			generate(n, 1, 1, bag, items, b);
 			cout << "," << benchmark(1, [bag, &items]{

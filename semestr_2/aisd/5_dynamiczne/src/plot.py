@@ -63,50 +63,18 @@ plot(sp_b[sp_b['n'] >= 100][['n/c', 'dynamic/n']], 'speed-b',
 # quality
 #
 
-qu = pd.read_csv('output/quality.csv')
-qu.sort_values(['nu'], inplace=True)
-qu.index = qu['nu']
+qu = pd.read_csv('output/quality.csv', index_col='n')
+#qu.sort_values(['nu'], inplace=True)
+#qu.index = qu['nu']
 
-plot(qu[['dynamic', 'greedy']], 'quality-n', xlabel='n', ylabel='quality',
-        style=['.-', ':'])
+plot(qu[qu.index < 100][['brute', 'greedy', 'dynamic']], 'quality', xlabel='n', ylabel='jakość',
+        legend=['BF', 'GA', 'DP'],
+        style=['yo-', 'b+-', 'g+-'])
 
-#bench['hc'] = bench[[f'hc-{i}' for i in range(1, 25+1)]].mean(axis=1)
-#
-#
-#fig, ax = plt.subplots(figsize=(6, 5))
-#for key, group in bench.groupby(['phi']):
-#    ax = group.plot(ax=ax, kind='line', x='v', y='ec', label=f'φ = {key}%', style='-+')
-#    plt.xlabel('ilość wierzchołków')
-#    plt.ylabel('czas (sekundy)')
-#    plt.xlim(min(group['v']), max(group['v']))
-#
-#plt.legend(loc='best')
-#plt.savefig(f'output/euler.png')
-#
-##
-## plot hamilton cycles (by phi)
-##
-#
-#fig, ax = plt.subplots(figsize=(6, 5))
-#for key, group in bench.groupby(['phi']):
-#    ax = group.plot(ax=ax, kind='line', x='v', y='hc', label=f'φ = {key}%', style='-+')
-#    plt.xlabel('ilość wierzchołków')
-#    plt.ylabel('czas (sekundy)')
-#    plt.xlim(min(group['v']), max(group['v']))
-#
-#plt.legend(loc='best')
-#plt.savefig(f'output/hamil.png')
-#
-##
-## plot hamilton cycles (by v)
-##
-#
-#fig, ax = plt.subplots(figsize=(6, 5))
-#for key, group in bench.groupby(['v']):
-#    ax = group.plot(ax=ax, kind='line', x='phi', y='hc', label=f'|V| = {key}', style='-+')
-#    plt.xlabel('nasycenie krawędziami (procent)')
-#    plt.ylabel('czas (sekundy)')
-#    plt.xlim(min(group['phi']), max(group['phi']))
-#
-#plt.legend(loc='best')
-#plt.savefig(f'output/hamil_by_v.png')
+qu['greedy'] = qu['greedy'] / qu['dynamic']
+qu['dynamic'] = 1
+print(qu['greedy'])
+plot(qu[qu.index >= 100][['greedy', 'dynamic']], 'quality-big', xlabel='n', ylabel='jakość',
+        legend=['GA', 'DP'],
+        style=['b+-', 'g+-'])
+

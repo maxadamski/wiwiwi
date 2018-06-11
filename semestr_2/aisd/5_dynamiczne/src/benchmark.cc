@@ -21,10 +21,6 @@ bool cmp(Item l, Item r) {
 	return (double) l.v / l.w > (double) r.v / r.w;
 }
 
-void p(Item i, ostream &out) {
-	out << "{v: " << i.v << ", w: " << i.w << "}\n";
-}
-
 struct Bag {
 	int b, y, v = 0, w = 0;
 	Items items = {};
@@ -123,13 +119,6 @@ Bag solve_brute(Bag bag, Items &items) {
 // możemy porównywać BF i DP czasowo 
 // dla problemu optymalizacyjnego plecak jest NP-trudny
 
-void p(Matrix matrix, ostream &out = cout) {
-	for (auto row : matrix) {
-		for (auto item : row) cout << item << " ";
-		out << "\n";
-	}
-}
-
 int solve_dynamic_r(int i, int l, Items &items, Matrix &m) {
 	if (i == 0 || l == 0) return 0;
 
@@ -177,85 +166,134 @@ Bag solve_dynamic(Bag bag, Items &items) {
 	return bag;
 }
 
-void generate(int n, double beta, double nu, Bag &bag, Items &items, int b = -1,
-		int W = 1000, int V = 10000) {
-	int total_w = 0;
+
+// 4. Generatory instancji
+
+void generate(int n, double nu, Bag &bag, Items &items, double b = -1) {
 	int total_v = 0;
+	int total_w = 0;
 
 	for (int i = 0; i < n; i++) {
-		int w = random(10, W);
-		int v = random(100, V);
-		items.push_back({w,v});
-		total_w += w;
+		int v = random(100, 10000);
+		int w = random(10, 1000);
+		items.push_back({v,w});
 		total_v += v;
+		total_w += w;
 	}
 
 	bag.y = nu * total_v;
-	bag.b = b == -1 ? random(10000, 1000000) : b;
-	//bag.b = beta * total_w;
+	bag.b = b == -1 ? random(10000, 1000000) : b * total_w;
 }
 
 
-void generate_greedy_worst(int n, double b, double nu, Bag &bag, Items &items) {
-	int w = b / (n - 1);
-	int v = w / 2;
+void generate_greedy_worst(int n, Bag &bag, Items &items) {
+	int b = (n - 1) * 10;
+	int w = 10;
+	int v = 5;
 	int total_v = 0;
 
 	// czyste zło
-	items.push_back({w, v + 1});
-	total_v += v + 1;
+	int W = b - 9;
+	int V = W/2 + 1;
+	items.push_back({V, W});
+	total_v += V;
 
 	for (int i = 1; i < n; i++) {
-		items.push_back({w,v});
+		items.push_back({v,w});
 		total_v += v;
 	}
 
-	//cerr << "total_v: " << total_v << "\n";
-	bag.y = nu * total_v;
+	bag.y = (n - 1) * v;
 	bag.b = b;
 }
 
+// 5. Funkcje pomocnicze
+
+void p(Item item, ostream &out = cerr) {
+	out << "{v: " << item.v << ", w: " << item.w << "}";
+}
+
+void p(Items items, ostream &out = cerr) {
+	out << "[ ";
+	for (Item item : items) out << item.v << "/" << item.w << " ";
+	out << "]";
+}
+
+void p(Bag bag, ostream &out = cerr) {
+	out << "{ v: " << bag.v
+		<< " w: " << bag.w
+		<< " items: ";
+	p(bag.items, out);
+	out << " }";
+}
+
+
+void p(Matrix matrix, ostream &out = cerr) {
+	for (auto row : matrix) {
+		for (auto item : row) cout << item << " ";
+		out << "\n";
+	}
+}
+
+// Zestawy testujące
 
 void quality() {
-	cout << "n,b,y,beta,nu,greedy,dynamic\n";
-	double beta = 1;
-	for (int n = 100; n <= 100; n += 100) {
-		for (double nu = 1; nu <= 10; nu += 1) {
-			Items items; Bag bag;
-			generate_greedy_worst(n, beta * n, nu, bag, items);
+	cout << "n,b,y,nu,beta,greedy,brute,dynamic\n";
+	for (int n = 3; n <= 28; n += 1) {
+		Items items; Bag bag;
+		generate_greedy_worst(n, bag, items);
 
-			cout << items.size() << "," << bag.b << "," << bag.y << ","
-				 << beta << "," << nu << ",";
+		cout << items.size() << "," << bag.b << "," << bag.y << ",0,0,";
 
-			Bag gr = solve_greedy(bag, items);
-			cout << (double) gr.v / gr.y;
+		Bag gr = solve_greedy(bag, items);
+		cout << (double) gr.v / gr.y << ",";
+		cerr << ".";
 
-			cout << ",";
-			cerr << ".";
+		Bag bf = solve_brute(bag, items);
+		cout << (double) bf.v / bf.y << ",";
+		cerr << ".";
 
-			Bag dp = solve_dynamic(bag, items);
-			cout << (double) dp.v / dp.y;
+		Bag dp = solve_dynamic(bag, items);
+		cout << (double) dp.v / dp.y << "\n";
+		cerr << ".";
+	}
+	cerr << "\n";
 
-			cout << "\n";
-			cerr << ".";
-		}
-		cerr << "\n";
+	for (int n = 100; n <= 1000; n += 100) {
+		Items items; Bag bag;
+		double nu = 0.5;
+		double beta = 0.2;
+		generate(n, nu, bag, items, beta);
+
+		cout << items.size() << "," << bag.b << "," << bag.y << "," 
+			 << nu << "," << beta << ",";
+
+		Bag gr = solve_greedy(bag, items);
+		cout << (double) gr.v / gr.y << ",";
+		cerr << ".";
+		
+		cout << "0,";
+		cerr << ".";
+
+		Bag dp = solve_dynamic(bag, items);
+		cout << (double) dp.v / dp.y << "\n";
+		cerr << ".";
 	}
 
 	cerr << "\n";
 }
 
 void speed() {
-	cout << "n,b,y,beta,nu,brute,greedy,dynamic\n";
+	cout << "n,b,y,nu,brute,greedy,dynamic\n";
 
-	double beta = 1, nu = 1;
+	double nu = 1;
 	int stop = 28, step = 1;
 	for (int n = 12; n <= stop; n += step) {
 		Items items; Bag bag;
-		generate(n, beta, nu, bag, items);
+		generate(n, nu, bag, items);
 
 		cout << items.size() << "," << bag.b << "," << bag.y << ","
-			 << beta << "," << nu << ",";
+			 << nu << ",";
 
 		if (n <= 28) {
 			cout << benchmark(1, [bag, &items]{
@@ -281,7 +319,7 @@ void speed() {
 		cerr << "\n";
 
 		if (n == 28) {
-			n = 100, stop = 2000, step = 50;
+			n = 100, stop = 2000, step = 100;
 		}
 	}
 
@@ -299,7 +337,7 @@ void surf() {
 		cout << b;
 		for (int n : ns) {
 			Items items; Bag bag;
-			generate(n, 1, 1, bag, items, b);
+			generate(n, 1, bag, items, b);
 			cout << "," << benchmark(1, [bag, &items]{
 				solve_dynamic(bag, items);
 			}) * 1e-9;

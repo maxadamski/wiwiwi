@@ -5,7 +5,8 @@
 
 % 1.1 sortowanie z kluczem
 
-default_key(V, K) :- V = K.
+% V: value, K: key
+lex_key(V, K) :- V = K.
 
 encode(_, [], []).
 encode(F, [V | T], [K/V | Encoded]) :- call(F, V, K), encode(F, T, Encoded).
@@ -14,12 +15,24 @@ decode([], []).
 decode([_/V | T], [V | Decoded]) :- decode(T, Decoded).
 
 insert(A, [], [A]).
-insert(AK/AV, [BK/BV | T], [AK/AV, BK/BV | T]) :- AK =< BK.
-insert(AK/AV, [BK/BV | T], [BK/BV | Insert]) :- AK > BK, insert(AK/AV, T, Insert).
+insert(A, [B | T], [A, B | T]) :- A = AK/_, B = BK/_, AK =< BK, !.
+insert(A, [B | T], [B | Insert]) :- insert(A, T, Insert).
 
 isort([], []).
 isort([H | T], Sorted) :- isort(T, Z), insert(H, Z, Sorted).
 isort(F, X, Y) :- encode(F, X, U), isort(U, V), decode(V, Y).
+
+% definicje map wartość -> klucz:
+% |- relative_key(List, V, K) :- average(List, Avg), K is abs(V - Avg)
+% |- add_key(Add, V, K) :- K is V + Add
+%
+% klucz bez kontekstu:
+% ?- X = [8,4,1,6,8],
+%    isort(lex_key, X, Y).
+%
+% przekazujemy kontekst do kluczowania:
+% ?- isort(add_key(2), X, Y).
+% ?- isort(relative_key(X), X, Y).
 
 % 1.2 listy
 

@@ -119,6 +119,21 @@ Bag solve_brute(Bag bag, Items &items) {
 // możemy porównywać BF i DP czasowo 
 // dla problemu optymalizacyjnego plecak jest NP-trudny
 
+void p(Matrix matrix, ostream &out = cerr) {
+	out << "    ";
+	for (int c = 0; c < matrix[0].size(); c++)
+		out << c << " ";
+	out << "\n  +-----------------------------\n";
+
+	int i = 0;
+	for (auto row : matrix) {
+		out << i << " | ";
+		for (auto item : row) out << item << " ";
+		out << "\n";
+		i++;
+	}
+}
+
 int solve_dynamic_r(int i, int l, Items &items, Matrix &m) {
 	if (i == 0 || l == 0) return 0;
 
@@ -161,6 +176,7 @@ Bag solve_dynamic(Bag bag, Items &items) {
 		}
 	}
 
+	p(m);
 	bag.v = m[Y-1][X-1];
 	bag.w = bag.b;
 	return bag;
@@ -225,14 +241,6 @@ void p(Bag bag, ostream &out = cerr) {
 		<< " items: ";
 	p(bag.items, out);
 	out << " }";
-}
-
-
-void p(Matrix matrix, ostream &out = cerr) {
-	for (auto row : matrix) {
-		for (auto item : row) cout << item << " ";
-		out << "\n";
-	}
 }
 
 // Zestawy testujące
@@ -350,30 +358,11 @@ void surf() {
 
 void test() {
 	// "Suita testowa":
-	//Items items = { {2,3}, {3,1}, {1,4}, {1,1}, {8,5} };
-	Items items = { {7, 11}, {5, 10}, {5, 10} };
-	Bag bag(20, 10);
-	Bag gr = solve_greedy(bag, items);
-	for (auto item : gr.items)
-		p(item, cerr);
+	Items items = { {1, 3}, {2,5}, {4,3}, {2,2}, {5,7}, {13,47} };
+	Bag bag(12, 10);
 
-	//Bag bag; Items items;
-	//generate(28, 1, 1, bag, items);
-
-	cout << benchmark(1, [bag, &items]{
-		Bag dp = solve_dynamic(bag, items);
-		cout << (double) dp.v / dp.y << endl;
-	}) * 1e-9 << "s\n";
-
-	cout << benchmark(1, [bag, &items]{
-		Bag gr = solve_greedy(bag, items);
-		cout << (double) gr.v / gr.y << endl;
-	}) * 1e-9 << "s\n";
-
-	cout << benchmark(1, [bag, &items]{
-		Bag bf = solve_brute(bag, items);
-		cout << (double) bf.v / bf.y << endl;
-	}) * 1e-9 << "s\n";
+	Bag dp = solve_dynamic(bag, items);
+	cerr << "dp: " << dp.v << "\n";
 }
 
 void usage(bool abort = true) {

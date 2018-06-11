@@ -68,5 +68,3 @@ odd([H|[_|T]], [H|X]) :- odd(T, X).
 even([], []).
 even([_], []).
 even([_|[H|T]], [H|X]) :- even(T, X).
-
-% Pytanie: Jakie są połączenia miedzy Świnoujściem a Rzeszowem?

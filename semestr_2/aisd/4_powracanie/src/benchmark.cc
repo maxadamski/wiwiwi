@@ -332,7 +332,22 @@ void bench() {
 }
 
 void test() {
+	cerr << "CE/CH | 300 | 400 | 500\n";
+	for (double phi : {0.6, 0.75, 0.95}) {
+		cerr << phi << "";
+		for (int V : {300,400,500}) {
+			AdjacencyMatrix g(V, edges(V, phi));
+			cerr << " | " << benchmark_simple([&g]{
+				g.eulerian_cycle();
+			}) * 1e-9 << flush;
 
+			AdjacencyMatrix h(V, edges(V, phi), false);
+			cerr << "/" << benchmark_simple([&h]{
+				h.hamiltonian_cycle();
+			}) * 1e-9;
+		}
+		cout << "\n";
+	}
 }
 
 void usage(bool abort = true) {

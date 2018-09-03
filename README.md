@@ -1,3 +1,5 @@
+__WARNING:__ Boring school stuff ahead!
+
 # WIWIWI
 
 Stworzone w ramach zajęć.

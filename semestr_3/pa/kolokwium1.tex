@@ -1,0 +1,175 @@
+\documentclass[11pt]{article}
+\usepackage{setspace,lmodern,amsmath,amssymb,amsfonts,amsthm}
+\usepackage[top=1in, bottom=1.25in, left=1.25in, right=1.25in]{geometry}
+\usepackage[polish]{babel}
+\usepackage[utf8]{inputenc}
+\date{}
+\setlength{\parindent}{0cm}
+
+\begin{document}
+
+\begin{center}
+	\LARGE Podstawy Automatyki - Sprawdzian 1 \\
+\end{center}
+\vspace{0.4cm}
+
+\section{Człony}
+
+k - współczynnik wzmocnienia\\
+T - stała czasowa inercji / całkowania / opóźnienie\\
+$\xi$ - współczynnik tłumienia $\in (0, 1)$\\
+$\omega_0$ - pulsacja oscylacji własnych
+
+
+\subsection{Obiekty proporcjonalne}
+
+\subsubsection{Obiekt wzmacniający idealny}
+
+$y(t) = k x(t)$\\
+
+$G(s) = k$\\
+
+\textbf{Zastosowania:} wzmacniacz bezinercyjny, maszyny proste
+
+\subsubsection{Obiekt wzmacniający rzeczywisty}
+
+$T \frac{dy(t)}{dt} + y(t) = k x(t)$\\
+
+$G(s) = \frac{k}{1 + sT}$\\
+
+\textbf{Zastosowania:} wzmacniacz rzeczywisty, maszyny proste, zawór
+
+\subsubsection{Obiekt inercyjny n-tego rzędu}
+
+$
+T_1 T_2 ... T_n \frac{d^n y(t)}{dt^n} + ...
++ (T_1 + T_2 + ... T_n) \frac{d y(t)}{dt} + y(t) =
+k x(t)
+$\\
+
+$G(s) = \frac{k}{(1 + sT_1)(1 + sT_2)...(1 + sT_n)}$\\
+
+\textbf{Zastosowania drugiego rzędu:} maszyny proste, zawory z niekorzystnymi zjawiskami\\
+\textbf{Zastosowania n-tego rzędu:} złożone układy hydrauliczne, mechaniczne i elektryczne
+
+\subsection{Obiekt oscylacyjny}
+
+$
+T^2 \frac{d^2 y(t)}{dt^2} +
+2 \xi T \frac{dy(t)}{dt} + y(t) =
+k x(t)
+$\\
+
+$G(s) = \frac{k \omega_0^2 }{s^2 + 2 \xi \omega_0 s + \omega_0^2}$\\
+
+\textbf{Zastosowania:} układy mechaniczne oscylujące (masa i sprężyna), elektryczny układ drgający, wahadło
+
+\subsection{Obiekty różniczkujące}
+
+\subsubsection{Obiekt różniczkujący idealny}
+
+$y(t) = k \frac{dx(t)}{dt}$\\
+
+$G(s) = ks$\\
+
+\textbf{Zastosowania:} brak
+
+\subsubsection{Obiekt różniczkujący rzeczywisty}
+
+$T \frac{dy(t)}{dt} + y(t) = k \frac{dx(t)}{dt}$\\
+
+$G(s) = \frac{ks}{1 + sT}$\\
+
+\textbf{Zastosowania:} cewka indukcyjna, tłumik hydrauliczny, tarcie mechaniczne
+
+
+\subsection{Obiekty całkujące}
+
+\subsubsection{Obiekt całkujący idealny}
+
+$y(t) = k \int_0^t x(\tau) d\tau$\\
+
+$G(s) = \frac{k}{s}$\\
+
+\textbf{Zastosowania:} kondensator idealny
+
+\subsubsection{Obiekt całkujący rzeczywisty}
+
+$T \frac{dy(t)}{dt} + y(t) = k \int_0^t x(\tau) d\tau$\\
+
+$G(s) = \frac{k}{s(1 + sT)}$\\
+
+\textbf{Zastosowania:} kondensator, zbiornik cieczy
+
+
+\subsection{Obiekt opóźniający}
+
+$y(t) = x(t-T)$\\
+
+$G(s) = e^{-sT}$\\
+
+\textbf{Zastosowania:} transporter taśmowy
+
+
+
+\pagebreak
+
+\section{Definicje}
+
+\subsection{Transmitancja operatorowa}
+
+$$G(s) = \frac{Y(s)}{X(s)}$$
+
+Stosunek transformaty Laplace'a odpowiedzi do transformaty Laplace'a wymuszenia, przy zerowych warunkach początkowych.
+
+
+\subsection{Charakterystyka czasowa}
+
+Przebieg czasowy wyjścia, wywołany wymuszeniem.
+
+\subsection{Transmitancja widmowa}
+
+Stosuek zespolonej składowej odpowiedzi do zespolonej składowej wymuszenia sinusoidalnego. Wykres transmitancji widmowej na płaszczyźnie Gaussa nazywamy charakterystyką amplitudowo-fazową.
+
+$$
+G(j\omega) = \frac{\hat Y_W}{\hat X} =
+\frac{A_X e^{j \omega t}}{A_{Y_W} e^{j(\omega t + \phi)}} =
+P(\omega) + jQ(\omega)
+$$
+
+
+\section{Charakterystyki}
+
+\subsection{Charakterystyka impulsowa}
+
+\[
+	\delta(t) = g(t) = \begin{cases}
+		\infty, & \text{dla } t = 0 \\
+		0, & \text{dla } t \neq 0 \\
+	\end{cases}
+	\text{ oraz }
+	X(s) = 1
+\]
+
+\subsection{Charakterystyka skokowa}
+
+\[
+	\textbf{1}(t) = h(t) = \begin{cases}
+		1, & \text{dla } t \geq 0 \\
+		0, & \text{dla } t < 0 \\
+	\end{cases}
+	\text{ oraz }
+	X(s) = \frac{1}{s}
+\]
+
+\subsection{Logarytmiczna charakterystyka amplitudowa}
+
+\[
+	\frac{|Y|}{|X|} = \sqrt[20]{10}
+	\rightarrow
+	20 \log \frac{|Y|}{|X|} = \log 10 = 1
+\]
+
+
+
+\end{document}

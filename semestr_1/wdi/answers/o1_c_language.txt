@@ -1,0 +1,20 @@
+1. 11
+2.
+3. 36
+4. 12
+5. 118
+6. 3
+7. 
+8. 
+
+int main(void){
+	int x;
+	scanf("%d", &x);
+	if (x % 2 == 0) {
+		printf("Even ");
+		
+	}
+	printf("***\n");
+	return 0;
+}
+

@@ -32,3 +32,10 @@ Stworzone w ramach zajęć.
   - pe: podstawy elektroniki
   - fdi: fizyka dla informatyków
     - rozwiązane zadania
+- semestr 3
+  - pa: podstawy automatyki
+    - notatki
+  - ok: optymalizacja kombinatoryczna
+    - projekt job-shop
+  - ptc: podstawy techniki cyfrowej
+    - zadania z laboratoriów

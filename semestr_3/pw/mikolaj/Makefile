@@ -1,4 +1,4 @@
 .PHONY: build
 
 build:
-	gcc -Wall palacze.c
+	gcc -Wall mikolaj.c

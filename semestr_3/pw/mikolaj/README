@@ -1,0 +1,2 @@
+Proszę użyć komendy `make build`, a następnie wykonać plik `a.out`.
+Aby zmodyfikować działanie programu, można zmienić wartości stałych w pliku `mikolaj.hh`.

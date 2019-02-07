@@ -1,4 +1,4 @@
 .PHONY: build
 
 build:
-	gcc -Wall mikolaj.c
+	g++ -O2 -lpthread -Wall mikolaj.cc

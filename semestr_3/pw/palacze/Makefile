@@ -1,4 +1,4 @@
 .PHONY: build
 
 build:
-	gcc -Wall palacze.c
+	g++ -O2 -Wall palacze.cc

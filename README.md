@@ -39,3 +39,6 @@ Stworzone w ramach zajęć.
     - projekt job-shop
   - ptc: podstawy techniki cyfrowej
     - zadania z laboratoriów
+  - pw: programowanie współbieżne
+    - rozwiązane problemy synchronizacji
+    - notatki

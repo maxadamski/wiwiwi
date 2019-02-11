@@ -3,7 +3,9 @@
 ## Instrukcja obsługi
 
 Proszę użyć komendy `make build`, a następnie wykonać plik `a.out`.
-Aby zmodyfikować działanie programu, można zmienić wartości stałych w pliku `mikolaj.hh`.
+
+Aby zmienić parametry programu, proszę zmienić wartości stałych w pliku `mikolaj.hh`.
+
 
 ## Opis problemu
 

@@ -17,19 +17,29 @@
 //
 
 #define DEBUG
+// how many reindeers
 #define DEER_COUNT 9
+// how many elves
 #define HELP_COUNT 10
-#define AGENT_COUNT DEER_COUNT + HELP_COUNT
-
+// total employee count (do not change)
+#define AGENT_COUNT (DEER_COUNT + HELP_COUNT)
+// minimum reindeers to wake up santa
 #define DEER_MIN 9
+// minimum elves to wake up santa
 #define HELP_MIN 3
-
+// how many seconds in an hour
 #define HOUR 2
+// probability of a reindeer waking up
 #define DEER_WAKE_PROB 15
+// probability of an elf waking up
 #define HELP_WAKE_PROB 15
+// duration of present-giving event
 #define PRESENT_TIME 10
+// duration of executive-meeting event
 #define MEETING_TIME 10
+// how long must santa sleep after an event
 #define SANTA_SLEEP 0
+// wait time between drawing status
 #define DRAW_WAIT 5e4
 
 //

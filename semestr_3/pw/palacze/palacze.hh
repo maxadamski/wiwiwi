@@ -14,7 +14,19 @@
 #include <signal.h>
 #include <unistd.h>
 
-#define msize (sizeof(Message) - sizeof(long))
+// fix agent's non-atomic printf (doesn't work for N smokers)
+// when this is not defined the printf may not be accurate
+#define BUFFER_FIX
+// initial wallet balance
+#define WALLET_INIT 15
+// minimum ingredient price
+#define PRICE_MIN 1
+// maximum ingredient price
+#define PRICE_MAX 10
+// how long the smoke break takes
+#define SMOKE_BREAK 1e6
+// how many smokers are there
+#define SMOKERS 3
 
 struct Message {
 	long mtype;
@@ -40,6 +52,8 @@ void V(int semnum) {
 	semop(semd, &sem_buf, 1);
 }
 
+#define msize (sizeof(Message) - sizeof(long))
+
 int RECV(Message *message, int mask) {
 	// assert(mask > 0)
 	return msgrcv(msgd, message, msize, mask + 1, 0);
@@ -53,3 +67,4 @@ int SEND(Message *message, int mask) {
 int random_int(int min, int max) {
 	return rand() % (max - min + 1) + min;
 }
+

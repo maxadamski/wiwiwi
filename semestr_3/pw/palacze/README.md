@@ -4,6 +4,12 @@
 
 Proszę użyć komendy `make build`, a następnie wykonać plik `a.out`.
 
+Aby zmienić parametry programu, proszę zmienić wartości stałych w pliku `palacze.hh`.
+
+Plik `palacze.cc` zawiera właściwy kod programu.
+
+Plik `palacze.hh` zawiera importy, stałe i mało ciekawe funkcje/makra pomocnicze.
+
 ## Opis problemu
 
 Zadanie oparte jest na problemie palaczy tytoniu [Wikipedia](https://en.wikipedia.org/wiki/Cigarette_smokers_problem) przy czym:

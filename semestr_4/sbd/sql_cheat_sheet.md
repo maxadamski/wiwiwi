@@ -5,7 +5,7 @@
 
 ```
 select [unique] { _ [ as _ ] }
-from _
+from { _ alias { [[natural] inner|outer] join on _ alias } }
 where _
 group by _
 having _

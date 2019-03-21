@@ -10,13 +10,13 @@
 
 ### Polecenie `ip`
 
-`ip link [show [up]]`
-`ip link set dev eth0 (up|down)`
-`ip addr [show [up]]`
-`ip addr (add|del) X.X.X.X/X dev _`
-`ip addr flush dev _`
+- `ip link [show [up]]`
+- `ip link set dev eth0 (up|down)`
+- `ip addr [show [up]]`
+- `ip addr (add|del) X.X.X.X/X dev _`
+- `ip addr flush dev _`
 
 ### Testowanie połączenia
 
-`ping _`
-`traceroute -T _`
+- `ping _`
+- `traceroute -T _`

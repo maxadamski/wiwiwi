@@ -23,7 +23,7 @@ setb ea
 setb eadc
 mov  adccon1, #10000010b
 loop:
-call display
+call refresh
 jmp  loop
 
 readadc:

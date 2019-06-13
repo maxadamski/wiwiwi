@@ -28,9 +28,9 @@
 - Akcje: ACCEPT, DROP, REJECT, LOG, MARK, SET
 
 - `iptables -t <table> -L [-n] [--line-numbers] [-v] [-x] [-Z]`
-- `iptables -t <table> -P <chain> <action>
-- `iptables (-A|-I <n>) <chain> -s <src> -d <dst> -j <action>
-- `iptables (-F|-D <n>) <chain>
+- `iptables -t <table> -P <chain> <action>`
+- `iptables (-A|-I <n>) <chain> -s <src> -d <dst> -j <action>`
+- `iptables (-F|-D <n>) <chain>`
 - `iptables-save/restore`
 
 - `-p udp/tcp --sport/dport <port>`

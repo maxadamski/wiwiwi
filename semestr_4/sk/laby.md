@@ -18,7 +18,7 @@
 
 ### Switch
 
-- `ip l add link <dev> <new_dev> type vlan id <id>
+- `ip l add link <dev> <new_dev> type vlan id <id>`
 - `ip l del <dev>`
 
 ### Firewall

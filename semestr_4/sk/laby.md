@@ -38,6 +38,7 @@
 - `-m connlimit --connlimit-above/below <n>`
 - `-m comment <text>`
 
+
 ## Konfiguracja Cisco
 
 - `picocom [-b9600] /dev/ttyS0` łączenie

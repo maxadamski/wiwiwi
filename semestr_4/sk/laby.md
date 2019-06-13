@@ -6,8 +6,8 @@
 
 - `ip (link|addr) [show [up]]`
 - `ip link set dev <dev> (up|down)`
-- `ip link set dev <dev> address XX:XX:XX:XX:XX:XX` ustaw MAC
-- `ip addr (add|del) X.X.X.X/X dev DEV` ustaw IP
+- `ip link set dev <dev> address XX:XX:XX:XX:XX:XX` - ustaw MAC
+- `ip addr (add|del) X.X.X.X/X dev DEV` - ustaw IP
 - `ip addr flush dev <dev>`
 
 ### Router
@@ -56,8 +56,8 @@
 - `show ip ospf (interface|neighbor|database)`
 
 - `hostname <name>`
-- `interface <name> X/X` konfiguracja interfejsu
-- `ip route <addr> <mask> <next>` trasowanie
+- `interface <name> X/X` - konfiguracja interfejsu
+- `ip route <addr> <mask> <next>` - trasowanie
 - `router ospf <id=1>`
 
 ### Switch
@@ -66,7 +66,7 @@
 - `show interfaces trunk`
 
 - `vlan <id>`
-- `name <name>` nazwa VLAN
+- `name <name>` - nazwa VLAN
 - `interface <name> X/X`
 - `interface range <name> X/X-Y, ...`
 
@@ -77,15 +77,15 @@
 - `no shutdown`
 
 - `switchport access vlan <id>`
-- `switchport mode (access|trunk)` nie trunk / trunk
-- `switchport trunk encapsulation dot1q` używaj 802.1Q
+- `switchport mode (access|trunk)` - nie trunk / trunk
+- `switchport trunk encapsulation dot1q` - używaj 802.1Q
 - `no shutdown`
 
 ### OSPF
 
 - `network <addr> <odwrócona maska> area <area=0>`
-- `auto-cost reference-bandwidth 1000` maksymalna prędkość do kosztów 
-- `no passive-interface Gi 0/0` włącz OSPF na interfejsie
+- `auto-cost reference-bandwidth 1000` - maksymalna prędkość do kosztów 
+- `no passive-interface Gi 0/0` - włącz OSPF na interfejsie
 
 
 ## Debugging
@@ -95,10 +95,10 @@
 - `tracepath -T <dst>`
 - `arping -I <dev> <dst>`
 - `netstat -g` - grupy multicastowe
-- `netserver` - serwer testu szybkości
-- `netperf -H <dst>` - klient testu szybkości
-- `nc -l <port>` - serwer no porcie
-- `nc <dst> <port>` - klient do portu
+- `netserver`
+- `netperf -H <dst>`
+- `nc -l <port>`
+- `nc <dst> <port>`
 - `ethtool [-p|--identify] DEV`
 - `ethtool DEV`: `link detected: yes/no`
 - `tcpdump`

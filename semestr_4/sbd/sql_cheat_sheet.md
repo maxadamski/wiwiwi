@@ -1,13 +1,6 @@
 
 # SQL Cheat Sheet
 
-## Nulls
-
-- Arithmetic operations with NULL return NULL
-- Boolean comparisons with NULL return UNKNOWN
-- `count(*)` counts all NULL and non-NULL tuples
-- `count(attr)` counts all tuples where attr is not NULL
-- Other aggregate functions ignore NULL
 
 ## DQL
 
@@ -50,6 +43,8 @@ count([all | distinct] <attr>)
 <select> {union | intersect | minus} <select> 
 ```
 
+
+
 ## DML
 
 ```
@@ -57,6 +52,8 @@ insert into <table> (<attr>, ...) values (<expr>, ...)
 delete from <table> where <cond>
 update <table> set (<attr>, ...) = (<select>) where <cond>
 ```
+
+
 
 ## DDL
 
@@ -100,6 +97,18 @@ drop view <view>;
 ```
 
 
+
+## Library
+
+### Tables
+
+```
+user_constraints: (table_name, constraint_name, constraint_type, search_condition)
+user_updatable_columns: (table_name, column_name, updatable, insertable, deletable)
+user_tables: (table_name)
+dual: (dummy)
+```
+
 ### Switch
 
 ```
@@ -110,16 +119,7 @@ else <expr>
 end
 ```
 
-### Builtins
-
-```
-user_constraints: (table_name, constraint_name, constraint_type, search_condition)
-user_updatable_columns: (table_name, column_name, updatable, insertable, deletable)
-user_tables: (table_name)
-dual: (dummy)
-```
-
-### Library
+### Functions
 
 ```
 -- Operators
@@ -171,24 +171,34 @@ to_date(Str, fmt: Str): Date
 decode(value, c1, r1, ..., ci, ri, other)
 ```
 
-## Formatting
+### Formatting
 
-### Date & Time
+#### Date & Time
 ```
-SCC BC AD - Stulecie, Era
+SCC BC AD - Century, Era
 D DD DDD DAY fmDAY - Day
 MM MON MONTH fmMONTH - Month
 YYYY - Year
 HH HH24 - Hour
 MI - Minute
 SS - Second
-AM PM - Pora dnia
+AM PM - Time of day
 ```
 
-### Number
+#### Number
 ```
 D - fraction separator
 G - group separator
 9 - digit
 0 - zero padding
 ```
+
+
+
+## Nulls
+
+- Arithmetic operations with NULL return NULL
+- Boolean comparisons with NULL return UNKNOWN
+- `count(*)` counts all NULL and non-NULL tuples
+- `count(attr)` counts all tuples where attr is not NULL
+- Other aggregate functions ignore NULL

@@ -77,8 +77,8 @@ describe <table>;
 
 ```
 <constr>
-  | {primary | foreign} key(<attr>, ...) [on delete cascade]
-  | references <table>(<attr>, ...) [on delete cascade]
+  | primary key(<attr>, ...) [on delete cascade]
+  | [foreign key <attr>] references <table>(<attr>, ...) [on delete cascade]
   | unique(<attr>)
   | check(<expr>)
   | not null

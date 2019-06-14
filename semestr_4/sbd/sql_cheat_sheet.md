@@ -89,7 +89,7 @@ describe <table>;
 ```
 create [or replace] view <view> (<attr>, ...)
 as <select>
-[with check option [constraint <name>]];
+[with {check option [constraint <name>] | read only}];
 ```
 
 ```

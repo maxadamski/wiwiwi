@@ -1,36 +1,125 @@
 
 # SQL Cheat Sheet
 
-## Selection
+## Nulls
+
+- Arithmetic operations with NULL return NULL
+- Boolean comparisons with NULL return UNKNOWN
+- `count(*)` counts all NULL and non-NULL tuples
+- `count(attr)` counts all tuples where attr is not NULL
+- Other aggregate functions ignore NULL
+
+## DQL
 
 ```
-select [unique] { _ [ as _ ] }
-from { _ alias { [[natural] inner|outer] join on _ alias } }
-where _
-group by _
-having _
-order by { _ [asc | desc] } [ nulls (last | first) ]
+with
+  <name> as (<select>), ...
+select
+  [distinct] <expr> [ as <name> ], ...
+from
+  {<table> <join>}
+where
+  <cond>
+group by
+  <name> [asc | desc], ...
+having
+  <cond>
+order by
+  <name> [asc | desc] [nulls {last | first}], ...
+fetch first <n> rows with ties
 ```
 
-## Switch
+### Joins
 
 ```
-case value
-when c1 then r1
-when ci then ri
-else other
-end
+join := [ inner | {full | left | right [outer] ] join <table> on { <cond> | using (<name>, ...) }
+join := natural [ inner | {full | left | right} [outer] ] join <table> 
 ```
 
-## Groups
+### Aggregation
 
 ```
 avg, count, max, min, sum, variance, stddev
 count(*)
-count([all | distinct] _)
+count([all | distinct] <attr>)
 ```
 
-## Library
+### Sets
+
+```
+<select> {union | intersect | minus} <select> 
+```
+
+## DML
+
+```
+insert into <table> (<attr>, ...) values (<expr>, ...)
+delete from <table> where <cond>
+update <table> set (<attr>, ...) = (<select>) where <cond>
+```
+
+## DDL
+
+```
+create table <table> (
+  <attr> <type> [default <expr>] [[constraint <name>] <constr>] [generated always as identity],
+  ...
+  [constraint <name>] <constr>,
+  ...
+)
+```
+
+```
+alter table <table> {enable | disable} constraint <name>;
+alter table <table> add (...) modify (...);
+drop table <table> [cascade constraints];
+describe <table>;
+```
+
+### Constraints
+
+```
+<constr>
+  | {primary | foreign} key(<attr>, ...) [on delete cascade]
+  | references <table>(<attr>, ...) [on delete cascade]
+  | unique(<attr>)
+  | check(<expr>)
+  | not null
+```
+
+### Views
+
+```
+create [or replace] view <view> (<attr>, ...)
+as <select>
+[with check option [constraint <name>]];
+```
+
+```
+drop view <view>;
+```
+
+
+### Switch
+
+```
+case [<expr>]
+when <expr> then <expr>
+when <expr> then <expr>
+else <expr>
+end
+```
+
+### Builtins
+
+```
+user_constraints: (table_name, constraint_name, constraint_type, search_condition)
+user_updatable_columns: (table_name, column_name, updatable, insertable, deletable)
+user_tables: (table_name)
+dual: (dummy)
+```
+
+### Library
 
 ```
 -- Operators
@@ -41,7 +130,7 @@ T? is null
 date 'YYYY-MM-DD'
 timestamp 'YYYY-MM-DD HH:MI:SS.MMMM'
 interval 'REPR' _ [ to _ ]
-listagg(_, Str) within group (order by _)
+listagg(<attr>, Str) within group (order by <attr>, ...)
 
 -- Optional
 coalesce/nvl(T?, T): T

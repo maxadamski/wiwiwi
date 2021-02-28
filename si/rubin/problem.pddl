@@ -1,0 +1,17 @@
+(define (problem test1)
+	(:domain test)
+	(:objects )
+	(:init
+		(succ zero one) (succ one two) (succ two three)
+		(poziomo cr sp) (poziomo sp t) (poziomo ps st) (poziomo st so)
+		(pionowo cr za) (pionowo za ps)
+		(pionowo sp f) (pionowo f st)
+		(pionowo t zb) (pionowo zb so)
+		(tkaniny zero) (przyprawy zero) (owoce two) (kawa zero)
+		(kupiec f)
+		(faza move)
+	)
+	(:goal (and
+		(rubin)
+	))
+)

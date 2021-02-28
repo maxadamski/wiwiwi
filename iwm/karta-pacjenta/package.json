@@ -1,0 +1,34 @@
+{
+    "name": "karta-pacjenta",
+    "version": "1.0.0",
+    "main": "index.js",
+    "private": true,
+    "devDependencies": {
+        "@mdi/font": "^5.1.45",
+        "@vue/component-compiler-utils": "^3.1.2",
+        "autoprefixer": "^9.7.6",
+        "buefy": "^0.8.17",
+        "bulma-extensions": "^6.2.7",
+        "http-server": "^0.12.3",
+        "material-design-icons-iconfont": "^5.0.1",
+        "parcel-bundler": "^1.12.4",
+        "postcss-modules": "^2.0.0",
+        "pug": "^2.0.4",
+        "sass": "^1.26.5",
+        "stylus": "^0.54.7",
+        "vue-hot-reload-api": "^2.3.4",
+        "vue-template-compiler": "^2.6.11"
+    },
+    "dependencies": {
+        "fhir": "^4.7.8",
+        "fhir.js": "^0.0.22",
+        "vue": "^2.6.4",
+        "vue-plotly": "^1.1.0",
+        "vue-router": "^3.1.6"
+    },
+    "scripts": {
+        "dev": "parcel src/index.html",
+        "build": "parcel build src/index.html",
+        "dist": "http-server dist -g"
+    }
+}

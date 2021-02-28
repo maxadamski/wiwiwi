@@ -1,0 +1,59 @@
+dog yellow
+apple green
+note orange
+clock orange
+candle purple
+fire red black
+question green
+bird purple
+tree green orange
+horse black
+key orange
+milk white orange
+skull white
+spider black
+exclamation yellow
+thunder yellow
+droplet blue
+sun yellow
+hand purple
+dino green
+cat purple
+hammer orange
+cube blue
+ghost blue
+snow blue
+paint green
+moon yellow
+lock black
+cactus green
+dragon purple
+scissors purple
+bulb yellow
+anchor orange
+clown red white
+cheese yellow
+man orange
+zebra black white
+heart red
+stop red
+biedra red black
+snowman blue orange white
+clover green
+cobweb purple
+yinyang black white
+glasses black
+bomb black
+lips red
+maple red
+turtle green
+flower yellow white
+car orange
+igloo blue white
+dolphin blue
+carrot orange green
+pencil blue white
+eye purple
+crosshair red
+_dot yellow green
+_spark black

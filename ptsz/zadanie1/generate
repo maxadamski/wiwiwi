@@ -1,0 +1,50 @@
+#!/usr/bin/env python3
+
+import numpy as np
+import random
+from numpy.random import geometric, binomial, beta
+from sys import argv
+from sys import stderr
+from time import time
+NAME = argv[0]
+
+# utilities
+map = lambda xs, f: [f(x) for x in xs]
+nbinomial = lambda mu, phi: np.random.negative_binomial(phi, phi/(mu+phi))
+bernoulli = lambda p: np.random.random() < p
+dnormal = lambda mu, sigma: int(np.random.normal(mu, sigma))
+
+def panic(*args):
+    print(*args, file=stderr)
+    exit(1)
+
+def generate(size, mu_p=5, phi_p=2, phi_pd=2, sd_w=2, phi_step=0.5, shuffle=True):
+    """larger phi - slimmer tails"""
+    np.random.seed()
+    t = mu_p
+    mu_pd = int(mu_p * 1.5)
+    lines = []
+    a_par, b_par = 2, 10
+    par = beta(a_par, b_par)
+    for i in range(size):
+        r = max(0, dnormal(t, mu_p))
+        p = max(1, nbinomial(mu_p, phi_p))
+        d = r + p + nbinomial(mu_pd, phi_pd)
+        s = p / (d - r)
+        w = max(1, dnormal(p + p*(s - 0.5), sd_w))
+        if bernoulli(par):
+            par = max(0.05, beta(a_par, b_par))
+            t += binomial(mu_p + mu_pd, phi_step)
+        assert r >= 0
+        assert w > 0
+        assert p > 0
+        assert r + p <= d
+        lines.append(f'{p} {r} {d} {w}')
+
+    if shuffle: random.shuffle(lines)
+    print(size)
+    print('\n'.join(lines))
+
+if __name__ == '__main__':
+    if len(argv) <= 1: panic('usage: {argv[0]} N')
+    generate(int(argv[1]))

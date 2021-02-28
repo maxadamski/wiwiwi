@@ -1,0 +1,205 @@
+phi = 1.6180339
+scale = 2 1.5 1 0.5 0 -0.5
+sizes = 14px 18px 23px 29px 37px 47px
+heights = 23px 29px 36px 44px 56px 70px
+units = 0 4px 7px 11px 18px 29px 47px
+
+:root
+    for x, i in units
+        --u{i} x
+
+for thing in (('margin' 'm') ('padding' 'p'))
+    name = thing[0]
+    symb = thing[1]
+    for x, i in units
+        .{symb}a-{i}
+            {name} x
+        .{symb}l-{i}
+            {name}-left x
+        .{symb}r-{i}
+            {name}-right x
+        .{symb}t-{i}
+            {name}-top x
+        .{symb}b-{i}
+            {name}-bottom x
+        .{symb}x-{i}
+            {name}-left x
+            {name}-right x
+        .{symb}y-{i}
+            {name}-top x
+            {name}-bottom x
+        
+.w-100
+    width 100%
+.w-50
+    width 100%
+
+.mx-a
+    margin-left auto
+    margin-right auto
+
+.my-a
+    margin-left auto
+    margin-right auto
+
+.m-title
+    margin-bottom units[5]
+
+.m-h1
+    margin-bottom units[5]
+
+.m-h2
+    margin-top units[6]
+    margin-bottom units[4]
+
+.m-h3
+    margin-top units[5]
+    margin-bottom units[3]
+
+.m-h4
+    margin-bottom units[2]
+
+golden-font(n)
+    font-size sizes[n];
+    line-height heights[n];
+
+html, body, p, pre, button, input, textarea
+    font-size sizes[1]
+    line-height heights[1]
+
+article 
+    h1, h2, h3, h4, h5, h6, p, li
+        max-width 55ch
+
+.title
+    golden-font(5)
+
+h1
+    golden-font(4)
+
+h2
+    golden-font(3)
+
+h3
+    golden-font(2)
+
+h4
+    golden-font(1)
+
+small
+    golden-font(0)
+
+h5, h6
+    // do not use h5 and h6
+    color red
+    text-decoration line-through
+
+article
+    .title
+        @extend .m-title
+    h1
+        @extend .m-h1
+    h2
+        @extend .m-h2
+    h3
+        @extend .m-h3
+    h4
+        @extend .m-h4
+    ul, ol
+        margin-left units[5]
+    blockquote
+        padding-left units[4]
+    p, ul, ol, pre, blockquote
+        margin-bottom units[5]
+    li
+        margin-bottom units[3]
+    
+    
+.mono
+    font-family 'mononoki', 'Roboto Mono', 'Consolas', monospace
+
+.medium
+    font-weight 600
+
+.bold
+    font-weight 700
+
+.extra-bold
+    font-weight 800
+
+.text-centered
+    text-align center
+
+.text-justified
+    text-align justify
+
+.capitalized
+    text-transform capitalize
+
+.has-list-decoration
+    list-style disc
+
+.narrow-box
+    max-width 600px
+
+.wide-box
+    max-width 1200px
+
+.flex-space
+    display flex
+    justify-content space-between
+    align-items center
+
+.flex-center
+    display flex
+    justify-content center
+    align-items center
+
+.flex
+    display flex
+
+.flex-column
+    display flex
+    flex-direction column
+
+.align-items-center
+    align-items center
+
+.justify-content-center
+    justify-content center
+.justify-content-stretch
+    justify-content space-between
+
+.flex-center
+    justify-content center
+    align-items center
+
+.align-end
+    align-self end 
+
+.justify-end
+    justify-self end
+
+.flex-column
+    display flex
+    flex-direction column
+
+.flex-stretch
+    display flex
+    justify-content space-between
+
+.bordered
+    border 1px dashed var(--text-color)
+    border-radius 5px
+    padding 2px 8px
+
+.font-mono
+    font-family monospace
+
+.shadow
+    &:hover
+        filter drop-shadow(0 7px 8px rgba(0, 0, 0, .2))
+
+.narrow
+    max-width 600px
+    margin 0 auto

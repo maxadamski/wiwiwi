@@ -1,0 +1,171 @@
+package com.sample
+ 
+import com.sample.Main.Plec;
+import com.sample.Main.Osoba;
+import com.sample.Main.Relacja;
+
+rule "init"
+when
+then
+	Osoba maria          = new Osoba("Maria");
+	Osoba ewa            = new Osoba("Ewa");
+	Osoba agata          = new Osoba("Agata");
+	Osoba anna           = new Osoba("Anna");
+	Osoba agnieszka      = new Osoba("Agnieszka");
+	Osoba beata          = new Osoba("Beata");
+	Osoba iwona          = new Osoba("Iwona");
+	Osoba joanna         = new Osoba("Joanna");
+	Osoba piotr          = new Osoba("Piotr");
+	Osoba adam           = new Osoba("Adam");
+	Osoba marek          = new Osoba("Marek");
+	Osoba robert         = new Osoba("Robert");
+	Osoba jan            = new Osoba("Jan");
+	Osoba krzysztof      = new Osoba("Krzysztof");
+	Osoba radek          = new Osoba("Radek");
+	Osoba darek          = new Osoba("Darek");
+	Osoba tomek          = new Osoba("Tomek");
+	Osoba jacek          = new Osoba("Jacek");
+
+	insert(new Relacja(maria,marek,"rodzic"));
+	insert(new Relacja(maria,agata,"rodzic"));
+	insert(new Relacja(maria,jan,"rodzic"));
+	insert(new Relacja(piotr,marek,"rodzic"));
+	insert(new Relacja(piotr,agata,"rodzic"));
+	insert(new Relacja(piotr,jan,"rodzic"));
+	insert(new Relacja(ewa,anna,"rodzic"));
+	insert(new Relacja(ewa,joanna,"rodzic"));
+	insert(new Relacja(ewa,krzysztof,"rodzic"));
+	insert(new Relacja(adam,anna,"rodzic"));
+	insert(new Relacja(adam,joanna,"rodzic"));
+	insert(new Relacja(adam,krzysztof,"rodzic"));
+	insert(new Relacja(agata,radek,"rodzic"));
+	insert(new Relacja(agata,beata,"rodzic"));
+	insert(new Relacja(robert,radek,"rodzic"));
+	insert(new Relacja(robert,beata,"rodzic"));
+	insert(new Relacja(anna,darek,"rodzic"));
+	insert(new Relacja(anna,tomek,"rodzic"));
+	insert(new Relacja(jan,darek,"rodzic"));
+	insert(new Relacja(jan,tomek,"rodzic"));
+	insert(new Relacja(agnieszka,jacek,"rodzic"));
+	insert(new Relacja(agnieszka,iwona,"rodzic"));
+	insert(new Relacja(krzysztof,jacek,"rodzic"));
+	insert(new Relacja(krzysztof,iwona,"rodzic"));
+end
+ 
+rule "kobieta o1"
+when
+	rel : Relacja(o1.imie matches ".*a", o1.plec == Plec.NIEZNANA)
+then
+	System.out.println("female " + rel.o1.imie);
+	rel.o1.plec = Plec.KOBIETA;
+	for (Relacja x : rel.o1.relacje) update(x);
+	update(rel)
+end
+
+rule "kobieta o2"
+when
+	rel : Relacja(o2.imie matches ".*a", o2.plec == Plec.NIEZNANA)
+then
+	System.out.println("female " + rel.o2.imie);
+	rel.o2.plec = Plec.KOBIETA;
+	for (Relacja x : rel.o2.relacje) update(x);
+	update(rel);
+end
+
+rule "mezczyzna o1"
+when
+	rel : Relacja(o1.imie not matches ".*a", o1.plec == Plec.NIEZNANA)
+then
+	System.out.println("male " + rel.o1.imie);
+	rel.o1.plec = Plec.MEZCZYZNA;
+	for (Relacja x : rel.o1.relacje) update(x);
+	update(rel);
+end
+
+rule "mezczyzna o2"
+when
+	rel : Relacja(o2.imie not matches ".*a", o2.plec == Plec.NIEZNANA)
+then
+	System.out.println("male " + rel.o2.imie);
+	rel.o2.plec = Plec.MEZCZYZNA;
+	for (Relacja x : rel.o2.relacje) update(x);
+	update(rel);
+end
+
+rule "ojciec"
+when
+	rel : Relacja(o1.plec == Plec.MEZCZYZNA, relacja == "rodzic")
+then
+	System.out.println(rel.o1 + " jest ojcem " + rel.o2);
+	insert(new Relacja(rel.o1, rel.o2, "ojciec"));
+end
+	
+rule "matka"
+when
+	rel : Relacja(o1.plec == Plec.KOBIETA, relacja == "rodzic")
+then
+	System.out.println(rel.o1 + " jest matką " + rel.o2);
+	insert(new Relacja(rel.o1, rel.o2, "matka"));
+end
+
+rule "babcia"
+when
+	p: Relacja(relacja == "matka")
+	q: Relacja(relacja == "rodzic", p.o2 == q.o1)
+then
+	System.out.println(p.o1 + " jest babcią " + q.o2);
+	insert(new Relacja(p.o1, q.o2, "babcia"));
+end
+
+rule "dziadek"
+when
+	p: Relacja(relacja == "ojciec")
+	q: Relacja(relacja == "rodzic", p.o2 == q.o1)
+then
+	System.out.println(p.o1 + " jest dziadkiem " + q.o2);
+	insert(new Relacja(p.o1, q.o2, "dziadek"));
+end
+
+rule "brat"
+when
+	a: Relacja(relacja == "ojciec", a.o2.plec == Plec.MEZCZYZNA)
+	b: Relacja(relacja == "ojciec", a.o1 == b.o1, a.o2 != b.o2)
+then
+	System.out.println(a.o2 + " jest bratem " + b.o2);
+	insert(new Relacja(a.o2, b.o2, "brat"));
+end
+
+rule "siostra"
+when
+	a: Relacja(relacja == "ojciec", a.o2.plec == Plec.KOBIETA)
+	b: Relacja(relacja == "ojciec", a.o1 == b.o1, a.o2 != b.o2)
+then
+	System.out.println(a.o2 + " jest siostrą " + b.o2);
+	insert(new Relacja(a.o2, b.o2, "siostra"));
+end
+
+rule "stryj"
+when
+	a: Relacja(relacja == "brat")
+	b: Relacja(relacja == "ojciec", a.o2 == b.o1)
+then
+	System.out.println(a.o1 + " jest stryjem " + b.o2);
+	insert(new Relacja(a.o1, b.o2, "stryj"));
+end
+
+rule "wuj"
+when
+	a: Relacja(relacja == "brat")
+	b: Relacja(relacja == "matka", a.o2 == b.o1)
+then
+	System.out.println(a.o1 + " jest wujem " + b.o2);
+	insert(new Relacja(a.o1, b.o2, "wuj"));
+end
+
+query "query stryj"
+	rel : Relacja(relacja == "stryj")
+end
+
+query "query wuj"
+	Relacja(wuj : o1, other : o2, relacja == "wuj")
+end

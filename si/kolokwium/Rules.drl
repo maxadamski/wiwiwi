@@ -1,0 +1,69 @@
+package com.sample
+
+import com.sample.Main.Triple;
+
+rule "X subprop Y and Y subprop Z --> X subprop Z" 
+when
+	t1: Triple(p1: predicate == Triple.RDFSSUBPROPERTYOF, s1: subject, o1: object)
+	t2: Triple(p2: predicate == p1, s2: subject == o1, o2: object)
+	not(Triple(subject == s1, predicate == Triple.RDFSSUBPROPERTYOF, object == o2))
+then
+	Triple x = new Triple(s1, Triple.RDFSSUBPROPERTYOF, o2);
+	insert(x);
+	System.out.println(x);
+end
+ 
+rule "X subclass Y and Y subclass Z --> X subclass Z" 
+when
+	t1: Triple(p1: predicate == Triple.RDFSSUBCLASSOF, s1: subject, o1: object)
+	t2: Triple(p2: predicate == p1, s2: subject == o1, o2: object)
+	not(Triple(subject == s1, predicate == Triple.RDFSSUBCLASSOF, object == o2))
+then
+	Triple x = new Triple(s1, Triple.RDFSSUBCLASSOF, o2);
+	insert(x);
+	System.out.println(x);
+end
+
+rule "X P Y and P subprop Q --> X Q Y"
+when
+	Triple(X: subject, P: predicate, Y: object)
+	Triple(P2: subject == P, predicate == Triple.RDFSSUBPROPERTYOF, Q: object)
+	not(Triple(subject == X, predicate == Q, object == Y))
+then
+	Triple x = new Triple(X, Q, Y);
+	insert(x);
+	System.out.println(x);
+end
+
+rule "P domain T and X P Y --> X type T"
+when
+	Triple(P: subject, predicate == Triple.RDFSDOMAIN, T: object)
+	Triple(X: subject, P2: predicate == P, Y: object)
+	not(Triple(subject == X, predicate == Triple.RDFTYPE, object == T))
+then
+	Triple x = new Triple(X, Triple.RDFTYPE, T);
+	insert(x);
+	System.out.println(x);
+end
+
+rule "P range T and X P Y --> Y type T"
+when
+	Triple(P: subject, predicate == Triple.RDFSRANGE, T: object)
+	Triple(X: subject, P2: predicate == P, Y: object)
+	not(Triple(subject == Y, predicate == Triple.RDFTYPE, object == T))
+then
+	Triple x = new Triple(Y, Triple.RDFTYPE, T);
+	insert(x);
+	System.out.println(x);
+end
+
+rule "X type T and T subclass U --> X type U"
+when
+	Triple(X: subject, P: predicate == Triple.RDFTYPE, T: object)
+	Triple(T2: subject == T, predicate == Triple.RDFSSUBCLASSOF, U: object)
+	not(Triple(subject == X, predicate == Triple.RDFTYPE, object == U))
+then
+	Triple x = new Triple(X, Triple.RDFTYPE, U);
+	insert(x);
+	System.out.println(x);
+end

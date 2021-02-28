@@ -1,0 +1,59 @@
+package com.sample
+ 
+import com.sample.Main.Pomiar;
+import com.sample.Main.Pozar;
+import com.sample.Main.Straz;
+import com.sample.Main.Telefon;
+
+rule "init"
+when
+then
+	insert(new Pomiar(10, true));
+	insert(new Pomiar(20, true));
+end
+ 
+rule "pali się"
+when
+	exists Pomiar(dym == true || temperatura > 150)
+then
+	insert(new Pozar());
+end
+
+rule "alarm"
+when
+	Pozar()
+then
+	System.out.println("Pali się!");
+end
+
+rule "telefon"
+when
+	Pozar()
+then
+	insert(new Telefon(112));
+end
+
+rule "numer"
+when
+	telefon : Telefon(numer : numer)
+then
+	System.out.println("Proszę zadzwonić na numer " + numer);
+end
+
+rule "straz"
+when
+	Straz()
+	pozar : Pozar()
+then
+	System.out.println("Straż przyjechała!");
+	retract(pozar)
+end
+
+rule "odjazd"
+when
+	straz : Straz()
+	not Pozar()
+then
+	System.out.println("Odjazd");
+	retract(straz)
+end

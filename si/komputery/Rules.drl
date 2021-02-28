@@ -1,0 +1,53 @@
+package com.sample
+
+declare enum Socket
+	QW3("QW3"), XYZ("XYZ 1150");
+	name: String
+end
+ 
+declare CPU
+	name: String
+	socket: Socket
+end
+
+declare Mobo
+	name: String
+	socket: Socket
+	gpu: boolean
+	sound: boolean
+end
+
+declare GPU
+	name: String
+end
+
+declare Sound
+	name: String
+end
+
+declare Disk
+	name: String
+end
+
+rule "init"
+when
+then
+	insert(new Mobo("Rohan Budget", Socket.QW3, false, false));
+	insert(new Mobo("Rohan Extra", Socket.QW3, true, false));
+	insert(new Mobo("Gondor", Socket.XYZ, true, true));
+	insert(new CPU("GPP X6", Socket.QW3));
+	insert(new CPU("GPP Fenomenalny", Socket.QW3));
+	insert(new CPU("Orthank a5", Socket.XYZ));
+	insert(new CPU("Orthank a7", Socket.XYZ));
+	insert(new GPU("Asus"));
+	insert(new GPU("Gigabyte"));
+	insert(new GPU("MSI"));
+	insert(new Sound("Asus Xonar DG"));
+	insert(new Sound("Asus Xonar DX"));
+	insert(new Sound("Creative Sound Blaster"));
+	insert(new Disk("Plextor"));
+	insert(new Disk("Seagate"));
+	insert(new Disk("Western Digital"));
+	System.out.println("Inserted initial rules");
+end
+ 

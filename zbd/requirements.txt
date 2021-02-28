@@ -1,0 +1,3 @@
+faker
+mysql-connector-python
+flask

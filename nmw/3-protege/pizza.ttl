@@ -1,0 +1,303 @@
+@prefix : <http://semantic.cs.put.poznan.pl/ontologie/pizza.owl#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://semantic.cs.put.poznan.pl/ontologie/pizza.owl> .
+
+<http://semantic.cs.put.poznan.pl/ontologie/pizza.owl> rdf:type owl:Ontology ;
+                                                        rdfs:comment "Ontologia opisująca różne rodzaje pizzy." .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://semantic.cs.put.poznan.pl/ontologie/pizza.owl#Pizza_000000021
+:Pizza_000000021 rdf:type owl:ObjectProperty ,
+                             owl:TransitiveProperty ;
+                    rdfs:label "maCzęść"@pl .
+
+
+###  http://semantic.cs.put.poznan.pl/ontologie/pizza.owl#Pizza_000000022
+:Pizza_000000022 rdf:type owl:ObjectProperty ;
+                    rdfs:subPropertyOf :Pizza_000000021 ;
+                    rdf:type owl:FunctionalProperty ;
+                    rdfs:domain :Pizza_000000000 ;
+                    rdfs:range :Pizza_000000001 ;
+                    rdfs:label "maCiasto"@pl .
+
+
+###  http://semantic.cs.put.poznan.pl/ontologie/pizza.owl#Pizza_000000023
+:Pizza_000000023 rdf:type owl:ObjectProperty ;
+                    rdfs:subPropertyOf :Pizza_000000021 ;
+                    rdfs:domain :Pizza_000000000 ;
+                    rdfs:range :Pizza_000000002 ;
+                    rdfs:label "maDodatek"@pl .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://semantic.cs.put.poznan.pl/ontologie/pizza.owl#Pizza_000000000
+:Pizza_000000000 rdf:type owl:Class ;
+                    rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                      owl:onProperty :Pizza_000000022 ;
+                                      owl:someValuesFrom :Pizza_000000001
+                                    ] ;
+                    rdfs:label "Pizza"@pl .
+
+
+###  http://semantic.cs.put.poznan.pl/ontologie/pizza.owl#Pizza_000000001
+:Pizza_000000001 rdf:type owl:Class ;
+                    rdfs:label "Ciasto"@pl .
+
+
+###  http://semantic.cs.put.poznan.pl/ontologie/pizza.owl#Pizza_000000002
+:Pizza_000000002 rdf:type owl:Class ;
+                    rdfs:label "Dodatek"@pl .
+
+
+###  http://semantic.cs.put.poznan.pl/ontologie/pizza.owl#Pizza_000000003
+:Pizza_000000003 rdf:type owl:Class ;
+                    rdfs:subClassOf :Pizza_000000001 ;
+                    owl:disjointWith :Pizza_000000004 ;
+                    rdfs:label "CiastoCienkie"@pl .
+
+
+###  http://semantic.cs.put.poznan.pl/ontologie/pizza.owl#Pizza_000000004
+:Pizza_000000004 rdf:type owl:Class ;
+                    rdfs:subClassOf :Pizza_000000001 ;
+                    rdfs:label "CiastoGrube"@pl .
+
+
+###  http://semantic.cs.put.poznan.pl/ontologie/pizza.owl#Pizza_000000005
+:Pizza_000000005 rdf:type owl:Class ;
+                    rdfs:subClassOf :Pizza_000000002 ;
+                    rdfs:label "DodatekSerowy"@pl .
+
+
+###  http://semantic.cs.put.poznan.pl/ontologie/pizza.owl#Pizza_000000006
+:Pizza_000000006 rdf:type owl:Class ;
+                    rdfs:subClassOf :Pizza_000000005 ;
+                    owl:disjointWith :Pizza_000000007 ;
+                    rdfs:label "Mozzarella"@pl .
+
+
+###  http://semantic.cs.put.poznan.pl/ontologie/pizza.owl#Pizza_000000007
+:Pizza_000000007 rdf:type owl:Class ;
+                    rdfs:subClassOf :Pizza_000000005 ;
+                    rdfs:label "Parmesan"@pl .
+
+
+###  http://semantic.cs.put.poznan.pl/ontologie/pizza.owl#Pizza_000000008
+:Pizza_000000008 rdf:type owl:Class ;
+                    rdfs:subClassOf :Pizza_000000002 ;
+                    rdfs:label "DodatekMięsny"@pl .
+
+
+###  http://semantic.cs.put.poznan.pl/ontologie/pizza.owl#Pizza_000000009
+:Pizza_000000009 rdf:type owl:Class ;
+                    rdfs:subClassOf :Pizza_000000008 ;
+                    rdfs:label "Szynka"@pl .
+
+
+###  http://semantic.cs.put.poznan.pl/ontologie/pizza.owl#Pizza_000000010
+:Pizza_000000010 rdf:type owl:Class ;
+                    rdfs:subClassOf :Pizza_000000008 ;
+                    rdfs:label "Salami"@pl .
+
+
+###  http://semantic.cs.put.poznan.pl/ontologie/pizza.owl#Pizza_000000011
+:Pizza_000000011 rdf:type owl:Class ;
+                    rdfs:subClassOf :Pizza_000000008 ;
+                    rdfs:label "KiełbasaPepperoni"@pl .
+
+
+###  http://semantic.cs.put.poznan.pl/ontologie/pizza.owl#Pizza_000000012
+:Pizza_000000012 rdf:type owl:Class ;
+                    rdfs:subClassOf :Pizza_000000002 ;
+                    rdfs:label "DodatekWarzywny"@pl .
+
+
+###  http://semantic.cs.put.poznan.pl/ontologie/pizza.owl#Pizza_000000013
+:Pizza_000000013 rdf:type owl:Class ;
+                    rdfs:subClassOf :Pizza_000000012 ;
+                    rdfs:label "Cebula"@pl .
+
+
+###  http://semantic.cs.put.poznan.pl/ontologie/pizza.owl#Pizza_000000014
+:Pizza_000000014 rdf:type owl:Class ;
+                    rdfs:subClassOf :Pizza_000000012 ;
+                    rdfs:label "Papryka"@pl .
+
+
+###  http://semantic.cs.put.poznan.pl/ontologie/pizza.owl#Pizza_000000015
+:Pizza_000000015 rdf:type owl:Class ;
+                    rdfs:subClassOf :Pizza_000000014 ;
+                    owl:disjointWith :Pizza_000000016 ;
+                    rdfs:label "PaprykaJalapeno"@pl .
+
+
+###  http://semantic.cs.put.poznan.pl/ontologie/pizza.owl#Pizza_000000016
+:Pizza_000000016 rdf:type owl:Class ;
+                    rdfs:subClassOf :Pizza_000000014 ;
+                    rdfs:label "PapryczkaChili"@pl .
+
+
+###  http://semantic.cs.put.poznan.pl/ontologie/pizza.owl#Pizza_000000017
+:Pizza_000000017 rdf:type owl:Class ;
+                    rdfs:subClassOf :Pizza_000000012 ;
+                    rdfs:label "Pomidor"@pl .
+
+
+###  http://semantic.cs.put.poznan.pl/ontologie/pizza.owl#Pizza_000000018
+:Pizza_000000018 rdf:type owl:Class ;
+                    rdfs:subClassOf :Pizza_000000002 ;
+                    rdfs:label "Sos"@pl .
+
+
+###  http://semantic.cs.put.poznan.pl/ontologie/pizza.owl#Pizza_000000019
+:Pizza_000000019 rdf:type owl:Class ;
+                    rdfs:subClassOf :Pizza_000000018 ;
+                    rdfs:label "SosPomidorowy"@pl .
+
+
+###  http://semantic.cs.put.poznan.pl/ontologie/pizza.owl#Pizza_000000020
+:Pizza_000000020 rdf:type owl:Class ;
+                    rdfs:subClassOf :Pizza_000000019 ;
+                    rdfs:label "PikantnySosPomidorowy"@pl .
+
+
+###  http://semantic.cs.put.poznan.pl/ontologie/pizza.owl#Pizza_000000024
+:Pizza_000000024 rdf:type owl:Class ;
+                    rdfs:subClassOf :Pizza_000000000 ;
+                    rdfs:label "NazwanaPizza"@pl .
+
+
+###  http://semantic.cs.put.poznan.pl/ontologie/pizza.owl#Pizza_000000025
+:Pizza_000000025 rdf:type owl:Class ;
+                    rdfs:subClassOf :Pizza_000000024 ,
+                                    [ rdf:type owl:Restriction ;
+                                      owl:onProperty :Pizza_000000023 ;
+                                      owl:someValuesFrom :Pizza_000000006
+                                    ] ,
+                                    [ rdf:type owl:Restriction ;
+                                      owl:onProperty :Pizza_000000023 ;
+                                      owl:someValuesFrom :Pizza_000000019
+                                    ] ,
+                                    [ rdf:type owl:Restriction ;
+                                      owl:onProperty :Pizza_000000023 ;
+                                      owl:maxQualifiedCardinality "2"^^xsd:nonNegativeInteger ;
+                                      owl:onClass :Pizza_000000002
+                                    ] ;
+                    rdfs:comment "Pizza, która ma dodatki: sos pomidorowy i mozarella" ;
+                    rdfs:label "Margherita"@pl .
+
+
+###  http://semantic.cs.put.poznan.pl/ontologie/pizza.owl#Pizza_000000027
+:Pizza_000000027 rdf:type owl:Class ;
+                    rdfs:subClassOf :Pizza_000000024 ,
+                                    [ rdf:type owl:Restriction ;
+                                      owl:onProperty :Pizza_000000023 ;
+                                      owl:someValuesFrom :Pizza_000000006
+                                    ] ,
+                                    [ rdf:type owl:Restriction ;
+                                      owl:onProperty :Pizza_000000023 ;
+                                      owl:someValuesFrom :Pizza_000000011
+                                    ] ,
+                                    [ rdf:type owl:Restriction ;
+                                      owl:onProperty :Pizza_000000023 ;
+                                      owl:someValuesFrom :Pizza_000000019
+                                    ] ;
+                    rdfs:comment "Pizza, która ma dodatki: sos pomidorowy, mozarella i kiełbasa pepperoni" ;
+                    rdfs:label "Pepperoni"@pl .
+
+
+###  http://semantic.cs.put.poznan.pl/ontologie/pizza.owl#Pizza_000000028
+:Pizza_000000028 rdf:type owl:Class ;
+                    owl:equivalentClass [ owl:intersectionOf ( :Pizza_000000000
+                                                               [ rdf:type owl:Class ;
+                                                                 owl:complementOf [ rdf:type owl:Restriction ;
+                                                                                    owl:onProperty :Pizza_000000023 ;
+                                                                                    owl:someValuesFrom :Pizza_000000008
+                                                                                  ]
+                                                               ]
+                                                             ) ;
+                                          rdf:type owl:Class
+                                        ] ;
+                    rdfs:subClassOf :Pizza_000000000 ;
+                    rdfs:label "PizzaWegetariańska"@pl .
+
+
+###  http://semantic.cs.put.poznan.pl/ontologie/pizza.owl#Pizza_000000029
+:Pizza_000000029 rdf:type owl:Class ;
+                    owl:equivalentClass [ owl:intersectionOf ( :Pizza_000000000
+                                                               [ rdf:type owl:Restriction ;
+                                                                 owl:onProperty :Pizza_000000023 ;
+                                                                 owl:someValuesFrom :Pizza_000000008
+                                                               ]
+                                                             ) ;
+                                          rdf:type owl:Class
+                                        ] ;
+                    rdfs:subClassOf :Pizza_000000000 ;
+                    rdfs:label "PizzaZMięsem"@pl .
+
+
+###  http://semantic.cs.put.poznan.pl/ontologie/pizza.owl#Pizza_000000030
+:Pizza_000000030 rdf:type owl:Class ;
+                    rdfs:subClassOf :Pizza_000000024 ,
+                                    [ rdf:type owl:Restriction ;
+                                      owl:onProperty :Pizza_000000023 ;
+                                      owl:someValuesFrom :Pizza_000000006
+                                    ] ,
+                                    [ rdf:type owl:Restriction ;
+                                      owl:onProperty :Pizza_000000023 ;
+                                      owl:someValuesFrom :Pizza_000000009
+                                    ] ,
+                                    [ rdf:type owl:Restriction ;
+                                      owl:onProperty :Pizza_000000023 ;
+                                      owl:someValuesFrom :Pizza_000000019
+                                    ] ;
+                    rdfs:label "Vesuvio"@pl .
+
+
+#################################################################
+#    General axioms
+#################################################################
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :Pizza_000000000
+                :Pizza_000000001
+                :Pizza_000000002
+              )
+] .
+
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :Pizza_000000005
+                :Pizza_000000008
+                :Pizza_000000012
+                :Pizza_000000018
+              )
+] .
+
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :Pizza_000000009
+                :Pizza_000000010
+                :Pizza_000000011
+              )
+] .
+
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :Pizza_000000013
+                :Pizza_000000014
+                :Pizza_000000017
+              )
+] .
+
+
+###  Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi

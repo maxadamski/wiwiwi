@@ -1,0 +1,360 @@
+@prefix : <http://przyklad.org/miejscowosci#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dbo: <http://dbpedia.org/ontology/> .
+@prefix dbr: <http://dbpedia.org/resource/> .
+@prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@base <http://przyklad.org/miejscowosci#> .
+
+<http://przyklad.org/miejscowosci#> rdf:type owl:Ontology .
+
+#################################################################
+#    Annotation properties
+#################################################################
+
+###  http://dbpedia.org/ontology/populationTotal
+<http://dbpedia.org/ontology/populationTotal> rdf:type owl:AnnotationProperty .
+
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://dbpedia.org/ontology/country
+<http://dbpedia.org/ontology/country> rdf:type owl:ObjectProperty .
+
+
+###  http://dbpedia.org/ontology/location
+<http://dbpedia.org/ontology/location> rdf:type owl:ObjectProperty .
+
+
+###  http://dbpedia.org/ontology/subdivision
+<http://dbpedia.org/ontology/subdivision> rdf:type owl:ObjectProperty .
+
+
+###  http://purl.obolibrary.org/obo/BFO_0000051
+<http://purl.obolibrary.org/obo/BFO_0000051> rdf:type owl:ObjectProperty ;
+                                             rdfs:label "ma część"@pl .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://przyklad.org/miejscowosci#miejsc_000000003
+:miejsc_000000003 rdf:type owl:DatatypeProperty ;
+                  rdfs:range xsd:int ;
+                  rdfs:label "liczbaLudności"@pl .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://dbpedia.org/ontology/ArchitecturalStructure
+<http://dbpedia.org/ontology/ArchitecturalStructure> rdf:type owl:Class .
+
+
+###  http://dbpedia.org/ontology/Building
+<http://dbpedia.org/ontology/Building> rdf:type owl:Class .
+
+
+###  http://dbpedia.org/ontology/HistoricPlace
+<http://dbpedia.org/ontology/HistoricPlace> rdf:type owl:Class .
+
+
+###  http://dbpedia.org/ontology/Infrastructure
+<http://dbpedia.org/ontology/Infrastructure> rdf:type owl:Class .
+
+
+###  http://dbpedia.org/ontology/Location
+<http://dbpedia.org/ontology/Location> rdf:type owl:Class .
+
+
+###  http://dbpedia.org/ontology/Museum
+<http://dbpedia.org/ontology/Museum> rdf:type owl:Class .
+
+
+###  http://dbpedia.org/ontology/Place
+<http://dbpedia.org/ontology/Place> rdf:type owl:Class .
+
+
+###  http://dbpedia.org/ontology/Road
+<http://dbpedia.org/ontology/Road> rdf:type owl:Class .
+
+
+###  http://dbpedia.org/ontology/RouteOfTransportation
+<http://dbpedia.org/ontology/RouteOfTransportation> rdf:type owl:Class .
+
+
+###  http://przyklad.org/miejscowosci#miejsc_000000000
+:miejsc_000000000 rdf:type owl:Class ;
+                  rdfs:label "Miejscowość"@pl .
+
+
+###  http://przyklad.org/miejscowosci#miejsc_000000004
+:miejsc_000000004 rdf:type owl:Class ;
+                  rdfs:label "Województwo"@pl .
+
+
+###  http://www.w3.org/2003/01/geo/wgs84_pos#SpatialThing
+<http://www.w3.org/2003/01/geo/wgs84_pos#SpatialThing> rdf:type owl:Class .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  http://dbpedia.org/resource/Arena_COS_Torwar
+<http://dbpedia.org/resource/Arena_COS_Torwar> rdf:type owl:NamedIndividual ;
+                                               <http://dbpedia.org/ontology/location> <http://dbpedia.org/resource/Śródmieście,_Warsaw> .
+
+
+###  http://dbpedia.org/resource/Białołęka
+<http://dbpedia.org/resource/Białołęka> rdf:type owl:NamedIndividual .
+
+
+###  http://dbpedia.org/resource/Chancellery_of_the_Prime_Minister_of_Poland
+<http://dbpedia.org/resource/Chancellery_of_the_Prime_Minister_of_Poland> rdf:type owl:NamedIndividual ;
+                                                                          <http://dbpedia.org/ontology/location> <http://dbpedia.org/resource/Śródmieście,_Warsaw> .
+
+
+###  http://dbpedia.org/resource/Copernicus_Science_Centre
+<http://dbpedia.org/resource/Copernicus_Science_Centre> rdf:type owl:NamedIndividual ,
+                                                                 <http://dbpedia.org/ontology/ArchitecturalStructure> ,
+                                                                 <http://dbpedia.org/ontology/Building> ,
+                                                                 <http://dbpedia.org/ontology/Location> ,
+                                                                 <http://dbpedia.org/ontology/Museum> ,
+                                                                 <http://dbpedia.org/ontology/Place> ,
+                                                                 <http://www.w3.org/2003/01/geo/wgs84_pos#SpatialThing> ;
+                                                        <http://dbpedia.org/ontology/location> <http://dbpedia.org/resource/Warsaw> .
+
+
+###  http://dbpedia.org/resource/Electio_Viritim_Monument
+<http://dbpedia.org/resource/Electio_Viritim_Monument> rdf:type owl:NamedIndividual ;
+                                                       <http://dbpedia.org/ontology/location> <http://dbpedia.org/resource/Wola> .
+
+
+###  http://dbpedia.org/resource/Konstanty_Zamoyski_Palace
+<http://dbpedia.org/resource/Konstanty_Zamoyski_Palace> rdf:type owl:NamedIndividual ,
+                                                                 <http://dbpedia.org/ontology/HistoricPlace> ,
+                                                                 <http://dbpedia.org/ontology/Location> ,
+                                                                 <http://dbpedia.org/ontology/Place> ,
+                                                                 owl:Thing ,
+                                                                 <http://www.w3.org/2003/01/geo/wgs84_pos#SpatialThing> ;
+                                                        <http://dbpedia.org/ontology/location> <http://dbpedia.org/resource/Warsaw> .
+
+
+###  http://dbpedia.org/resource/Kraków
+<http://dbpedia.org/resource/Kraków> rdf:type owl:NamedIndividual ;
+                                     <http://dbpedia.org/ontology/country> <http://dbpedia.org/resource/Poland> ;
+                                     <http://dbpedia.org/ontology/populationTotal> "779115"^^xsd:nonNegativeInteger .
+
+
+###  http://dbpedia.org/resource/Masovian_Voivodeship
+<http://dbpedia.org/resource/Masovian_Voivodeship> rdf:type owl:NamedIndividual .
+
+
+###  http://dbpedia.org/resource/Museum_of_John_Paul_II_and_Primate_Wyszyński
+<http://dbpedia.org/resource/Museum_of_John_Paul_II_and_Primate_Wyszyński> rdf:type owl:NamedIndividual ;
+                                                                           <http://dbpedia.org/ontology/location> <http://dbpedia.org/resource/Wilanów> .
+
+
+###  http://dbpedia.org/resource/Ochota
+<http://dbpedia.org/resource/Ochota> rdf:type owl:NamedIndividual .
+
+
+###  http://dbpedia.org/resource/Poland
+<http://dbpedia.org/resource/Poland> rdf:type owl:NamedIndividual .
+
+
+###  http://dbpedia.org/resource/Poznań
+<http://dbpedia.org/resource/Poznań> rdf:type owl:NamedIndividual ;
+                                     <http://dbpedia.org/ontology/country> <http://dbpedia.org/resource/Poland> ;
+                                     <http://dbpedia.org/ontology/populationTotal> "534813"^^xsd:nonNegativeInteger .
+
+
+###  http://dbpedia.org/resource/Praga_Południe
+<http://dbpedia.org/resource/Praga_Południe> rdf:type owl:NamedIndividual .
+
+
+###  http://dbpedia.org/resource/Uruski_Palace
+<http://dbpedia.org/resource/Uruski_Palace> rdf:type owl:NamedIndividual ,
+                                                     <http://dbpedia.org/ontology/HistoricPlace> ,
+                                                     <http://dbpedia.org/ontology/Location> ,
+                                                     <http://dbpedia.org/ontology/Place> ,
+                                                     <http://www.w3.org/2003/01/geo/wgs84_pos#SpatialThing> ;
+                                            <http://dbpedia.org/ontology/location> <http://dbpedia.org/resource/Warsaw> .
+
+
+###  http://dbpedia.org/resource/Warsaw
+<http://dbpedia.org/resource/Warsaw> rdf:type owl:NamedIndividual ;
+                                     <http://dbpedia.org/ontology/country> <http://dbpedia.org/resource/Poland> ;
+                                     <http://dbpedia.org/ontology/subdivision> <http://dbpedia.org/resource/Białołęka> ,
+                                                                               <http://dbpedia.org/resource/Masovian_Voivodeship> ,
+                                                                               <http://dbpedia.org/resource/Ochota> ,
+                                                                               <http://dbpedia.org/resource/Praga_Południe> ,
+                                                                               <http://dbpedia.org/resource/Wawer> ,
+                                                                               <http://dbpedia.org/resource/Wilanów> ,
+                                                                               <http://dbpedia.org/resource/Wola> ,
+                                                                               <http://dbpedia.org/resource/Włochy> ,
+                                                                               <http://dbpedia.org/resource/Śródmieście,_Warsaw> ;
+                                     <http://dbpedia.org/ontology/populationTotal> "1790658"^^xsd:nonNegativeInteger .
+
+
+###  http://dbpedia.org/resource/Warsaw_Chopin_Airport
+<http://dbpedia.org/resource/Warsaw_Chopin_Airport> rdf:type owl:NamedIndividual ;
+                                                    <http://dbpedia.org/ontology/location> <http://dbpedia.org/resource/Włochy> .
+
+
+###  http://dbpedia.org/resource/Warsaw_Icon_Museum
+<http://dbpedia.org/resource/Warsaw_Icon_Museum> rdf:type owl:NamedIndividual ;
+                                                 <http://dbpedia.org/ontology/location> <http://dbpedia.org/resource/Ochota> .
+
+
+###  http://dbpedia.org/resource/Warsaw_Uprising_Museum
+<http://dbpedia.org/resource/Warsaw_Uprising_Museum> rdf:type owl:NamedIndividual ;
+                                                     <http://dbpedia.org/ontology/location> <http://dbpedia.org/resource/Wola> .
+
+
+###  http://dbpedia.org/resource/Wawer
+<http://dbpedia.org/resource/Wawer> rdf:type owl:NamedIndividual .
+
+
+###  http://dbpedia.org/resource/Wilanów
+<http://dbpedia.org/resource/Wilanów> rdf:type owl:NamedIndividual .
+
+
+###  http://dbpedia.org/resource/Wola
+<http://dbpedia.org/resource/Wola> rdf:type owl:NamedIndividual .
+
+
+###  http://dbpedia.org/resource/Wrocław
+<http://dbpedia.org/resource/Wrocław> rdf:type owl:NamedIndividual ;
+                                      <http://dbpedia.org/ontology/country> <http://dbpedia.org/resource/Poland> ;
+                                      <http://dbpedia.org/ontology/populationTotal> "642869"^^xsd:nonNegativeInteger .
+
+
+###  http://dbpedia.org/resource/Włochy
+<http://dbpedia.org/resource/Włochy> rdf:type owl:NamedIndividual .
+
+
+###  http://dbpedia.org/resource/Żerań_Power_Station
+<http://dbpedia.org/resource/Żerań_Power_Station> rdf:type owl:NamedIndividual ;
+                                                  <http://dbpedia.org/ontology/location> <http://dbpedia.org/resource/Białołęka> .
+
+
+###  http://dbpedia.org/resource/Castle_Square,_Warsaw
+<http://dbpedia.org/resource/Castle_Square,_Warsaw> rdf:type owl:NamedIndividual ;
+                                                    <http://dbpedia.org/ontology/location> <http://dbpedia.org/resource/Śródmieście,_Warsaw> .
+
+
+###  http://dbpedia.org/resource/Grochowska_Street,_Warsaw
+<http://dbpedia.org/resource/Grochowska_Street,_Warsaw> rdf:type owl:NamedIndividual ,
+                                                                 <http://dbpedia.org/ontology/ArchitecturalStructure> ,
+                                                                 <http://dbpedia.org/ontology/Infrastructure> ,
+                                                                 <http://dbpedia.org/ontology/Location> ,
+                                                                 <http://dbpedia.org/ontology/Place> ,
+                                                                 <http://dbpedia.org/ontology/Road> ,
+                                                                 <http://dbpedia.org/ontology/RouteOfTransportation> ,
+                                                                 <http://www.w3.org/2003/01/geo/wgs84_pos#SpatialThing> ;
+                                                        <http://dbpedia.org/ontology/location> <http://dbpedia.org/resource/Praga_Południe> ,
+                                                                                               <http://dbpedia.org/resource/Warsaw> .
+
+
+###  http://dbpedia.org/resource/Holy_Trinity_Church,_Warsaw
+<http://dbpedia.org/resource/Holy_Trinity_Church,_Warsaw> rdf:type owl:NamedIndividual ,
+                                                                   <http://dbpedia.org/ontology/ArchitecturalStructure> ,
+                                                                   <http://dbpedia.org/ontology/Building> ,
+                                                                   <http://dbpedia.org/ontology/Location> ,
+                                                                   <http://dbpedia.org/ontology/Place> ,
+                                                                   <http://www.w3.org/2003/01/geo/wgs84_pos#SpatialThing> ;
+                                                          <http://dbpedia.org/ontology/location> <http://dbpedia.org/resource/Warsaw> .
+
+
+###  http://dbpedia.org/resource/Korkowa_Street,_Warsaw
+<http://dbpedia.org/resource/Korkowa_Street,_Warsaw> rdf:type owl:NamedIndividual ;
+                                                     <http://dbpedia.org/ontology/location> <http://dbpedia.org/resource/Wawer> .
+
+
+###  http://dbpedia.org/resource/Miodowa_Street_(Warsaw)
+<http://dbpedia.org/resource/Miodowa_Street_(Warsaw)> rdf:type owl:NamedIndividual ,
+                                                               <http://dbpedia.org/ontology/ArchitecturalStructure> ,
+                                                               <http://dbpedia.org/ontology/Infrastructure> ,
+                                                               <http://dbpedia.org/ontology/Location> ,
+                                                               <http://dbpedia.org/ontology/Place> ,
+                                                               <http://dbpedia.org/ontology/Road> ,
+                                                               <http://dbpedia.org/ontology/RouteOfTransportation> ,
+                                                               <http://www.w3.org/2003/01/geo/wgs84_pos#SpatialThing> ;
+                                                      <http://dbpedia.org/ontology/location> <http://dbpedia.org/resource/Warsaw> .
+
+
+###  http://dbpedia.org/resource/Tricity,_Poland
+<http://dbpedia.org/resource/Tricity,_Poland> rdf:type owl:NamedIndividual ;
+                                              <http://dbpedia.org/ontology/country> <http://dbpedia.org/resource/Poland> ;
+                                              <http://dbpedia.org/ontology/populationTotal> "748986"^^xsd:nonNegativeInteger .
+
+
+###  http://dbpedia.org/resource/Śródmieście,_Warsaw
+<http://dbpedia.org/resource/Śródmieście,_Warsaw> rdf:type owl:NamedIndividual .
+
+
+###  http://przyklad.org/miejscowosci#miejsc_000000001
+:miejsc_000000001 rdf:type owl:NamedIndividual ,
+                           :miejsc_000000000 ;
+                  :miejsc_000000003 "533830"^^xsd:int ;
+                  rdfs:label "Poznań"@pl .
+
+
+###  http://przyklad.org/miejscowosci#miejsc_000000002
+:miejsc_000000002 rdf:type owl:NamedIndividual ,
+                           :miejsc_000000000 ;
+                  :miejsc_000000003 "1790658"^^xsd:int ;
+                  rdfs:label "Warszawa"@pl .
+
+
+###  http://przyklad.org/miejscowosci#miejsc_000000005
+:miejsc_000000005 rdf:type owl:NamedIndividual ,
+                           :miejsc_000000004 ;
+                  <http://purl.obolibrary.org/obo/BFO_0000051> :miejsc_000000001 ;
+                  rdfs:label "Województwo Wielkopolskie"@pl .
+
+
+###  http://przyklad.org/miejscowosci#miejsc_000000006
+:miejsc_000000006 rdf:type owl:NamedIndividual ,
+                           :miejsc_000000004 ;
+                  <http://purl.obolibrary.org/obo/BFO_0000051> :miejsc_000000002 ;
+                  rdfs:label "Województwo Mazowieckie"@pl .
+
+dbr:Malbork dbo:populationTotal	"38723"^^xsd:nonNegativeInteger ;
+	dbo:country	dbr:Poland .
+dbr:Uchylsko	dbo:areaTotal	2520000.0 ;
+	dbo:populationTotal	"338"^^xsd:nonNegativeInteger ;
+	dbo:country	dbr:Poland .
+dbr:Gliwice	dbo:areaTotal	133880000.0 ;
+	dbo:populationTotal	"178603"^^xsd:nonNegativeInteger ;
+	dbo:country	dbr:Poland .
+dbr:Ogrodzieniec	dbo:populationTotal	"4282"^^xsd:nonNegativeInteger ;
+	dbo:country	dbr:Poland .
+
+<http://dbpedia.org/resource/Krak\u00F3w>	dbo:areaTotal	326800000.0 ;
+	dbo:populationTotal	"779115"^^xsd:nonNegativeInteger ;
+	dbo:country	dbr:Poland .
+<http://dbpedia.org/resource/Tricity,_Poland>	dbo:areaTotal	414810000.0 ;
+	dbo:populationTotal	"748986"^^xsd:nonNegativeInteger ;
+	dbo:country	dbr:Poland .
+<http://dbpedia.org/resource/Pozna\u0144>	dbo:areaTotal	261850000.0 ;
+	dbo:populationTotal	"534813"^^xsd:nonNegativeInteger ;
+	dbo:country	dbr:Poland .
+dbr:Warsaw	dbo:areaTotal	517240000.0 ;
+	dbo:populationTotal	"1790658"^^xsd:nonNegativeInteger ;
+	dbo:country	dbr:Poland .
+<http://dbpedia.org/resource/Wroc\u0142aw>	dbo:areaTotal	292920000.0 ;
+	dbo:populationTotal	"642869"^^xsd:nonNegativeInteger ;
+	dbo:country	dbr:Poland .
+
+
+###  Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi

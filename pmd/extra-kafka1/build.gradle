@@ -1,0 +1,30 @@
+apply plugin: 'java'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(10)
+    }
+}
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Test Kafka Producer',
+           'Implementation-Version': '1.0',
+           'Main-Class': 'com.example.TestProducer'
+    }
+    baseName = 'TestProducer'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.apache.kafka:kafka-clients:2.1.1'
+    compile 'com.opencsv:opencsv:5.4'
+    compile 'org.slf4j:slf4j-api:1.7.30'
+    compile 'org.slf4j:slf4j-simple:1.7.30'
+}
+

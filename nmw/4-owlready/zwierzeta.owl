@@ -1,0 +1,238 @@
+<?xml version="1.0"?>
+<Ontology xmlns="http://www.w3.org/2002/07/owl#"
+     xml:base="http://www.semanticweb.org/ontologies/zwierzeta"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     ontologyIRI="http://www.semanticweb.org/ontologies/zwierzeta">
+    <Prefix name="" IRI="http://www.semanticweb.org/ontologies/zwierzeta"/>
+    <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
+    <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+    <Prefix name="xml" IRI="http://www.w3.org/XML/1998/namespace"/>
+    <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
+    <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
+    <Annotation>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <Literal>Ontologia opisująca zwierzęta domowe.</Literal>
+    </Annotation>
+    <Declaration>
+        <Class IRI="#Charakterystyka"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Chomik"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Hodowla"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Kot"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Królik"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MałeZwierzę"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Owłosienie"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Pies"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Pochodzenie"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Pokarm"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PokarmRoślinny"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PokarmZwierzęcy"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Ptak"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Rybka"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Schronisko"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Waga"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Wszystkożerca"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ZwierzęDomowe"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ŚwinkaMorska"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#je"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#ma_charakterystykę"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#ma_część"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#ma_funkcję"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#pochodzi_z"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#ma_wartość"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#Figaro"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#Kajtek"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#wagaFigaro"/>
+    </Declaration>
+    <EquivalentClasses>
+        <Class IRI="#Wszystkożerca"/>
+        <ObjectIntersectionOf>
+            <ObjectSomeValuesFrom>
+                <ObjectProperty IRI="#je"/>
+                <Class IRI="#PokarmRoślinny"/>
+            </ObjectSomeValuesFrom>
+            <ObjectSomeValuesFrom>
+                <ObjectProperty IRI="#je"/>
+                <Class IRI="#PokarmZwierzęcy"/>
+            </ObjectSomeValuesFrom>
+        </ObjectIntersectionOf>
+    </EquivalentClasses>
+    <SubClassOf>
+        <Class IRI="#Chomik"/>
+        <Class IRI="#MałeZwierzę"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Hodowla"/>
+        <Class IRI="#Pochodzenie"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Kot"/>
+        <Class IRI="#ZwierzęDomowe"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Królik"/>
+        <Class IRI="#MałeZwierzę"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MałeZwierzę"/>
+        <Class IRI="#ZwierzęDomowe"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Owłosienie"/>
+        <Class IRI="#Charakterystyka"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Pies"/>
+        <Class IRI="#ZwierzęDomowe"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PokarmRoślinny"/>
+        <Class IRI="#Pokarm"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PokarmZwierzęcy"/>
+        <Class IRI="#Pokarm"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Ptak"/>
+        <Class IRI="#ZwierzęDomowe"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Rybka"/>
+        <Class IRI="#ZwierzęDomowe"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Schronisko"/>
+        <Class IRI="#Pochodzenie"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Waga"/>
+        <Class IRI="#Charakterystyka"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ŚwinkaMorska"/>
+        <Class IRI="#MałeZwierzę"/>
+    </SubClassOf>
+    <DisjointClasses>
+        <Class IRI="#Chomik"/>
+        <Class IRI="#Królik"/>
+        <Class IRI="#ŚwinkaMorska"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="#Hodowla"/>
+        <Class IRI="#Schronisko"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="#Kot"/>
+        <Class IRI="#MałeZwierzę"/>
+        <Class IRI="#Pies"/>
+        <Class IRI="#Ptak"/>
+        <Class IRI="#Rybka"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="#Pochodzenie"/>
+        <Class IRI="#ZwierzęDomowe"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="#PokarmRoślinny"/>
+        <Class IRI="#PokarmZwierzęcy"/>
+    </DisjointClasses>
+    <ClassAssertion>
+        <Class IRI="#Kot"/>
+        <NamedIndividual IRI="#Figaro"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Kot"/>
+        <NamedIndividual IRI="#Kajtek"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Waga"/>
+        <NamedIndividual IRI="#wagaFigaro"/>
+    </ClassAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#ma_charakterystykę"/>
+        <NamedIndividual IRI="#Figaro"/>
+        <NamedIndividual IRI="#wagaFigaro"/>
+    </ObjectPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#ma_wartość"/>
+        <NamedIndividual IRI="#wagaFigaro"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#integer">5</Literal>
+    </DataPropertyAssertion>
+    <SubObjectPropertyOf>
+        <ObjectProperty IRI="#je"/>
+        <ObjectProperty abbreviatedIRI="owl:topObjectProperty"/>
+    </SubObjectPropertyOf>
+    <SubObjectPropertyOf>
+        <ObjectProperty IRI="#ma_część"/>
+        <ObjectProperty abbreviatedIRI="owl:topObjectProperty"/>
+    </SubObjectPropertyOf>
+    <TransitiveObjectProperty>
+        <ObjectProperty IRI="#ma_część"/>
+    </TransitiveObjectProperty>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#pochodzi_z"/>
+        <Class IRI="#Pochodzenie"/>
+    </ObjectPropertyRange>
+</Ontology>
+
+
+
+<!-- Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi -->
+

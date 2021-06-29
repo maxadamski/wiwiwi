@@ -28,6 +28,7 @@ public class TestProducer {
     static int ts_col = 0;
     static float speedup = 1;
     static int skip = 1;
+    static int delay = 0;
     static Mode mode = Mode.NONE;
 
     static void printUsage(int exit_code) {
@@ -63,6 +64,7 @@ public class TestProducer {
                 case "--topic": topic = args[++i]; break;
                 case "--skip": skip = Integer.parseInt(args[++i]); break;
                 case "--speedup": speedup = Float.parseFloat(args[++i]); break;
+                case "--delay": delay = Integer.parseInt(args[++i]); break;
                 case "--ts_col": ts_col = Integer.parseInt(args[++i]); break;
                 case "--ts_format": ts_format = args[++i]; break;
                 case "--mode":
@@ -156,7 +158,7 @@ public class TestProducer {
                         Date sendDate = maybeParseDate(row[ts_col], dateFormat);
                         if (sendDate == null) continue;
                         var text = String.join(",", row);
-                        var timeUntil = firstSend + (long) ((sendDate.getTime() - firstSend) / speedup) - System.currentTimeMillis();
+                        var timeUntil = firstSend + (long) ((sendDate.getTime() - firstSend) / speedup) - System.currentTimeMillis() + delay;
                         if (timeUntil > 0 && !firstMessage) {
                             TimeUnit.MILLISECONDS.sleep(timeUntil);
                         }

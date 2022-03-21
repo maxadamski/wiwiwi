@@ -1,0 +1,4 @@
+Przyporządkowanie liter do tematów:
+A - /calib/basler_left/image_raw
+B - /calib/realsense/image_raw
+C - /calib/basler_right/image_raw

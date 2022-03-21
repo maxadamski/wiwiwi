@@ -1,0 +1,43 @@
+# kalibr_calibrate_cameras --target april_6x6_50x50cm.yaml --bag calib_basler_realsense_2019-10-14-13-55-55.bag --models pinhole-radtan pinhole-radtan omni-radtan --topics /calib/basler_left/image_raw /calib/basler_right/image_raw /calib/realsense/image_raw
+
+Calibration results 
+====================
+Camera-system parameters:
+	cam0 (/calib/basler_left/image_raw):
+	type: <class 'aslam_cv.libaslam_cv_python.DistortedPinholeCameraGeometry'>
+	distortion: [-0.24504371  0.0941023  -0.00158847 -0.00017711] +- [ 0.00123047  0.00220983  0.00010403  0.00009676]
+	projection: [ 582.69658432  581.64586506  367.74985729  287.40306586] +- [ 0.27084696  0.27447198  0.25005099  0.37845292]
+	reprojection error: [0.000189, 0.001033] +- [0.449400, 0.446622]
+
+	cam1 (/calib/basler_right/image_raw):
+	type: <class 'aslam_cv.libaslam_cv_python.DistortedPinholeCameraGeometry'>
+	distortion: [-0.23273233  0.08301439 -0.00027885 -0.00031443] +- [ 0.00183396  0.00199157  0.00010889  0.00029128]
+	projection: [ 586.15792976  586.17657909  385.52021179  277.0657958 ] +- [ 0.15710711  0.14776855  0.09115749  0.24881422]
+	reprojection error: [-0.000033, 0.000500] +- [0.411681, 0.472280]
+
+	cam2 (/calib/realsense/image_raw):
+	type: <class 'aslam_cv.libaslam_cv_python.DistortedOmniCameraGeometry'>
+	distortion: [-0.12206357  0.42523252  0.00180908 -0.00249704] +- [ 0.01194412  0.07799553  0.00053174  0.00052482]
+	projection: [   1.72339605  763.99632241  764.84892242  416.85401362  395.93979833] +- [ 0.00294351  0.10609037  0.10599852  0.42145936  0.30611533]
+	reprojection error: [0.000044, 0.000386] +- [0.740934, 0.430060]
+
+	baseline T_1_0:
+	q: [ 0.00217169  0.00564278  0.0132967   0.99989331] +- [ 0.00100743  0.00065096  0.00010607]
+	t: [-0.32335726  0.00632472  0.001257
+07] +- [ 0.00023413  0.00020114  0.0005902 ]
+
+	baseline T_2_1:
+	q: [ 0.002251   -0.01479726 -0.00230266  0.99988533] +- [ 0.00120412  0.00145892  0.00016306]
+	t: [ 0.20394573  0.1251344  -0.08284888] +- [ 0.00031187  0.00028326  0.00084954]
+
+
+
+Target configuration
+====================
+
+  Type: aprilgrid
+  Tags: 
+    Rows: 6
+    Cols: 6
+    Size: 0.055 [m]
+    Spacing 0.0165 [m]

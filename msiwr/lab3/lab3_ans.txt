@@ -1,0 +1,6 @@
+1. Flaga --clock sprawia, że czas zegara jest publikowany
+2. W pliku jest 10376 skanów laserowych
+3. Temat z informacjami o położeniu na podstawie danych laserowych to /slam_out_pose
+4. Częstotliwość /poseupdate to około 9.3Hz
+5. Serwis /pause_mapping zatrzymuje, a serwis /restart_mapping_with_new_pose uruchamia mapowanie
+6. Wartość parametru map_size jest równa 2048

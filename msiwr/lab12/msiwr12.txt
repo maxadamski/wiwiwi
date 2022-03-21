@@ -1,0 +1,11 @@
+1. /scan
+2. odom; base_link
+3. Jeśli ustawiony na true, sprawia, że costmap przedstawia aktualne lokalne otoczenie robota
+4. Wielkość: 6m x 6m; Rozdzielczość: 0.025m/cell
+5. Raytracing służy do usuwania informacji o przeszkodzie (clear)
+6. Inflation radius definiuje na jaką odległość wokół przeszkód ma być propagowany koszt w mapie
+7. Footprint określa wymiary robota
+8. Wielkość: 6m x 6m; Rozdzielczość: 0.1m/cell
+9. Na podstawie odległości Mahalonobisa, nowe dane z sensorów są łączone z aktualną informacją o wysokości w danej komórce.
+10. Mapa 2.5D nie reprezentuje informacji o wielu przeszkodach na różnych wysokościach. Jest to mapa elewacji, więc w miejscu stołu na mapie będzie przeszkoda o wysokości tego stołu.
+11. Mapa 2.5D nie jest najlepsza do drona, bo nie uwzględnia informacji o lukach w przeszkodach na różnych wysokościach. Chociaż jeśli dron tylko lata nad przeszkodami i nie wykonujemy skomplikowanych manewrów to można taką mapę w ostateczności zastosować.

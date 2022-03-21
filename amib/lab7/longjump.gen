@@ -1,0 +1,196 @@
+# created Fri Feb  4 21:25:48 2022
+# by Framsticks 5.0rc19
+org:
+name:f0 best
+genotype:~
+//0
+p:1.4305365874778992, -0.9174805248694599, -0.19633855348575896, fr=0.994, ing=0.167
+p:1.5267111705145773, -0.8841341031366948, -0.21311717531451713, fr=2.655, ing=0.227
+p:1.4864686521202404, -0.7292563860590214, 0.00969947864569387, fr=0.206, ing=0.09
+p:1.411, -0.893, -0.077, fr=0.681, ing=0.237
+p:0.7602757376079229, 0.6466881611634637, -1.2467321724522937, fr=0.054, ing=0.527
+j:4, 1, rotstif=0.739
+j:0, 4, stif=0.994, rotstif=0.827
+j:2, 0, stif=0.994, rotstif=0.897
+j:3, 0, stif=0.999, rotstif=0.59
+j:4, 2, stif=0.976, rotstif=0.834
+n:j=0, d=|:p=0.403
+n:d=*
+n:j=0, d=@:p=0.97
+n:j=3, d=G
+n:j=2, d=@:p=0.997
+n:j=2, d="|:p=0.024, r=0.787"
+n:d=*
+n:d=*
+n:j=0, d=G
+n:d=*
+n:p=2, d=T
+n:d=*
+n:j=2, d=G
+n:
+c:0, 1, 7.788
+c:2, 1, 0.935
+c:4, 3, 13.273
+c:5, 3, 0.044
+c:13, 13
+c:13, 10
+c:13, 7
+~
+info_timestamp:1644006170.7757401
+info_author:
+info_author_ispublic:1
+info_email:
+info_email_ispublic:0
+info:(manually created)
+info_origin:0
+info_how_created:
+info_performance:
+energy0:1.0
+numparts:5
+numjoints:5
+numneurons:14
+numconnections:7
+num:9
+gnum:0
+instances:0
+lifespan:0.0
+velocity:0.0
+distance:0.0
+vertvel:0.0
+vertpos:0.0
+data:@Serialized:{}
+user1:@Serialized:null
+user2:@Serialized:null
+user3:@Serialized:null
+is_valid:1
+uid:g13
+
+org:
+name:f0 best 2
+genotype:~
+//0
+p:-0.5732019305662814, 0.35046553755418364, 0.3601797354177045, fr=0.562, ing=0.141
+p:0.964, -0.426, -0.299, fr=0.156, ing=0.162
+p:1.2265658582899113, -0.4950706707653818, 0.14780161362484348, fr=0.507, ing=0.374
+p:0.649, -0.574, 0.987, fr=0.081, ing=0.483
+p:1.0779438593505741, -0.625436604111004, -0.20597627694385573, fr=0.222, ing=0.253
+p:1.110649249868421, -0.6646034879904754, 0.047427230119795716, fr=0.831, ing=0.032
+p:1.241, -0.342, -0.524, fr=0.537, ing=0.153
+j:0, 2, rotstif=0.782
+j:3, 0, stif=0.888, rotstif=0.937
+j:4, 0, stif=0.952, rotstif=0.582
+j:5, 4, stif=0.919, rotstif=0.886
+j:1, 4, stif=0.931, rotstif=0.989
+j:1, 0, stif=0.934, rotstif=0.963
+j:6, 4, stif=0.906, rotstif=0.924
+n:j=0, d="|:p=0.346, r=0.976"
+n:p=0, d=Gpart:ry=-2.87
+n:p=2, d="Gpart:ry=2.659, rz=0.222"
+n:p=4, d="Gpart:ry=2.541, rz=-0.806"
+n:p=1, d="Gpart:ry=0.342, rz=-0.836"
+n:p=6, d="T:r=0.972, rz=-0.467"
+n:p=5, d=S
+n:d=N:fo=0.378
+n:p=1, d=T:r=0.996
+n:d=*
+n:d=N:fo=0.378
+c:0, 1, 2.341
+c:10, 8, 4.817
+~
+info_timestamp:1644006214.241986
+info_author:
+info_author_ispublic:1
+info_email:
+info_email_ispublic:0
+info:(manually created)
+info_origin:0
+info_how_created:
+info_performance:
+energy0:1.0
+numparts:7
+numjoints:7
+numneurons:11
+numconnections:2
+num:10
+gnum:0
+instances:0
+lifespan:0.0
+velocity:0.0
+distance:0.0
+vertvel:0.0
+vertpos:0.0
+data:@Serialized:{}
+user1:@Serialized:null
+user2:@Serialized:null
+user3:@Serialized:null
+is_valid:1
+uid:g16
+
+org:
+name:f1 best
+genotype:~
+LLrrFFiX[*][G][|, 3:-0.457, p:0.224, r:1, r:1, r:1]LfiiWWX[G][S][N, -1:1,7:1][*][|, 8:2.441, r:0.823, r:0.959]LLQFMX[S][S][Gpart, rz:0][N, 3:0.024, 0:1, fo:0.193, s:0, in:0, -2:0.77, -2:1, -3:1, fo:0.04, -11:1]LLLRRRRqfX[T][S][G][N, -14:1][|, -1:5.367, r:0.942]
+~
+info_timestamp:1644006248.1068933
+info_author:
+info_author_ispublic:1
+info_email:
+info_email_ispublic:0
+info:(manually created)
+info_origin:0
+info_how_created:
+info_performance:
+energy0:1.0
+numparts:5
+numjoints:4
+numneurons:17
+numconnections:12
+num:11
+gnum:0
+instances:0
+lifespan:0.0
+velocity:0.0
+distance:0.0
+vertvel:0.0
+vertpos:0.0
+data:@Serialized:{}
+user1:@Serialized:null
+user2:@Serialized:null
+user3:@Serialized:null
+is_valid:1
+uid:g18
+
+org:
+name:f1 best 2
+genotype:~
+wX[@]MI(rCQQFFM(CQIX[G][|, p:0.321, -1:3.863, r:0.884]), LLrmW(, LQWX[*][G][G]LCIWX[G][N, -2:-0.767, s:0.384, fo:1, in:0, si:0.277, -2:1, -1:1, -3:1, -3:1.822, -1:1][|, -3:-6.876, p:0.436, r:1,r:1]), )
+~
+info_timestamp:1644006264.6557689
+info_author:
+info_author_ispublic:1
+info_email:
+info_email_ispublic:0
+info:(manually created)
+info_origin:0
+info_how_created:
+info_performance:
+energy0:1.0
+numparts:5
+numjoints:4
+numneurons:9
+numconnections:8
+num:12
+gnum:0
+instances:0
+lifespan:0.0
+velocity:0.0
+distance:0.0
+vertvel:0.0
+vertpos:0.0
+data:@Serialized:{}
+user1:@Serialized:null
+user2:@Serialized:null
+user3:@Serialized:null
+is_valid:1
+uid:g19
+

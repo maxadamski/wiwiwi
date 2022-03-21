@@ -1,0 +1,1 @@
+Counter({'tvmonitor': 104, 'laptop': 85, 'cup': 66, 'keyboard': 62, 'mouse': 57, 'sink': 39, 'book': 27, 'chair': 26, 'oven': 25, 'microwave': 20, 'diningtable': 19, 'cell phone': 10, 'bottle': 10, 'remote': 7, 'refrigerator': 5})

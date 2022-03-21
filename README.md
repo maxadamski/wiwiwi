@@ -14,6 +14,8 @@ Lata: 2017-2022
 
 ## Zasoby
 
+- Bonus
+	- Jak połączyć się z eduroamem w Linuxie bez NetworkManagera ani innego okropnego GUI :)
 - Semestr 1
 	- PPP: podstawy programowania python
 		- projekt: codingame
@@ -106,11 +108,53 @@ Lata: 2017-2022
 		- sprawozdania
 - Semestr 8
 	- SU: systemy uczące się
+		- rozwiązane laby
 	- ISWD: inteligentne systemy wspomagania decyzji
 	- WK: widzenie komputerowe
+		- rozwiązane notebooki z labów
+		- projekt: bilard
 	- ZMIO: zaawansowane metody inteligencji obliczeniowej
+		- rozwiązane projekty z labów
 	- PMD: przetwarzanie masywnych danych
+		- projekt: proste API z bązą danych Cassandra
+		- projekt: Spark + crimes dataset
+		- bonusowe zadanie z Kafki
 	- IMO: inteligentne metody optymalizacji
+		- rozwiązania zadań na laby (TSP z dwoma cyklami)
 	- NMW: narzędzia modelowania wiedzy
+		- rozwiązane notebooki z labów
+		- projekt: reprezentacja polskiej słowosieci w RDF
+		- plakat na podstawie artykułu ([COMET](https://arxiv.org/abs/1906.05317))
 	- IC: interpersonal communication
+- Semestr 9
+	- UG: uczenie głębokie
+		- projekt: klasyfikacja online preferencji osób adoptujących pieski
+	- ZPJN: zaawansowane przetwarzanie języka naturalnego
+		- rozwiązane notebooki z labów
+	- MSIwR: metody sztucznej inteligencji w robotyce
+		- odpowiedzi do zadań z labów
+		- prezentacja i krótkie streszczenie artykułów o integracji danych z wielu sensorów
+	- AMIB: algorytmy i modele inspirowane biologicznie
+		- rozwiązane zadania z labów
+	- TDS: technologie dobra społecznego
+		- projekt: psinder
+	- MPB: metoda projektów badawczych
+		- dwie prace pisemne
+	- ST&W: scientific and technical writing
+		- prace pisemne i prezentacja
+	- WDK: wprowadzenie do kognitywistyki
+- Semestr 10
+	- TUM: teoria uczenia maszynowego
+		- notatki
+	- SIwB: sztuczna inteligencja w informatyce biomedycznej (SIwIB?)
+		- grupowe projekty mniej więcej co dwa tygodnie
+	- CYB: cyberbezpieczeństwo
+		- zadanka na laboratoriach
+		- prowadzący przesyła pytania zaliczeniowe z wykładu
+		- cyber >>>>>> si w grach - trust me :)
+	- IP: internet przedmiotów
+		- zadanka na laboratoriach
+		- ip > wdw
+	- SEM: seminarium dyplomowe
+		- dwie prezentacje
 

@@ -1,0 +1,5 @@
+1. Prawdopodobieństwo zajętości sześcianu (wart. probabilityczna)
+2. Tak
+3. Wg autorów, implementacja może być prosto rozszerzona do maksymalnej głębokości drzewa 32 (wielkość mapy = 2^32*1cm na wymiar). Zmniejszenie rozdzielczości zwiększa pokrycie.
+4. Użyty planer: RTT Sharp; Lista dostępnych planerów: http://ompl.kavrakilab.org/namespaceompl_1_1geometric.html
+5. getPathLengthObjective; Alternatywa: MaximizeMinClearanceObjective

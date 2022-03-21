@@ -1,0 +1,6 @@
+sim_params:
+Energy0:1000
+
+Population:
+perfperiod:1
+

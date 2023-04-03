@@ -1,3 +1,5 @@
+_private/
+**/_private/
 jezyk_angielski/notatki/exercises_test_2.pdf
 .ipynb_checkpoints/
 semestr_2/aisd/*/build

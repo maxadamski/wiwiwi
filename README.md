@@ -1,21 +1,15 @@
-__WARNING:__ Boring school stuff ahead!
-
 # WIWIWI
 
-Stworzone w ramach zajęć.
+Projekty, zadania, notatki i inne rzeczy z zajęć.
 
-Politechnika Poznańska, wydział Informatyki i Telekomunikacji (dawniej: Informatyki)
-
-Kierunek: Informatyka
-
-Specjalność: Sztuczna Inteligencja
-
-Lata: 2017-2022
+```
+Politechnika Poznańska, wydział Informatyki i Telekomunikacji (dawniej Informatyki)
+  -> Informatyka (2017-2021)
+  -> Sztuczna Inteligencja (2021-2022)
+```
 
 ## Zasoby
 
-- Bonus
-	- Jak połączyć się z eduroamem w Linuxie bez NetworkManagera ani innego okropnego GUI :)
 - Semestr 1
 	- PPP: podstawy programowania python
 		- projekt: codingame
@@ -150,8 +144,7 @@ Lata: 2017-2022
 		- grupowe projekty mniej więcej co dwa tygodnie
 	- CYB: cyberbezpieczeństwo
 		- zadanka na laboratoriach
-		- prowadzący przesyła pytania zaliczeniowe z wykładu
-		- cyber >>>>>> si w grach - trust me :)
+		- cyber > si w grach :)
 	- IP: internet przedmiotów
 		- zadanka na laboratoriach
 		- ip > wdw

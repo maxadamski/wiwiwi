@@ -23,125 +23,6 @@ enum Method {
     GREEDY, ACO, MCTS
 };
 
-
-Graph::Graph(Jobs &jobs) {
-    // Tasks A and B are consecutive tasks A-->B
-    // A i B are being processed on the same machine A<-->B
-
-    const int JOB_LENGTH = (int) jobs.time[0].size(); //assert time[i].size() == mach[i].size()
-    auto task_graph_index = [JOB_LENGTH](Task const &t) { return t.job * JOB_LENGTH + t.ord + 1; };
-
-    vector<vector<Task>> tasked_jobs;
-
-    for (int i = 0; i < JOB_LENGTH; ++i) {
-        vector<Task> tasked_job;
-        for (int j = 0; j < JOB_LENGTH; ++j)
-            tasked_job.push_back(Task{i, j, jobs.time[i][j], jobs.mach[i][j]}); //int job, ord, time, mach;
-
-        tasked_jobs.push_back(tasked_job);
-    }
-
-    const int ENDING_TASK_INDEX = int(jobs.time.size() * JOB_LENGTH + 1); // +1 because task number 0 is "fake"(begin_task)
-
-//    Task begin_task, ending_task;
-
-
-    // Przyjmijmy takie wartości dla pierwszego i ostatniego
-    Task begin_task = Task{-1, -1, -1, -1};
-    Task ending_task = Task{-2, -2, -2, -2};
-
-    //Odkomentować gdyby był problem z wartościami tych dwóch tasków
-
-
-    // Process same job tasks edges
-    for (int i = 0; i < JOB_LENGTH; ++i) {
-        for (int j = 0; j < JOB_LENGTH; ++j) {
-
-            Task *task_p = &tasked_jobs[i][j];
-            const int TASK_INDEX = task_graph_index(*task_p);
-
-            if (j == 0) { // Process first task of every job
-                task_p->prev.push_back(0);
-                task_p->next.push_back(TASK_INDEX + 1);
-                begin_task.next.push_back(TASK_INDEX);
-
-                continue;
-            }
-
-            if (j == JOB_LENGTH - 1) {// Process last task of every job
-                task_p->next.push_back(ENDING_TASK_INDEX);
-                task_p->prev.push_back(TASK_INDEX - 1);
-                ending_task.prev.push_back(TASK_INDEX);
-
-                continue;
-            }
-
-            //process other tasks
-            task_p->next.push_back(TASK_INDEX + 1);
-            task_p->prev.push_back(TASK_INDEX - 1);
-        }
-    }
-
-    //Process machines
-    map<int, vector<Task *>> machine_map;
-
-    for (auto &job: tasked_jobs)
-        for (auto &task: job)
-            machine_map[task.mach].push_back(&task);
-
-
-
-    // For graph with cycles
-    /*for (auto const&[_, vec] : machine_map)
-        for (auto &t1: vec)
-            for (auto &t2: vec)
-                if (t1 != t2) {
-                    t1->next.push_back(task_graph_index(*t2));
-                    t2->prev.push_back(task_graph_index(*t1));
-                }
-     */
-
-    for (auto const&[mach, vec] : machine_map)
-        for (int i = 0; i < vec.size() -1; i++)
-            for (int j = i + 1; j < vec.size()  ; ++j) {
-                if (vec[i]->ord <= vec[j]->ord) {
-                    vec[i]->next.push_back(task_graph_index(*vec[j]));
-                    vec[j]->prev.push_back(task_graph_index(*vec[i]));
-                }
-            }
-
-
-    //Append all to graph
-    tasks.push_back(begin_task);
-    for (auto const &job: tasked_jobs)
-        for (auto const task: job)
-            tasks.push_back(task);
-
-    tasks.push_back(ending_task);
-
-    // Added later
-    last_index = ENDING_TASK_INDEX;
-
-    print_graph(); //For debug
-
-}
-
-void Graph::print_graph() {
-    for (int i = 0; i < tasks.size(); ++i) {
-        //Print next
-        cout << i << ":" << endl << " Next: ";
-        for (auto &next_neighbour: tasks[i].next)
-            cout << next_neighbour << ", ";
-        cout << endl;
-
-        //Print prev
-        cout << " Previous: ";
-        for (auto &prev_neighbour: tasks[i].prev)
-            cout << prev_neighbour << ", ";
-        cout << endl;
-    }
-}
-
 void parse_beasley(ifstream &input, Jobs &jobs) {
     int J, M;
     input >> J >> M;
@@ -326,15 +207,15 @@ int main(int argc, char **argv) {
             cerr << "-- debug schedule\n";
             cerr << visual(jobs, ans) << "\n\n";
         }
-		//For graph testing
-		if (graph_display) {
-			t0 = time_now();
-			Graph graph = Graph(jobs);
-			t1 = time_now();
-			cerr << "constructing graph took: " << time_diff(t0, t1) << endl;
-			cerr << "-- printing graph" << endl << endl;
-			graph.print_graph();
-		}
+//		//For graph testing
+//		if (graph_display) {
+//			t0 = time_now();
+//			Graph graph = Graph(jobs);
+//			t1 = time_now();
+//			cerr << "constructing graph took: " << time_diff(t0, t1) << endl;
+//			cerr << "-- printing graph" << endl << endl;
+//			graph.print_graph();
+//		}
     }
 
     if (benchmark) {

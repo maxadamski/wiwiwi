@@ -50,9 +50,6 @@ jobshop OPCJE
     -v|--visual
         wizualizuje rozwiązanie w trybie debugowania
         może się nieprawidłowo wyświetlać, gdy liczba zadań jest większa od 36
-        
-    -g|--graph
-        wyświetla listę sąsiedztwa dla każdego wierzchołka (taska), oraz czas konstrukcji grafu
 
     -c|--convert
         wyświetla instancję w formacie beasley na stdout
@@ -76,4 +73,4 @@ script/test OPCJE
 
 ## Autorzy
 
-Max Adamski, Daniel Cieśliński
+Max Adamski (report1), Daniel Cieśliński (report2)

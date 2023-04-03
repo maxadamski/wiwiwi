@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+for inp in res/tailard/*.txt; do 
+    name=$(basename $inp .txt)
+    conv=res/tail-or/$name.txt
+    out/jobshop --convert -t tailard -f $inp 1> $conv
+	echo $conv
+done

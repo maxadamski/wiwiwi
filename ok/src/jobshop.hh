@@ -17,19 +17,16 @@ struct Jobs {
     std::vector<std::vector<int>> time, mach;
 };
 
-struct Task {
-    int job, ord, time, mach;
-    std::vector<int> next, prev, data;
-};
 
-struct Graph {
-    std::vector<Task> tasks;
-    int last_index;
 
-    explicit Graph(Jobs &jobs);
-
-    void print_graph();
-};
+//struct Graph {
+//    std::vector<Task> tasks;
+//    int last_index;
+//
+//    explicit Graph(Jobs &jobs);
+//
+//    void print_graph();
+//};
 
 struct Ans {
     // fields:

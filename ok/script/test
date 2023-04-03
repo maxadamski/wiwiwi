@@ -1,0 +1,82 @@
+#!/usr/bin/env bash
+
+solve="out/jobshop"
+bench=""
+check=""
+funcs=()
+
+while (( $# > 0 )); do
+    case $1 in
+        -t|--test)
+            check="wine res/checker/test.exe"
+            shift;;
+        -b|--bench)
+            bench=$2
+            shift 2;;
+        -m|--method)
+            funcs+=($2)
+            shift 2;;
+        *)
+            echo "usage: run [-t] [-b FILE] [-m METHOD]..."
+            exit 1
+    esac
+done
+
+if [[ -n $bench ]]; then
+    # create the benchmark file and print the header
+    true > $bench
+    for fun in "${funcs[@]}"; do
+        printf 'inst;qual_%b;time_%b;' $fun $fun >> $bench
+    done
+    printf '\n' >> $bench
+fi
+
+for inp in res/testing/*.txt res/beasley/* res/tail-or/* res/demirkol/*; do 
+    name=`basename $inp .txt`
+    out=`mktemp`
+    log=`mktemp`
+    ans=`mktemp`
+
+    if [[ -n $bench ]]; then
+        printf '%s;' $name >> $bench
+    fi
+
+    for fun in "${funcs[@]}"; do
+
+        $solve -b -m $fun -t beasley -f $inp 1> $out 2> $log
+
+        if [[ -n $bench ]]; then
+            # append quality and time benchmarks to bench file
+            time=`head $out -n 1`
+            span=`head $out -n 2 | tail -n 1`
+            printf '%d;%d;' $span $time >> $bench
+        fi
+
+        if [[ -n $check ]]; then
+            # remove benchmarking info from the answer
+            tail $out -n +2 > $ans
+            # use the provided checking program
+            $check $inp $ans &>> $log
+            if (( $? != 0 )); then
+                # show which test failed and why on the stderr
+                printf '\nFAILED %b\n' $name >&2
+                cat $log >&2
+                exit 1
+            fi
+        fi
+
+        # makeshift progress bar ;)
+        printf '.' >&2
+
+    done
+
+    # next row of benchmarks
+    if [[ -n $bench ]]; then
+        printf '\n' >> $bench
+    fi
+
+done
+
+# end the progress bar
+printf '\n' >&2
+

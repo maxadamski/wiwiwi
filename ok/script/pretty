@@ -1,0 +1,27 @@
+#!/usr/bin/env python3
+
+import pandas as pd
+from sys import argv
+from os import listdir
+from os.path import isfile, join, basename
+from statistics import mean, stdev
+
+if len(argv) != 2:
+    print(f"usage: {argv[0]} FILE")
+    exit(0)
+file = argv[1]
+
+df = pd.read_csv(file, sep=',')
+df = df.drop(df.index[[0,1]]).reset_index(drop=True)
+
+print("name,J,M,lb,ub,span,error,t_avg [ms],t_std [ms]")
+for i in df.index:
+    name = df.inst[i]
+    span = int(float(df.quality[i]))
+    J, M = int(float(df.jobs[i])), int(float(df.mach[i]))
+    LB, UB = int(float(df.lower[i])), int(float(df.upper[i]))
+    err = int(float(df.error[i]))
+    t_avg = float(df.t_mean[i])*1e-6
+    t_std = float(df.t_stdd[i])*1e-6
+    print("{},{},{},{},{},{},{}%,{:.4e},{:.4e}".format(
+        name, J, M, LB, UB, span, err, t_avg, t_std))

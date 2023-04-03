@@ -1,0 +1,62 @@
+#!/usr/bin/env python3
+
+from subprocess import run, PIPE
+from os import listdir
+from os.path import isfile, join, basename
+from statistics import mean, stdev
+
+prog = '../out/jobshop'
+
+def compute(inst):
+    args = [prog, '-b', '-m', 'mcts', '-t', 'beasley', '-f', inst]
+    return run(args, stdout=PIPE).stdout
+
+def beasley_meta(file):
+    lines = open(file).readlines()
+    J, M = map(int, lines[0].split())
+    return J, M
+
+def tailard_meta(file):
+    lines = open(file).readlines()
+    J, M = lines[0].split()[:2]
+    return J, M
+
+def instances(dir):
+    return [join(dir, f) for f in listdir(dir)
+            if isfile(join(dir, f)) and f.endswith(".txt")]
+
+def bench_tai():
+    N = 100
+    # print('inst,jobs,t_mean,t_stdd,quality', end='')
+    #for i in range(N): print(f't_{i}', end=',')
+    # print()
+
+    for jobs in range(1, 20+1):
+        arg = [prog, '-b', '-m', 'mcts', '-j', str(jobs),
+               '-t', 'tailard', '-f', '../res/tailard/tai25.txt']
+        time, qual = [], []
+        out = run(arg, stdout=PIPE).stdout
+        t = out.decode().split('\n')[0]
+        q = out.decode().split('\n')[2]
+        print (t,q)
+
+        # q, t_m, t_d = qual[0], round(mean(time)), round(stdev(time))
+        # times = ','.join(map(str, time))
+        # print(f"tai20,{jobs},{t_m},{t_d},{q}")
+
+def bench_all():
+    N = 20
+    print('inst,jobs,t_mean,t_stdd,quality')
+    for inst in instances('res/tail-or') + instances('res/demirkol') + instances('res/beasley'):
+        fname = basename(inst).replace('.txt', '')
+        time, qual = [], []
+        for _ in range(N):
+            out = compute(inst)
+            lines = [[int(y) for y in x.split()] for x in out.splitlines()]
+            t, q = lines[0][0], lines[1][0]
+            time += [t]
+            qual += [q]
+        q, t_m, t_d = qual[0], round(mean(time)), round(stdev(time))
+        print(f"{fname},{t_m},{t_d},{q}")
+
+bench_tai()

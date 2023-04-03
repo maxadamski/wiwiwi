@@ -1,0 +1,8 @@
+newmtl Beer_Mat
+illum 4
+Ka 0.19255 0.19255 0.19255
+Kd 1 1 1
+Ks 0.50827 0.50827 0.50827
+Ns 52
+map_Kd beer.png
+Ni 1.00

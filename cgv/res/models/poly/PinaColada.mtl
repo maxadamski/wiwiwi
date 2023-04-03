@@ -1,0 +1,14 @@
+newmtl PinaColada_PinaColada_Mat
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd PinaColada_BaseColor.png
+Ni 1.00
+newmtl PinaColada_Transp_Mat
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 0.41 0.41 0.41
+map_Kd PinaColada_BaseColor.png
+Ni 1.00

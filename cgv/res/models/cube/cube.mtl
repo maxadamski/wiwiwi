@@ -1,0 +1,12 @@
+newmtl cube
+Tf 1.0 1.0 1.0 
+Ka 0.17 0.34 0.20
+Kd 0.17 0.34 0.20
+Ks 0.17 0.34 0.20
+Ke 0.0 0.0 0.0
+Ns 300
+Ni 1.0
+Tr 0.0
+d  1.0
+illum 2
+map_Kd cube.png

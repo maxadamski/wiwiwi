@@ -1,0 +1,106 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Bachelor's & Master's Thesis Template        %%
+%% Copyleft by Dawid Weiss & Marta Szachniuk    %%
+%% Faculty of Computing and Telecommunication   %%
+%% Poznan University of Technology, 2020        %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% Szkielet dla pracy licencjackiej pisanej w języku polskim.
+
+\documentclass[english,bachelor,a4paper,oneside]{ppfcmthesis}
+
+
+\usepackage[utf8]{inputenc}
+\usepackage[OT4]{fontenc}
+
+\usepackage{siunitx}
+\usepackage{multicol}
+\usepackage{pdfpages}
+
+\usepackage{newfloat,caption,float}
+\DeclareFloatingEnvironment[placement={!h},name=List]{mylist}
+\DeclareFloatingEnvironment[fileext=loe, listname=Examples, name=Example, placement=H, within=none]{example}
+\captionsetup[example]{}
+
+\usepackage{listings}
+\lstset{
+basicstyle=\small\ttfamily,
+%xleftmargin=.05\textwidth, xrightmargin=.05\textwidth
+}
+
+
+%--------------------------------------
+% Strona tytułowa
+%--------------------------------------
+
+% Autorzy pracy, jeśli jest ich więcej niż jeden
+% wstaw między nimi separator \and
+% w kolejności alfabetycznej
+\author{%
+   Dariusz Max Adamski \album{136674} \and 
+   Sławomir Gilewski \album{142192} \and
+   Piotr Jurga \album{136728}
+}
+\authortitle{}                                % Do not change.
+
+\title{AI Colosseum: a system for automatic evaluation of game playing bots}
+
+% Your supervisor comes here.
+\ppsupervisor{dr~inż.~Jędrzej Potoniec} 
+
+% Year of final submission (not graduation!)
+\ppyear{2021}                                 
+
+
+\begin{document}
+
+% Front matter starts here
+\frontmatter\pagestyle{empty}%
+\maketitle\cleardoublepage%
+
+%--------------------------------------
+% Miejsce na kartę pracy dyplomowej
+%--------------------------------------
+
+\includepdf{figures/karta_pracy.pdf}
+\cleardoublepage%
+
+%--------------------------------------
+% Spis treści
+%--------------------------------------
+
+\pagenumbering{Roman}\pagestyle{ppfcmthesis}%
+\tableofcontents* 
+\cleardoublepage % Zaczynamy od nieparzystej strony
+
+%--------------------------------------
+% Rozdziały
+%--------------------------------------
+
+%Najwygodniej jeśli każdy rozdział znajduje się w oddzielnym pliku
+\mainmatter%
+\input{body.tex}
+
+%--------------------------------------
+% Literatura
+%--------------------------------------
+
+%\bibliographystyle{plain}{\raggedright\sloppy\small\bibliography{bibliografia}} % original
+\bibliographystyle{unsrt}{\raggedright\sloppy\small\bibliography{bibliografia}}
+
+%--------------------------------------
+% Dodatki
+%--------------------------------------
+
+%\cleardoublepage\appendix%
+%\newpage
+%\input{appendix.tex}
+
+%--------------------------------------
+% Informacja o prawach autorskich
+%--------------------------------------
+
+\ppcolophon
+
+\end{document}

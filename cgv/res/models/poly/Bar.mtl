@@ -1,0 +1,14 @@
+newmtl Bar_A_mat
+illum 4
+Kd 0.50 0.50 0.50
+Ka 0.50 0.50 0.50
+Tf 1.00 1.00 1.00
+Ni 1.00
+map_Kd Bar_A_BaseColor.png
+newmtl Bar_B_mat
+illum 4
+Kd 0.50 0.50 0.50
+Ka 0.50 0.50 0.50
+Tf 1.00 1.00 1.00
+Ni 1.00
+map_Kd Bar_B_BaseColor.png

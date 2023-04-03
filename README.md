@@ -8,7 +8,7 @@ Politechnika Poznańska, wydział Informatyki i Telekomunikacji (dawniej Informa
   -> Sztuczna Inteligencja (2021-2022)
 ```
 
-## Zasoby
+## Spis treści
 
 - Semestr 1
 	- PPP: podstawy programowania python
@@ -56,8 +56,8 @@ Politechnika Poznańska, wydział Informatyki i Telekomunikacji (dawniej Informa
 	- ASK: architektura systemów komputerowych
 		- programy w asemblerze
 	- BO: badania operacyjne
-	- CG&V: computer graphics & visualization
-		- symulator picia  
+	- CGV: computer graphics & visualization
+		- projekt: gra 3D
 	- JFiK: języki formalne i kompilatory
 	- SK1: sieci komputerowe 1
 	- SiAD: statystyka i analiza danych
@@ -69,6 +69,7 @@ Politechnika Poznańska, wydział Informatyki i Telekomunikacji (dawniej Informa
 		- raport: porównanie słuchawek dousznych
 	- KCK: komunikacja człowiek-komputer
 		- projekt: rozpoznawanie głosu
+		- projekt: rozpoznawanie stanu gry Dobble
 	- SK2: sieci komputerowe 2
 		- projekt: gra multiplayer
 	- SW: systemy wbudowane
@@ -100,6 +101,9 @@ Politechnika Poznańska, wydział Informatyki i Telekomunikacji (dawniej Informa
 		- rozwiązane notebooki
 	- BSI: bezpieczeństwo systemów informatycznych
 		- sprawozdania
+	- Praca inżynierska
+		- "AI Colosseum: system do automatycznej oceny botów grających w gry"
+		- Patrz też: <https://github.com/maxadamski/colosseum>
 - Semestr 8
 	- SU: systemy uczące się
 		- rozwiązane laby
@@ -150,4 +154,7 @@ Politechnika Poznańska, wydział Informatyki i Telekomunikacji (dawniej Informa
 		- ip > wdw
 	- SEM: seminarium dyplomowe
 		- dwie prezentacje
+	- Praca magisterska
+		- "Learning Concept Embeddings with a Transferable Deep Neural Reasoner"
+		- Patrz też: <https://github.com/maxadamski/reasonable-embeddings>
 

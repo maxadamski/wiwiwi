@@ -1,0 +1,367 @@
+{
+    "models": {
+        "bar": "res/models/poly/Bar.obj",
+        "beerBottle": "res/models/beer/BeerBottle.obj",
+        "beerCan": "res/models/poly/beer.obj",
+        "beers": "res/models/poly/beer_flight.obj",
+        "bottle1": "res/models/poly/bottle1.obj",
+        "bottle2": "res/models/poly/bottle2.obj",
+        "bottle3": "res/models/poly/bottle3.obj",
+        "bottle4": "res/models/poly/bottle4.obj",
+        "bottle5": "res/models/poly/bottle5.obj",
+        "cube": "res/models/cube/cube.obj",
+        "lamp": "res/models/poly/Standing_lamp_01.obj",
+        "lamp2": "res/models/poly/lantern.obj",
+        "plant": "res/models/poly/plant.obj",
+        "player": "res/models/poly/player.obj",
+        "sky": "res/models/skydome/skydome.obj",
+        "suit": "res/models/nanosuit/nanosuit.obj",
+        "testCube": "res/models/cube/cube.obj",
+        "wineBottle": "res/models/wine/Wine.obj"
+    },
+    "objects": [
+        {
+            "drinkable": false,
+            "model": "lamp",
+            "origin": [
+                "25.00",
+                "1.50",
+                "-22.50"
+            ],
+            "rotation": "0.00",
+            "scale": "1.40",
+            "selectable": false,
+            "shader": "phong+mat"
+        },
+        {
+            "drinkable": false,
+            "model": "lamp",
+            "origin": [
+                "-16.00",
+                "1.50",
+                "-22.50"
+            ],
+            "rotation": "0.00",
+            "scale": "1.40",
+            "selectable": false,
+            "shader": "phong+mat"
+        },
+        {
+            "drinkable": false,
+            "model": "suit",
+            "origin": [
+                "-24.00",
+                "1.50",
+                "-19.00"
+            ],
+            "rotation": "0.43",
+            "scale": "1.00",
+            "selectable": false,
+            "shader": "phong+tex"
+        },
+        {
+            "drinkable": false,
+            "model": "plant",
+            "origin": [
+                "27.35",
+                "1.50",
+                "25.30"
+            ],
+            "rotation": "4.72",
+            "scale": "1.60",
+            "selectable": false,
+            "shader": "phong+tex"
+        },
+        {
+            "drinkable": false,
+            "model": "bar",
+            "origin": [
+                "0.00",
+                "0.00",
+                "0.00"
+            ],
+            "rotation": "0.00",
+            "scale": "3.00",
+            "selectable": false,
+            "shader": "phong+tex"
+        },
+        {
+            "drinkable": true,
+            "model": "beerCan",
+            "origin": [
+                "11.33",
+                "7.00",
+                "12.30"
+            ],
+            "rotation": "-2.23",
+            "scale": "1.00",
+            "selectable": true,
+            "shader": "phong+tex"
+        },
+        {
+            "drinkable": true,
+            "model": "beerCan",
+            "origin": [
+                "-20.35",
+                "9.30",
+                "-19.21"
+            ],
+            "rotation": "-6.30",
+            "scale": "1.00",
+            "selectable": true,
+            "shader": "phong+tex"
+        },
+        {
+            "drinkable": true,
+            "model": "beerCan",
+            "origin": [
+                "14.23",
+                "6.94",
+                "16.34"
+            ],
+            "rotation": "-0.42",
+            "scale": "1.00",
+            "selectable": true,
+            "shader": "phong+tex"
+        },
+        {
+            "drinkable": true,
+            "model": "beerCan",
+            "origin": [
+                "9.90",
+                "6.97",
+                "11.58"
+            ],
+            "rotation": "-3.04",
+            "scale": "1.00",
+            "selectable": true,
+            "shader": "phong+tex"
+        },
+        {
+            "drinkable": true,
+            "model": "beerCan",
+            "origin": [
+                "15.43",
+                "6.91",
+                "15.67"
+            ],
+            "rotation": "-4.41",
+            "scale": "1.00",
+            "selectable": true,
+            "shader": "phong+tex"
+        },
+        {
+            "drinkable": true,
+            "model": "beerCan",
+            "origin": [
+                "7.76",
+                "8.00",
+                "-9.12"
+            ],
+            "rotation": "-0.76",
+            "scale": "1.00",
+            "selectable": true,
+            "shader": "phong+tex"
+        },
+        {
+            "drinkable": true,
+            "model": "beerCan",
+            "origin": [
+                "0.85",
+                "7.97",
+                "-11.64"
+            ],
+            "rotation": "0.19",
+            "scale": "1.00",
+            "selectable": true,
+            "shader": "phong+tex"
+        },
+        {
+            "drinkable": true,
+            "model": "beerCan",
+            "origin": [
+                "16.15",
+                "7.99",
+                "-21.90"
+            ],
+            "rotation": "-0.54",
+            "scale": "1.00",
+            "selectable": true,
+            "shader": "phong+tex"
+        },
+        {
+            "drinkable": true,
+            "model": "beerCan",
+            "origin": [
+                "-0.07",
+                "7.94",
+                "-10.86"
+            ],
+            "rotation": "-0.59",
+            "scale": "1.00",
+            "selectable": true,
+            "shader": "phong+tex"
+        },
+        {
+            "drinkable": false,
+            "model": "lamp2",
+            "origin": [
+                "11.73",
+                "15.00",
+                "14.24"
+            ],
+            "rotation": "-1.34",
+            "scale": "7.50",
+            "selectable": false,
+            "shader": "phong+mat"
+        },
+        {
+            "drinkable": false,
+            "model": "lamp2",
+            "origin": [
+                "-14.55",
+                "15.00",
+                "14.17"
+            ],
+            "rotation": "-1.34",
+            "scale": "7.50",
+            "selectable": false,
+            "shader": "phong+mat"
+        },
+        {
+            "drinkable": false,
+            "model": "beers",
+            "origin": [
+                "11.00",
+                "7.60",
+                "13.60"
+            ],
+            "rotation": "3.60",
+            "scale": "5.50",
+            "selectable": false,
+            "shader": "phong+mat"
+        },
+        {
+            "drinkable": true,
+            "model": "bottle2",
+            "origin": [
+                "12.00",
+                "8.00",
+                "-10.00"
+            ],
+            "rotation": "-0.41",
+            "scale": "0.30",
+            "selectable": true,
+            "shader": "phong+mat"
+        },
+        {
+            "drinkable": true,
+            "model": "bottle3",
+            "origin": [
+                "10.00",
+                "8.00",
+                "-8.00"
+            ],
+            "rotation": "0.00",
+            "scale": "0.30",
+            "selectable": true,
+            "shader": "phong+mat"
+        },
+        {
+            "drinkable": true,
+            "model": "beerCan",
+            "origin": [
+                "-24.06",
+                "16.81",
+                "-19.19"
+            ],
+            "rotation": "13.27",
+            "scale": "1.00",
+            "selectable": true,
+            "shader": "phong+tex"
+        },
+        {
+            "drinkable": true,
+            "model": "beerBottle",
+            "origin": [
+                "-7.40",
+                "7.96",
+                "-13.00"
+            ],
+            "rotation": "0.01",
+            "scale": "10.00",
+            "selectable": true,
+            "shader": "phong+tex"
+        },
+        {
+            "drinkable": true,
+            "model": "beerBottle",
+            "origin": [
+                "10.74",
+                "6.99",
+                "16.44"
+            ],
+            "rotation": "-1.48",
+            "scale": "10.00",
+            "selectable": true,
+            "shader": "phong+tex"
+        },
+        {
+            "drinkable": true,
+            "model": "beerBottle",
+            "origin": [
+                "-6.76",
+                "7.97",
+                "-12.49"
+            ],
+            "rotation": "-0.09",
+            "scale": "10.00",
+            "selectable": true,
+            "shader": "phong+tex"
+        },
+        {
+            "drinkable": true,
+            "model": "beerBottle",
+            "origin": [
+                "-13.20",
+                "6.96",
+                "16.32"
+            ],
+            "rotation": "2.25",
+            "scale": "10.00",
+            "selectable": true,
+            "shader": "phong+tex"
+        },
+        {
+            "drinkable": true,
+            "model": "beerBottle",
+            "origin": [
+                "-15.25",
+                "7.00",
+                "12.71"
+            ],
+            "rotation": "2.09",
+            "scale": "10.00",
+            "selectable": true,
+            "shader": "phong+tex"
+        }
+    ],
+    "shaders": {
+        "flat": {
+            "fs": "res/shaders/flat+mat_f.glsl",
+            "vs": "res/shaders/flat_v.glsl"
+        },
+        "phong+mat": {
+            "fs": "res/shaders/phong+mat_f.glsl",
+            "vs": "res/shaders/phong_v.glsl"
+        },
+        "phong+tex": {
+            "fs": "res/shaders/phong+tex_f.glsl",
+            "vs": "res/shaders/phong_v.glsl"
+        },
+        "sky": {
+            "fs": "res/shaders/sky_f.glsl",
+            "vs": "res/shaders/sky_v.glsl"
+        }
+    }
+}

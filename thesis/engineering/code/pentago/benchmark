@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+bench () {
+    depth=
+    if [ $# = 2 ]; then
+        echo "Running $1 with depth $2"
+        depth="--depth $2"
+    else
+        echo "Running $1"
+    fi
+    rm -r tmp >/dev/null 2>&1
+    mkdir -p tmp
+    cp ../messages/python/colosseum.py tmp/colosseum.py
+    cp "$1"/run tmp/player
+
+    cd tmp
+    mkfifo in1 out1 in2 out2
+    ./player in1 out1 $depth >/dev/null 2>&1 &
+    p1pid=$!
+    ./player in2 out2 $depth >/dev/null 2>&1 &
+    p2pid=$!
+
+    log=../benchmark_results/$1_$2.txt
+    ../judge/run in1 out1 in2 out2 6 30 >/dev/null 2>>"$log"
+    kill $p1pid
+    kill $p2pid
+    cd ..
+}
+
+bench_5_times () {
+    bench $1 $2
+    bench $1 $2
+    bench $1 $2
+    bench $1 $2
+    bench $1 $2
+}
+
+./makeall
+#rm -r benchmark_results >/dev/null 2>&1
+#mkdir -p benchmark_results
+
+#bench_5_times player_python
+#bench_5_times player_random
+#bench_5_times player_alpha_beta 1
+#bench_5_times player_alpha_beta 2
+#bench_5_times player_alpha_beta 3
+#bench_5_times player_alpha_beta 4
+#bench_5_times player_negamax 1
+#bench_5_times player_negamax 2
+bench_5_times player_negamax 3

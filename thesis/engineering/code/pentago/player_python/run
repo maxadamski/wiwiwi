@@ -1,0 +1,18 @@
+#!/usr/bin/env python3
+
+import colosseum as co
+from time import time
+from sys import argv
+from random import randint
+
+fi, fo = co.open(argv[1], 'r'), co.open(argv[2], 'w')
+commit_move, get_moves = 2, 3
+
+while True:
+    co.send(fo, get_moves)
+    tag, data = co.recv(fi)
+    assert tag == get_moves
+    I, J, R = data
+    k = randint(0, len(I) - 1)
+    co.send(fo, commit_move, (I[k], co.u8), (J[k], co.u8), (R[k], co.u8))
+

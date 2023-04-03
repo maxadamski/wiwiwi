@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="author" content="Adamski et al.">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+	<meta name="description" content="Colosseum is a free online platform for automatic evaluation of AI agents in games.">
+    <title>Example Widget</title>
+</head>
+
+<body>
+	<h1>Interactive game #1</h1>
+	<p>This is a custom game widget, dynamically loaded from the server.</p>
+	<p>Game-makers can put <i>anything</i> here!</p>
+	<p>Usually this will be an interactive game session using the JS Colosseum API.</p>
+	<h3>JavaScript test</h3>
+	<p id="time"><b>failed</b></p>
+</body>
+
+<script>
+function showTime() { document.getElementById('time').innerHTML = new Date().toLocaleTimeString() }
+showTime()
+setInterval(showTime, 1000)
+</script>
+
+<style>
+body {
+	margin: 0;
+}
+</style>
+</html>

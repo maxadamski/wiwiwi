@@ -1,0 +1,62 @@
+/* --- Reset --- */
+
+html {
+    box-sizing: border-box;
+    font-family: 'Vollkorn', serif;
+    font-size: 19px;
+}
+
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+img, video {
+    max-width: 100%;
+    height: auto;
+}
+
+/* --- Brutal --- */
+
+body {
+    max-width: 650px;
+    margin: 40px auto;
+    padding: 0 10px;
+    color: #333;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    line-height: 1.2;
+    font-weight: normal;
+}
+
+p, ul, ol {
+    line-height: 1.618;
+}
+
+article {
+    max-width: 55ch;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid black;
+}
+
+@media (prefers-color-scheme: dark) {
+    hr {
+        border-color: white;
+    }
+
+    body {
+        color: white;
+        background: #444;
+    }
+
+    a:link {
+        color: #5bf;
+    }
+
+    a:visited {
+        color: #ccf;
+    }
+}

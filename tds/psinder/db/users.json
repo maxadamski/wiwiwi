@@ -1,0 +1,17 @@
+[
+	{
+		"login": "tester",
+		"name": "Johnny Test",
+		"password": "$argon2id$v=19$m=65536,t=4,p=4$0novZQzh/J/z3puz1jpHiFHKWUvpXWvNGSOEcI5RqtX6P+eck/L+H+P8X8t5713LmXOOUYqR8p6zlrLWOqfUGqM0JgSg9N5bi9Gac66V0tpba+29t5aSknLOuXeu9d47p1QqpfSe876XEgKAMAYAwBgDwPifE4LQ2tvbG4Pw3vs$vzxOQpgSq/X7QEEinne9uk8cs3yr6+lBPoWCYF4/3g0",
+		"location": {
+			"text": "Wielkopolskie, Poznań",
+			"city": "Poznań",
+			"region": "Wielkopolskie",
+			"lat": 52.406376,
+			"lon": 16.925167
+		},
+		"filter": {
+			"max_distance": null
+		}
+	}
+]

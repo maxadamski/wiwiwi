@@ -1,0 +1,34 @@
+digraph G {
+    compound=true;
+    node [shape=Mrecord]
+    
+    subgraph cluster_1 {
+        label="Serwis";
+        supervisor [label="{Nadzorca|Serwer HTTP}"];
+        supervisor -> judge_a, player_a, player_b;
+        subgraph cluster_1_1 {
+            label="Gra\nWłasny mechanizm IPC";
+            edge [dir=none];
+            judge_a [label="{Sędzia|Kontener KVM|Dowolny język}"];
+            player_a [label="{Gracz referencyjny|Kontener KVM|Dowolny język}"];
+            player_b [label="{Gracz użytkownika|Kontener KVM|Dowolny język}"];
+            judge_a -> player_a, player_b;
+        }
+        subgraph cluster_1_2 {
+            label="Kolejka użytkownikóv";
+            player_x [label="{Gracz|Gra n\nUżytkownik m}"];
+        }
+    }
+
+	subgraph cluster_2 {
+		label="Serwer";
+		db_2 [label="{Baza danych|PostgreSQL}"];
+		api  [label="{Serwer HTTP\nPython FastAPI|PugSQL}"];
+		api -> db_2;
+		api -> supervisor;
+	}
+
+    web_app [label="{Aplikacja SPA|Vue|Pug HTML|Stylus CSS}"];
+    auth    [label="{Autentykacja|Moodle LTI}"]
+    web_app -> api, auth;
+}

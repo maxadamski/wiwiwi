@@ -1,0 +1,163 @@
+phi = 1.61803
+pi = 3.14159
+
+body-color = #fefefe
+body-color-dark = #444
+text-color = #131313
+text-color-dark = #fff
+link-color-dark = #5bf
+visited-color-dark = #ccf
+decor-color = #aaa
+decor-color-dark = text-color-dark
+hover-color = #eee
+active-color = #ddd
+
+units = 0 4px 7px 11px 18px 29px 47px
+sizes = 14px 18px 23px 29px 37px 47px
+u0 = units[0]
+u1 = units[1]
+u2 = units[2]
+u3 = units[3]
+u4 = units[4]
+u5 = units[5]
+u6 = units[6]
+s1 = sizes[0]
+s2 = sizes[1]
+s3 = sizes[2]
+s4 = sizes[3]
+s5 = sizes[4]
+s6 = sizes[5]
+r1 = 3px
+
+h1
+    margin u5 0 u4 0
+    font-size s5
+h2
+    margin u4 0 u3 0
+    font-size s4
+h3
+    margin u3 0 u3 0
+    font-size s3
+h4
+    margin u3 0 u3 0
+    font-size s2
+h5
+    margin u2 0 u2 0
+    font-size s2
+p
+    margin u2 0
+    font-size s2
+
+.w-50
+    width 50%
+.w-100
+    width 100%
+.w-a
+    width auto
+.h-50
+    height 50%
+.h-100
+    height 100%
+.h-a
+    width auto
+
+.text-center
+    text-align center
+
+.mx-a
+    margin-left auto
+    margin-right auto
+.my-a
+    margin-top auto
+    margin-bottom auto
+
+for x, i in units
+    .mt-{i}
+        margin-top x
+    .mb-{i}
+        margin-bottom x
+    .ml-{i}
+        margin-left x
+    .mr-{i}
+        margin-right x
+
+.fy-center
+    align-items center
+
+.f-items-stretch
+    align-content stretch
+
+.hflex
+    display flex
+    flex-direction row
+
+.vflex
+    display flex
+    flex-direction column
+
+.flex-wrap
+    flex-wrap wrap
+
+hgap(x)
+    > *
+        margin-right x
+    > *:last-child
+        margin-right 0
+
+vgap(x)
+    > *
+        margin-bottom x
+    > *:last-child
+        margin-bottom 0
+
+hflex(justify, align)
+    display flex
+    flex-direction row
+    justify-content justify
+    align-items align
+
+vflex(justify, align)
+    display flex
+    flex-direction column
+    justify-content justify
+    align-items align
+
+
+.hcombo
+    display inline-flex
+    white-space nowrap
+    > *
+        border-radius 0
+    > *:not(:last-child)
+        border-right none
+    > *:first-child
+        border-top-left-radius r1
+        border-bottom-left-radius r1
+    > *:last-child
+        border-top-right-radius r1
+        border-bottom-right-radius r1
+
+
+for x, i in units
+    .hlist-{i}
+        hgap(x)
+
+    .vlist-{i}
+        vgap(x)
+
+.tooltip
+    cursor help
+    border-bottom 1px dotted black
+
+.debug
+    border 2px dashed red
+
+.nowrap
+    white-space nowrap
+
+.invalid
+    text-decoration underline wavy red
+
+@media (max-width: 769px)
+    .min-tablet
+        display none

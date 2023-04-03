@@ -2,7 +2,7 @@
 
 Final project for the computer graphics & visualization course at PUT.
 
-![animated gif of the game](/res/preview.gif)
+![animated gif of the game](/cgv/res/preview.gif)
 
 The general goal was to correctly load models and textures, then draw and shade the scene in the OpenGL core profile.
 Also, for this project a first person camera, movement, collision detection and object picking had to be implemented.

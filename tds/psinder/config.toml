@@ -1,0 +1,6 @@
+debug_endpoints = true
+exploration_rate = 0
+
+[security]
+login_timeout_hours = 24
+cors_allow_origins = ['*']

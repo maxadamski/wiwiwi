@@ -1,0 +1,9 @@
+{
+	gzip: {
+		enabled: true
+	},
+	brotli: {
+		enabled: false
+	},
+	compressOutput: false,
+}

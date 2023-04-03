@@ -1,0 +1,39 @@
+{
+    "name": "ai-colosseum",
+    "version": "0.1.0",
+    "main": "index.js",
+    "private": true,
+    "devDependencies": {
+        "@babel/core": "^7.0.0-0",
+        "@babel/plugin-transform-runtime": "^7.10.1",
+        "@creativebulma/bulma-divider": "^1.1.0",
+        "@mdi/font": "^5.1.45",
+        "@vue/component-compiler-utils": "^3.1.2",
+        "autoprefixer": "^9.8.0",
+        "babel-polyfill": "^6.26.0",
+        "buefy": "^0.8.17",
+        "http-server": "^0.12.3",
+        "material-design-icons-iconfont": "^5.0.1",
+        "parcel-bundler": "^1.12.4",
+        "parcel-plugin-compress": "^2.0.2",
+        "postcss": "^7.0.32",
+        "postcss-modules": "^2.0.0",
+        "pug": "^2.0.4",
+        "sass": "^1.26.5",
+        "stylus": "^0.54.7",
+        "vue-feather-icons": "^5.0.0",
+        "vue-hot-reload-api": "^2.3.4",
+        "vue-template-compiler": "^2.6.11"
+    },
+    "dependencies": {
+        "@babel/runtime-corejs2": "^7.10.3",
+        "vue": "2.x",
+        "vue-easy-toast": "^1.0.5",
+        "vue-router": "^3.1.6"
+    },
+    "scripts": {
+        "dev": "parcel src/index.html",
+        "build": "parcel build src/index.html --no-source-maps",
+        "dist": "http-server dist -g --port 1234"
+    }
+}

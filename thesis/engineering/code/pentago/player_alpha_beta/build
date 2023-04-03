@@ -1,0 +1,2 @@
+#!/bin/sh
+gcc -Ofast -march=native -I/share main.c -o run

@@ -1,0 +1,9 @@
+fastapi==0.70.1
+gunicorn==20.1.0
+uvicorn==0.16.0
+toml==0.10.2
+geopy==2.2.0
+scikit-learn==1.0.2
+passlib[argon2]
+python-multipart
+requests

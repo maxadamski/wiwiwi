@@ -1,0 +1,5 @@
+data/Images
+out_backup/
+.idea
+/out/*/logs
+/out/*/checkpoints/*

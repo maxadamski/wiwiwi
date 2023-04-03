@@ -1,0 +1,290 @@
+board_size: 6
+timeout: 30 ms
+Player W: (5, 3) 6
+Took 35.196715602 seconds
+......
+......
+......
+...W..
+......
+......
+Player B: (5, 0) 3
+Took 64.385719550 seconds
+......
+......
+......
+...W..
+......
+B.....
+Player W: (3, 0) 0
+Took 53.835674204 seconds
+......
+......
+......
+W..W..
+......
+B.....
+Player B: (5, 2) 1
+Took 42.223381898 seconds
+......
+......
+......
+W..W..
+......
+B.B...
+Player W: (3, 1) 3
+Took 53.190099941 seconds
+......
+......
+......
+WW.W..
+......
+B.B...
+Player B: (5, 1) 6
+Took 55.535229069 seconds
+......
+......
+......
+WW...W
+......
+BBB...
+Player W: (3, 2) 0
+Took 30.731983886 seconds
+......
+......
+......
+WWW..W
+......
+BBB...
+Player B: (0, 2) 4
+Took 63.025139534 seconds
+..B...
+......
+......
+B.W..W
+B.W...
+B.W...
+Player W: (3, 4) 5
+Took 73.918631625 seconds
+..B...
+......
+......
+WWW.WW
+......
+BBB...
+Player B: (3, 3) 6
+Took 144.491316246 seconds
+..B...
+......
+......
+WWW..B
+.....W
+BBB..W
+Player W: (5, 3) 3
+Took 69.388335113 seconds
+..B...
+......
+......
+WWW..B
+.....W
+BBBW.W
+Player B: (4, 3) 0
+Took 151.346467897 seconds
+......
+......
+..B...
+WWW..B
+...B.W
+BBBW.W
+Player W: (3, 3) 1
+Took 71.291536131 seconds
+..B...
+......
+......
+WWWW.B
+...B.W
+BBBW.W
+Player B: (3, 4) 3
+Took 79.721209475 seconds
+..B...
+......
+......
+WWWWBB
+...B.W
+BBBW.W
+Player W: (5, 4) 1
+Took 39.745511196 seconds
+B.....
+......
+......
+WWWWBB
+...B.W
+BBBWWW
+Player B: (4, 2) 3
+Took 60.328518972 seconds
+B.....
+......
+......
+WWWWBB
+..BB.W
+BBBWWW
+Player W: (0, 3) 3
+Took 24.607978101 seconds
+B.....
+......
+...W..
+WWWWBB
+..BB.W
+BBBWWW
+Player B: (2, 0) 2
+Took 38.063133753 seconds
+B..W..
+......
+B.....
+WWWWBB
+..BB.W
+BBBWWW
+Player W: (1, 3) 0
+Took 31.131413488 seconds
+B.BW..
+...W..
+......
+WWWWBB
+..BB.W
+BBBWWW
+Player B: (2, 2) 2
+Took 26.373077013 seconds
+B.B.WW
+......
+..B...
+WWWWBB
+..BB.W
+BBBWWW
+Player W: (1, 2) 2
+Took 29.389053657 seconds
+B.B...
+..W..W
+..B..W
+WWWWBB
+..BB.W
+BBBWWW
+Player B: (1, 0) 3
+Took 11.387130970 seconds
+B.B.WW
+B.W...
+..B...
+WWWWBB
+..BB.W
+BBBWWW
+Player W: (2, 0) 2
+Took 20.503883669 seconds
+B.B...
+B.W..W
+W.B..W
+WWWWBB
+..BB.W
+BBBWWW
+Player B: (4, 0) 3
+Took 5.875678298 seconds
+B.B.WW
+B.W...
+W.B...
+WWWWBB
+B.BB.W
+BBBWWW
+Player W: (1, 5) 2
+Took 11.669825686 seconds
+B.B...
+B.W..W
+W.B.WW
+WWWWBB
+B.BB.W
+BBBWWW
+Player B: (2, 3) 3
+Took 4.108365465 seconds
+B.B.WW
+B.W..W
+W.B..B
+WWWWBB
+B.BB.W
+BBBWWW
+Player W: (1, 4) 3
+Took 7.158849763 seconds
+B.BWWB
+B.WWW.
+W.B...
+WWWWBB
+B.BB.W
+BBBWWW
+Player B: (1, 5) 2
+Took 2.954380923 seconds
+B.B.WW
+B.W.WW
+W.B.BB
+WWWWBB
+B.BB.W
+BBBWWW
+Player W: (0, 1) 1
+Took 4.086561115 seconds
+BWB.WW
+W...WW
+BBW.BB
+WWWWBB
+B.BB.W
+BBBWWW
+Player B: (2, 3) 0
+Took 1.570034459 seconds
+BWB.WW
+B.W.WW
+W.BBBB
+WWWWBB
+B.BB.W
+BBBWWW
+Player W: (2, 1) 0
+Took 1.190569001 seconds
+WBB.WW
+W.W.WW
+BWBBBB
+WWWWBB
+B.BB.W
+BBBWWW
+Player B: (4, 4) 1
+Took 0.358441922 seconds
+BWB.WW
+B.W.WW
+WWBBBB
+WWWWBB
+B.BBBW
+BBBWWW
+Player W: (4, 1) 1
+Took 0.221035274 seconds
+BWB.WW
+W.W.WW
+BBWBBB
+WWWWBB
+BWBBBW
+BBBWWW
+Player B: (1, 1) 0
+Took 0.043875165 seconds
+BWB.WW
+BBW.WW
+WWBBBB
+WWWWBB
+BWBBBW
+BBBWWW
+Player W: (0, 3) 3
+Took 0.011944867 seconds
+BWBWWB
+BBWWWB
+WWBW.B
+WWWWBB
+BWBBBW
+BBBWWW
+Player B: (2, 4) 5
+Took 0.003051524 seconds
+BWBWWB
+BBWWWB
+WWBWBB
+WBBWBB
+WWBBBW
+WBBWWW

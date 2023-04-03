@@ -1,0 +1,17 @@
+#!/bin/bash
+
+robot=local/robot.jar 
+input="$1"
+format="${2:-ofn}"
+
+if [ ! -f $robot ]; then
+	echo "File $robot does not exist!"
+	echo "Download the latest version at https://github.com/ontodev/robot/releases"
+	exit 1
+fi
+
+f="$(mktemp)"
+java -jar $robot convert -i "$input" -f "$format" -o $f >&2
+cat $f
+rm -f $f
+

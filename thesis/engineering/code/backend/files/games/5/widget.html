@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Pentago</title>
+	<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+</head>
+
+<body>
+<div id="app" @mouseup="mouseup($event)" draggable="false">
+	<span class="status">{{status}}</span>
+	<div class="board" draggable="false"
+	:style="{'grid-template': `repeat(${n},1fr) / repeat(${n},1fr)`}">
+		<div v-for="(quad, i) in board" class="quad" draggable="false"
+		:style="{transform: `rotate(${quad.rotation}deg)`, 'grid-template': `repeat(${m},1fr) / repeat(${m},1fr)`}"
+		@mousedown="mousedown($event, quad)">
+			<div v-for="(cell, j) in quad.cells" class="cell" draggable="false"
+			:class="{white: cell.color === 1, black: cell.color === 2}"
+			@click="place(quad, cell)">
+				<!-- nothing to see here! -->
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+
+<style>
+#app {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+}
+.status {
+	margin: 5px 0;
+	font-family: sans-serif;
+}
+.board {
+	display: grid;
+	width: min(80vw, 80vh);
+	height: min(80vw, 80vh);
+	background: lightgray;
+	padding: 0.5%;
+	margin-top: 5px;
+	border-radius: 2%;
+}
+.quad {
+	display: grid;
+	justify-items: stretch;
+	align-items: stretch;
+	grid-gap: 10%;
+	background: red;
+	padding: 5%;
+	margin: 3%;
+	border-radius: 5%;
+	transition-duration: 1s;
+	transition-property: transform;
+}
+.cell {
+	background: darkred;
+	border-radius: 100px;
+}
+.white {
+	background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(198,198,198,1) 100%);
+}
+.black {
+	background: radial-gradient(circle, rgba(100,100,100,1) 0%, rgba(0,0,0,1) 40%);
+}
+</style>
+
+<script>
+const delta_angle = (dy2, dx2, dy1, dx1) => {
+	const a1 = Math.atan2(dy1, dx1) * 180/Math.PI
+	const a2 = Math.atan2(dy2, dx2) * 180/Math.PI
+	let da = a2 - a1
+	if (da > +180) da -= 360
+	if (da < -180) da += 360
+	return da
+}
+
+let app = new Vue({
+	el: '#app',
+	data: {
+		n: 2, // number of quadrants per axis
+		m: 3, // number of cells in a quadrant per axis
+		my_color: 1,
+		state: 'placing',
+		winner: null,
+		last_quad: null,
+		board: [],
+		rotation_before: null,
+		dragging: null,
+		mouse_x: 0, mouse_y: 0,
+		quad_x: 0, quad_y: 0,
+	},
+	methods: {
+		place(quad, cell) {
+			if (this.state != 'placing') return
+			cell.color = this.my_color
+			this.last_quad = quad
+			this.state = 'rotating'
+		},
+		mousedown(ev, quad) {
+			if (this.state != 'rotating') return
+			this.dragging = quad
+			this.rotation_before = quad.rotation
+			rect = ev.target.getBoundingClientRect()
+			this.quad_x = rect.x + rect.width / 2
+			this.quad_y = rect.y + rect.height / 2
+			this.mouse_x = ev.clientX
+			this.mouse_y = ev.clientY
+		},
+		mouseup(ev) {
+			if (this.state != 'rotating') return
+			const da = delta_angle(ev.clientY - this.quad_y, ev.clientX - this.quad_x,
+				this.mouse_y - this.quad_y, this.mouse_x - this.quad_x)
+			if (+10 < da && da < +120) {
+				this.dragging.rotation += 90
+				this.state = 'waiting'
+			}
+			else if (-120 < da && da < -10) {
+				this.dragging.rotation -= 90
+				this.state = 'waiting'
+			}
+			this.dragging = null
+			this.rotation_before = null
+		},
+	},
+	computed: {
+		status() {
+			if (this.state == 'rotating') return 'Rotate a square'
+			if (this.state == 'placing') return 'Place a stone'
+			if (this.state == 'waiting') return 'Waiting for opponent...'
+			if (this.state == 'finished') {
+				if (this.winner === 0) return 'Draw'
+				return this.winner === this.my_color ? 'You won!' : 'You lost'
+			}
+			return 'Unknown game state'
+		}
+	},
+	created() {
+		const params = new URL(window.location.href).searchParams
+		for (let p of params) console.log('query', p[0], '=', p[1])
+		for (let i = 0; i < this.n*this.n; i++) {
+			this.board.push({cells: [], rotation: 0})
+			for (let j = 0; j < this.m*this.m; j++) {
+				this.board[i].cells.push({color: 0})
+			}
+		}
+	},
+})
+</script>
+</html>
+

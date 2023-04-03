@@ -1,0 +1,6 @@
+name: col-web
+dependencies:
+    - python >= 3.8
+    - redis
+    - pip:
+        - -r file:requirements.txt

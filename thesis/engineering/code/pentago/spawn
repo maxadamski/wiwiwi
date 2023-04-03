@@ -1,0 +1,13 @@
+#!/bin/sh
+rm -r tmp
+mkdir -p tmp
+cp ../messages/python/colosseum.py tmp/colosseum.py
+cp "$1" tmp/judge
+cp "$2" tmp/player1
+cp "$3" tmp/player2
+
+cd tmp
+mkfifo in1 out1 in2 out2
+./judge in1 out1 in2 out2 6 30 &
+./player1 in1 out1 &
+./player2 in2 out2 &

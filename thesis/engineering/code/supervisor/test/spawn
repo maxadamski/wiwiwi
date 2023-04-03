@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+echo "Runnin player 1"
+"$2"/run "$2"/fifo_in "$2"/fifo_out &
+p1=$!
+echo "Player 1 PID is $p1"
+echo "Runnin player 2"
+"$3"/run "$3"/fifo_in "$3"/fifo_out &
+p2=$!
+echo "Player 2 PID is $p2"
+echo "Running judge"
+"$1"/run "$2"/fifo_in "$2"/fifo_out "$3"/fifo_in "$3"/fifo_out 6 30
+kill $p1
+kill $p2

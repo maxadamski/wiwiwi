@@ -1,0 +1,12 @@
+https://colosseum.put.poznan.pl {
+    route /api/* {
+        uri strip_prefix /api
+        reverse_proxy localhost:8000
+    }
+
+    route {
+        root * ./dist
+        try_files {path} /index.html
+        file_server
+    }
+}

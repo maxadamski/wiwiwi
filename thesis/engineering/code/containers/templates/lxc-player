@@ -1,0 +1,57 @@
+#!/bin/bash
+set -e
+
+share="/bin"
+copy=""
+while [ $# -ge 1 ]; do case "$1" in
+  --name=*) NAME="${1#*=}";;
+  --path=*) config="${1#*=}/config";;
+  --rootfs=*) rootfs=$(realpath ${1#*=});;
+  --sharedir=*) share="$(realpath ${1#*=})";;
+  --copydir=*) copy="$(realpath ${1#*=})";;
+  --mapped-uid) [ $# -ge 2 ] && LXCUID="$2"; shift;;
+  --mapped-gid) [ $# -ge 2 ] && LXCGRP="$2"; shift;;
+  *) echo >&2 "unknown options: '$*'"; exit 2;;
+esac; shift; done
+
+echo "root  = $rootfs"
+echo "share = $share"
+echo "copy  = $copy"
+
+cat ~/.config/lxc/default.conf > $config
+
+cat <<EOF >>$config
+# lxc-player
+lxc.rootfs.path = $rootfs
+lxc.uts.name = $NAME
+lxc.pty.max = 1024
+lxc.cap.drop = sys_module mac_admin mac_override sys_time
+lxc.apparmor.profile = unconfined
+lxc.mount.entry = /bin bin none ro,bind 0 0
+lxc.mount.entry = /lib lib none ro,bind 0 0
+lxc.mount.entry = /sbin sbin none ro,bind 0 0
+lxc.mount.entry = /usr usr none ro,bind 0 0
+lxc.mount.entry = $share share none ro,bind 0 0
+lxc.mount.auto = cgroup:mixed proc:mixed sys:mixed
+EOF
+
+mkdir -p $rootfs/{bin,dev,etc,home,lib,proc,root,sbin,sys,tmp,usr,var,share}
+
+touch $rootfs/etc/fstab
+
+cat <<EOF >$rootfs/etc/passwd
+root:x:0:0:root:/root:/bin/bash
+EOF
+
+cat <<EOF >$rootfs/etc/group
+root:x:0:root
+EOF
+
+# copy player data if requested
+if [ -n "$copy" ]; then
+    cp -r $copy/. $rootfs/root/
+fi
+
+# set up colosseum channels
+rm -f $rootfs/root/fifo_{in,out}
+mkfifo -m 666 $rootfs/root/fifo_{in,out}

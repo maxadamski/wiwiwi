@@ -1,0 +1,4 @@
+api_token = "password"
+force_https = false
+allow_origins = [ "https://localhost:8000" ]
+environments = ["C", "C++", "Python3"]

@@ -1,0 +1,8 @@
+name: backend
+channels:
+    - conda-forge
+dependencies:
+    - redis
+    - python=3.8
+    - pip:
+            - -r file:requirements.txt

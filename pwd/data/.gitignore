@@ -1,0 +1,4 @@
+cache
+doc2vec/*
+memes/*
+!.gitkeep

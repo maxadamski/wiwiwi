@@ -1,0 +1,51 @@
+#!/bin/bash
+
+PREFIX="$CONDA_PREFIX"
+INCLUDES="-Ibuild/include"
+COMMON_FLAGS="-O2 -Wall -std=c++11 -fPIC -pipe -march=native"
+CFLAGS="$COMMON_FLAGS -Wextra -ffast-math $INCLUDES"
+CPYFLAGS="$COMMON_FLAGS -shared -pthread -fwrapv -fstack-clash-protection -fno-strict-aliasing -I$PREFIX/include/python3.9 $INCLUDES"
+CC="g++"
+
+mkdir -p build/include
+mkdir -p build/ontofun
+
+cp factplusplus/Kernel/*.h build/include/
+
+if [ src/simplefact.pyx -nt build/simplefact.cpp ]; then
+	echo "cythonize src/simplefact.pyx"
+	cython --cplus -3 src/simplefact.pyx -o build/simplefact.cpp
+fi
+
+if [ src/ontofun.pyx -nt build/ontofun/ontofun.cpp ]; then
+	echo "cythonize src/ontofun.pyx"
+	cython --cplus -3 src/ontofun.pyx -o build/ontofun/ontofun.cpp
+fi
+
+for c in factplusplus/Kernel/*.cpp; do
+	o="build/$(basename "$c" .cpp).o"
+	if [ "$c" -nt "$o" ]; then
+		echo "build $c"
+		$CC $CFLAGS -c -o "$o" "$c" &
+	fi
+done
+
+if [ build/simplefact.cpp -nt build/simplefact.o ]; then
+	echo "build build/simplefact.cpp"
+	# -Wp,-w silences the ("unlikely" redefined) preprocessor warning
+	$CC $CPYFLAGS -Wp,-w -o build/simplefact.o build/simplefact.cpp &
+fi
+
+if [ build/ontofun/ontofun.cpp -nt build/ontofun/ontofun.o ]; then
+	echo "build build/parser/ontofun.cpp"
+	$CC $CPYFLAGS -o build/ontofun/ontofun.o build/ontofun/ontofun.cpp &
+fi
+
+wait
+
+echo "output src/simplefact.so"
+$CC $CPYFLAGS -o src/simplefact.so build/*.o
+
+echo "output src/ontofun.so"
+$CC $CPYFLAGS -o src/ontofun.so build/ontofun/ontofun.o
+

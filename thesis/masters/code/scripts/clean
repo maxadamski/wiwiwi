@@ -1,0 +1,8 @@
+#!/bin/sh
+
+rm -rf build/
+rm -f src/simplefact.so
+rm -rf src/__pycache__
+rm -rf scripts/__pycache__
+rm -rf scripts/.ipynb_checkpoints
+

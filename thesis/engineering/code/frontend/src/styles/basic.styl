@@ -1,0 +1,134 @@
+@import "shared"
+
+// --- BASICS ---
+
+html
+    box-sizing border-box
+    font-family 'Lato', 'Helvetica Neue', 'Helvetica', sans-serif
+    font-size 18px
+
+*, *::before, *::after
+    box-sizing inherit
+
+h1, h2, h3, h4, h5, h6
+    font-family 'Montserrat', 'Helvetica Neue', 'Helvetica', sans-serif
+    font-weight normal
+    line-height 1.2
+
+pre
+    font-family monospace
+    font-size 16px
+    overflow-x auto
+    white-space pre-wrap
+    max-width 800px
+    background #F4F4F4
+    padding u2
+    border-radius u1
+
+p, ul, ol
+    line-height phi
+
+article
+    max-width 55ch
+
+img, video
+    max-width 100%
+    height auto
+
+hr
+    border none
+    border-top 1px solid decor-color
+
+a
+    text-decoration none
+
+body
+    background body-color
+    color text-color
+    margin 0
+    padding 0
+
+// --- TABLES ---
+
+table
+    white-space nowrap
+    border-collapse collapse
+    width 100%
+    border-top 1px solid decor-color
+    border-bottom 1px solid decor-color
+
+tr
+    height 40px
+    &:not(:last-of-type)
+        border-bottom 1px solid decor-color
+    &:nth-child(even)
+        background #f8f8f8
+
+th, td
+    padding u2 u3
+    text-align left
+    vertical-align center
+    font-size 15px
+
+// --- CONTROLS ---
+
+button, input, .input-file
+    background body-color
+
+button, select, .input-file
+    &:not([disabled])
+        &:hover
+            background-color hover-color
+
+        &:active
+            background-color active-color
+
+    &:disabled
+        background-color hover-color
+        color gray
+        cursor not-allowed
+
+button, input, select, .input-file
+    border 1px solid decor-color
+    border-radius r1
+
+button, input, optgroup, select, .input-file, .input-checkbox, .input-radio
+    margin 0
+    font-size s1
+    padding u2 u3
+    max-height 32px
+    color text-color
+    cursor pointer
+    white-space nowrap
+    word-wrap break-word
+    word-break break-all
+
+label.input-radio, label.input-checkbox
+    padding u2 0
+    display inline-flex
+    justify-items space-between
+    align-items center
+
+    > input
+        margin-right 0.5ch
+    
+label.input-file > input
+    position absolute
+    width 1px
+    opacity 0
+
+
+select
+    padding u2 30px u2 (u3 - 5px)
+    background #fff url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5' viewBox='0 0 4 5'%3e%3cpath fill='%2333333' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right .75rem center/8px 10px
+    appearance none
+
+td, th
+    button, input, select, optgroup, .input-file, .input-checkbox, .input-radio
+        max-height 24px
+        font-size 13px
+        padding u1 u2
+
+    select
+        padding-top 2px
+        padding-right 30px

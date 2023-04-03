@@ -1,0 +1,5 @@
+#!/bin/sh
+for d in judge player_alpha_beta player_random; do
+	cd "$d" && test -f build && ./build
+	cd ..
+done

@@ -1,0 +1,74 @@
+#!/usr/bin/env python3
+
+import colosseum as co
+import numpy as np
+from colosseum import u8
+from sys import argv
+
+inf = float('inf')
+
+make_move, commit_move, get_moves, undo_move, get_winner, get_board, get_player = range(1, 8)
+fi, fo = co.open(argv[1], 'r'), co.open(argv[2], 'w')
+
+max_depth = 2
+i = 3
+while i < len(argv):
+    if argv[i] == "--depth":
+        assert len(argv) > i+1, 'expected a value after --depth'
+        max_depth = int(argv[i+1])
+        i += 1
+    i += 1
+
+def send(tag, *args):
+    co.send(fo, tag, *args)
+
+def call(tag, *args):
+    co.send(fo, tag, *args)
+    tag2, data = co.recv(fi)
+    assert tag2 == tag, f'expected tag {tag} in response, but got {tag2}'
+    return data[0] if len(data) == 1 else data
+
+def score_board(board, player):
+    if call(get_winner) == player: return inf
+    ax, bx, ay, by = np.zeros((4, board_size))
+    for i in range(board_size):
+        for j in range(board_size):
+            if board[i, j] == player:
+                ax[i] += 1
+                ay[j] += 1
+            elif board[i, j] != ord('.'):
+                bx[i] += 1
+                by[j] += 1
+    score = 0
+    for i in range(board_size):
+        score += 2**min(ax[i], 5) - 1
+        score += 2**min(ay[i], 5) - 1
+        score -= 2**bx[i] - 1
+        score -= 2**by[i] - 1
+    return score
+
+def negamax(depth, alpha=-inf, beta=+inf):
+    I, J, R = call(get_moves)
+    moves = np.array([I, J, R]).T
+    np.random.shuffle(moves)
+
+    if depth == 0 or len(moves) == 0:
+        player = call(get_player)
+        board = call(get_board)
+        return None, score_board(board, player)
+
+    move, best = None, -inf
+    for i, j, r in moves:
+        send(make_move, (i,u8), (j,u8), (r,u8))
+        score = -negamax(depth - 1, -beta, -alpha)[1]
+        send(undo_move)
+        if score > best: move, best = (i, j, r), score
+        alpha = max(best, alpha)
+        if alpha >= beta: return None, alpha
+
+    return move, best
+
+board_size = call(get_board).shape[0]
+while True:
+    (i, j, r), score = negamax(depth=max_depth)
+    send(commit_move, (i,u8), (j,u8), (r,u8))
